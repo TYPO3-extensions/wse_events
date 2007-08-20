@@ -117,7 +117,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
-			$templateFile = 'EXT:wse_events/template.html';
+			$templateFile = 'EXT:wse_events/wseevents.tmpl';
 		} else {
 			$templateFile = $conf['templateFile'];
 		}
@@ -272,7 +272,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
-			$templateFile = 'EXT:wse_events/template.html';
+			$templateFile = 'EXT:wse_events/wseevents.tmpl';
 		} else {
 			$templateFile = $conf['templateFile'];
 		}
@@ -353,7 +353,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
-			$templateFile = 'EXT:wse_events/template.html';
+			$templateFile = 'EXT:wse_events/wseevents.tmpl';
 		} else {
 			$templateFile = $conf['templateFile'];
 		}
@@ -408,7 +408,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
-			$templateFile = 'EXT:wse_events/template.html';
+			$templateFile = 'EXT:wse_events/wseevents.tmpl';
 		} else {
 			$templateFile = $conf['templateFile'];
 		}
