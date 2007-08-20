@@ -424,6 +424,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###NAME###'] = $this->getFieldContent('name');
 		$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
 		$markerArray['###EMAILDATA###'] = $this->getFieldContent('email');
+		$markerArray['###COMPANYNAME###'] = $this->getFieldHeader('company');
+		$markerArray['###COMPANYDATA###'] = $this->getFieldContent('company');
+		$markerArray['###COMPANYLINK###'] = $this->getFieldContent('companylink');
 		$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
 		$markerArray['###INFODATA###'] = $this->getFieldContent('info');
 		$markerArray['###BACKLINK###'] = $backlink;

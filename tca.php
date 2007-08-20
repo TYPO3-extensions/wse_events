@@ -709,6 +709,22 @@ $TCA['tx_wseevents_speakers'] = Array (
 				'size' => '30',
 			)
 		),
+		'company' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.company',		
+			'config' => Array (
+				'type' => 'input',	
+				'size' => '30',
+			)
+		),
+		'companylink' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.companylink',		
+			'config' => Array (
+				'type' => 'input',	
+				'size' => '30',
+			)
+		),
 		'info' => Array (		
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.info',		
@@ -731,7 +747,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, email, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, company, companylink, email, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')

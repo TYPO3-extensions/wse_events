@@ -148,6 +148,8 @@ CREATE TABLE tx_wseevents_speakers (
 	firstname tinytext NOT NULL,
 	comment text NOT NULL,
 	email tinytext NOT NULL,
+	company tinytext NOT NULL,
+	companylink tinytext NOT NULL,
 	info text NOT NULL,
 	
 	PRIMARY KEY (uid),
