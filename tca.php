@@ -464,7 +464,7 @@ $TCA['tx_wseevents_timeslots'] = Array (
 $TCA['tx_wseevents_sessions'] = Array (
 	'ctrl' => $TCA['tx_wseevents_sessions']['ctrl'],
 	'interface' => Array (
-		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,event,name,speaker,room,timeslots,categorie,number,teaser,description'
+		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,event,name,speaker,room,timeslots,category,number,teaser,description'
 	),
 	'feInterface' => $TCA['tx_wseevents_sessions']['feInterface'],
 	'columns' => Array (
@@ -561,9 +561,9 @@ $TCA['tx_wseevents_sessions'] = Array (
 				'maxitems' => 3,
 			)
 		),
-		'categorie' => Array (		
+		'category' => Array (		
 			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.categorie',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.category',		
 			'config' => Array (
 				'type' => 'select',	
 				'foreign_table' => 'tx_wseevents_categories',	
@@ -620,7 +620,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, comment, speaker, room, timeslots, categorie, number, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, comment, speaker, room, timeslots, category, number, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')

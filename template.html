@@ -1,8 +1,25 @@
 <h3>TEMPLATE</h3>
 <em>This is the default html template for wse_events</em>
 <!-- ###TEMPLATE### begin -->
+		<div class="tx-wseevents-pi1-choosecategory">
+			###LABEL###
+			<!-- Combobox to select category -->
+			<form action="###FORMACTION###">
+			<input type="hidden" name="no_cache" value="1">
+			<select name="###FORMSELECT###" onchange="this.form.submit()">
+				<!-- ###SELECT### -->
+				<!-- ###OPTIONSELECTED### -->
+				<option value="###VALUE###" selected="selected">###OPTION###</option>
+				<!-- ###OPTIONSELECTED### -->
+				<!-- ###OPTIONNOTSELECTED### -->
+				<option value="###VALUE###">###OPTION###</option>
+				<!-- ###OPTIONNOTSELECTED### -->
+				<!-- ###SELECT### -->
+			</select>
+			</form>
+		</div>
 <!-- ###SESSIONLIST### begin -->
-		<!-- wse_events default template: sessionlist -->
+		<!-- wse_events default template: sessionlist -->		
 		<div class="tx-wseevents-pi1-listrow">
 			<table>
 			<!-- ###SINGLEROW### begin -->
@@ -25,6 +42,31 @@
 			</table>
 		</div>
 <!-- ###SESSIONLIST### end -->
+
+<!-- ###SPEAKERLIST### begin -->
+		<!-- wse_events default template: sessionlist -->
+		<div class="tx-wseevents-pi1-listrow">
+			<table>
+			<!-- ###SINGLEROW### begin -->
+				<!-- ###HEADER### -->
+				<tr class="tx-wseevents-pi1-listrow-header">
+					<td valign="top"><p>###NAME###</p></td><td valign="top"><p>###SESSIONS###</p></td>
+				</tr>
+				<!-- ###HEADER### -->
+				<!-- ###ITEM### -->
+				<tr class="tx-wseevents-pi1-listrow-even">
+					<td valign="top"><p>###NAME###</p></td><td valign="top"><p>###SESSIONS###</p></td>
+				</tr>
+				<!-- ###ITEM### -->
+				<!-- ###ITEM_ALT### -->
+				<tr class="tx-wseevents-pi1-listrow-odd">
+					<td valign="top"><p>###NAME###</p></td><td valign="top"><p>###SESSIONS###</p></td>
+				</tr>
+				<!-- ###ITEM_ALT### -->
+			<!-- ###SINGLEROW### end -->
+			</table>
+		</div>
+<!-- ###SPEAKERLIST### end -->
 
 <!-- ###SESSIONVIEW### begin -->
 		<!-- wse_events default template: session view -->

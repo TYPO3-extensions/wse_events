@@ -16,8 +16,13 @@ $LOCAL_LANG = Array (
 		'tx_wseevents_sessions.listFieldHeader_description' => 'Description',
 		'tx_wseevents_sessions.notimeslots' => 'not yet sheduled',
 		'tx_wseevents_sessions.nospeakers' => 'no speaker assigned',
+		'tx_wseevents_sessions.choosecategory' => 'Choose category',
+		'tx_wseevents_sessions.chooseall' => '- All -',
+		'tx_wseevents_sessions.showselection' => 'Show selected category',
+		'tx_wseevents_speakers.listFieldHeader_name' => 'Speaker name',
 		'tx_wseevents_speakers.listFieldHeader_email' => 'E-Mail',
 		'tx_wseevents_speakers.listFieldHeader_info' => 'Information',
+		'tx_wseevents_speakers.listFieldHeader_speakersessions' => 'Sessions',
 		'back' => 'Back',	
 	),
 	'de' => Array (
@@ -30,87 +35,18 @@ $LOCAL_LANG = Array (
 		'tx_wseevents_sessions.listFieldHeader_description' => 'Beschreibung',
 		'tx_wseevents_sessions.notimeslots' => 'noch nicht geplant',
 		'tx_wseevents_sessions.nospeakers' => 'noch kein Sprecher',
+		'tx_wseevents_sessions.choosecategory' => 'Kategorie wählen',
+		'tx_wseevents_sessions.chooseall' => '- Alle -',
+		'tx_wseevents_sessions.showselection' => 'Ausgewählte Kategorie anzeigen',
+		'tx_wseevents_speakers.listFieldHeader_name' => 'Sprecher Name',
 		'tx_wseevents_speakers.listFieldHeader_email' => 'E-Mail',
 		'tx_wseevents_speakers.listFieldHeader_info' => 'Information',
+		'tx_wseevents_speakers.listFieldHeader_speakersessions' => 'Vorträge',
 		'back' => 'Zurück',	
-	),
-	'no' => Array (
-	),
-	'it' => Array (
-	),
-	'fr' => Array (
-	),
-	'es' => Array (
 	),
 	'nl' => Array (
 	),
-	'cz' => Array (
-	),
-	'pl' => Array (
-	),
-	'si' => Array (
-	),
-	'fi' => Array (
-	),
-	'tr' => Array (
-	),
-	'se' => Array (
-	),
-	'pt' => Array (
-	),
-	'ru' => Array (
-	),
-	'ro' => Array (
-	),
-	'ch' => Array (
-	),
-	'sk' => Array (
-	),
-	'lt' => Array (
-	),
-	'is' => Array (
-	),
-	'hr' => Array (
-	),
-	'hu' => Array (
-	),
-	'gl' => Array (
-	),
-	'th' => Array (
-	),
-	'gr' => Array (
-	),
-	'hk' => Array (
-	),
-	'eu' => Array (
-	),
-	'bg' => Array (
-	),
-	'br' => Array (
-	),
-	'et' => Array (
-	),
-	'ar' => Array (
-	),
-	'he' => Array (
-	),
-	'ua' => Array (
-	),
-	'lv' => Array (
-	),
-	'jp' => Array (
-	),
-	'vn' => Array (
-	),
-	'ca' => Array (
-	),
-	'ba' => Array (
-	),
-	'kr' => Array (
-	),
-	'eo' => Array (
-	),
-	'my' => Array (
+	'fr' => Array (
 	),
 );
 ?>

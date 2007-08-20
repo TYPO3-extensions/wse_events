@@ -62,6 +62,21 @@
 							</config>
 						</TCEforms>
 					</recursive>
+					<commonpages>
+						<TCEforms>
+							<exclude>1</exclude>
+							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.commonStorage</label>
+							<config>
+								<type>group</type>
+								<internal_type>db</internal_type>
+								<allowed>pages</allowed>
+								<size>3</size>
+								<maxitems>22</maxitems>
+								<minitems>0</minitems>
+								<show_thumbs>1</show_thumbs>
+							</config>
+					   </TCEforms>
+					</commonpages>
 				</el>
 			</ROOT>
 		</sDEF>
@@ -142,16 +157,6 @@
  							</config>
 					   </TCEforms>
 					</lastnameFirst>
-					<sorting>
-						<TCEforms>
-							<exclude>1</exclude>
-							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.sorting</label>
-							<config>
-								<type>input</type>
-								<size>20</size>
-							</config>
-					   </TCEforms>
-					</sorting>
 				</el>
 			</ROOT>
 		</display>

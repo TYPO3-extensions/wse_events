@@ -119,7 +119,7 @@ CREATE TABLE tx_wseevents_sessions (
 	comment text NOT NULL,
 	speaker blob NOT NULL,
 	timeslots blob NOT NULL,
-	categorie int(11) DEFAULT '0' NOT NULL,
+	category int(11) DEFAULT '0' NOT NULL,
 	number int(11) DEFAULT '0' NOT NULL,
 	teaser text NOT NULL,
 	description text NOT NULL,
