@@ -13,7 +13,7 @@
 					<pages>
 						<TCEforms>
 							<exclude>1</exclude>
-							<label>LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.eventStorage</label>
+							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.eventStorage</label>
 							<config>
 								<type>group</type>
 								<internal_type>db</internal_type>
@@ -74,28 +74,28 @@
 				<el>
 					<dynListType>
 						<TCEforms>
-							<label>LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType</label>
+							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.dynListType</label>
 							<config>
 								<type>select</type>
 								<items type="array">
 									<numIndex index="0" type="array">
-										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.0</numIndex>
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.dynListType.I.0</numIndex>
 										<numIndex index="1">sessionlist</numIndex>
 									</numIndex>
 									<numIndex index="1" type="array">
-										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.1</numIndex>
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.dynListType.I.1</numIndex>
 										<numIndex index="1">sessiondetail</numIndex>
 									</numIndex>
 									<numIndex index="2" type="array">
-										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.2</numIndex>
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.dynListType.I.2</numIndex>
 										<numIndex index="1">speakerlist</numIndex>
 									</numIndex>
 									<numIndex index="3" type="array">
-										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.3</numIndex>
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.dynListType.I.3</numIndex>
 										<numIndex index="1">speakerdetail</numIndex>
 									</numIndex>
 									<numIndex index="4" type="array">
-										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.4</numIndex>
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.dynListType.I.4</numIndex>
 										<numIndex index="1">timeslots</numIndex>
 									</numIndex>
 								</items>
@@ -105,7 +105,7 @@
 					<singleSession>
 						<TCEforms>
 							<exclude>1</exclude>
-							<label>LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.singleSession</label>
+							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.singleSession</label>
 							<config>
 								<type>group</type>
 								<internal_type>db</internal_type>
@@ -120,7 +120,7 @@
 					<singleSpeaker>
 						<TCEforms>
 							<exclude>1</exclude>
-							<label>LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.singleSpeaker</label>
+							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.singleSpeaker</label>
 							<config>
 								<type>group</type>
 								<internal_type>db</internal_type>
@@ -135,7 +135,7 @@
 					<fieldList>
 						<TCEforms>
 							<exclude>1</exclude>
-							<label>LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.fieldList</label>
+							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.fieldList</label>
 							<config>
 								<type>input</type>
 								<size>45</size>
@@ -145,7 +145,7 @@
 					<sorting>
 						<TCEforms>
 							<exclude>1</exclude>
-							<label>LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.sorting</label>
+							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.sorting</label>
 							<config>
 								<type>input</type>
 								<size>45</size>

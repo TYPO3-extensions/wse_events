@@ -56,7 +56,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$conf['singleSession'] = $this->pi_getFFvalue($piFlexForm, 'singleSession', 'display');
 				$conf['singleSpeaker'] = $this->pi_getFFvalue($piFlexForm, 'singleSpeaker', 'display');
 				$conf['fieldList'] = $this->pi_getFFvalue($piFlexForm, 'fieldList', 'display');
-				if ($conf['fieldList']=='') { $conf['fieldList'] = 'number,name,speaker,room,timeslots'; }
+				if ($conf['fieldList']=='') { $conf['fieldList'] = 'number,name,speaker,timeslots'; }
 				$conf['sorting'] = $this->pi_getFFvalue($piFlexForm, 'sorting', 'display');
 				if ($conf['sorting']=='') { $conf['sorting'] = 'name:0'; }
 				return $this->pi_wrapInBaseClass($this->listSessionView($content,$conf));
@@ -104,7 +104,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$sorting = $this->conf['sorting'];
 		list($this->internal['orderBy'],$this->internal['descFlag']) = explode(':',$sorting);
 		$this->internal['results_at_a_time']=t3lib_div::intInRange($lConf['results_at_a_time'],0,1000,100);		// Number of results to show in a listing.
-		$this->internal['maxPages']=t3lib_div::intInRange($lConf['maxPages'],0,1000,2);;		// The maximum number of "pages" in the browse-box: "Page 1", "Page 2", etc.
+		$this->internal['maxPages']=t3lib_div::intInRange($lConf['maxPages'],0,1000,2);;		// The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
 		$this->internal['searchFieldList']='uid,name,categorie,number,speaker,room,timeslots,teaser';
 		$this->internal['orderByList']='name';
 
@@ -229,7 +229,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$sessionname = $this->getFieldContent('name');
 		}
 		$thisrow ='<tr'.($c%2 ? $this->pi_classParam('listrow-odd') : '').'>';
-		foreach(explode(",",$this->conf['fieldList']) as $rowfield){
+		foreach(explode(',',$this->conf['fieldList']) as $rowfield){
 			switch ((string)$rowfield) {
 				case 'number': 
 					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('number').'</p></td>';
@@ -257,7 +257,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 */
 	function pi_list_header()	{
 		$thisrow ='<tr'.$this->pi_classParam('listrow-header').'>';
-		foreach(explode(",",$this->conf['fieldList']) as $rowfield){
+		foreach(explode(',',$this->conf['fieldList']) as $rowfield){
 			switch ((string)$rowfield) {
 				case 'number': 
 					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('number').'</p></td>';
@@ -301,7 +301,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			break;
 
 			case 'speaker':
-				foreach(explode(",",$this->internal['currentRow'][$fN]) as $k){
+				foreach(explode(',',$this->internal['currentRow'][$fN]) as $k){
 					$data = $this->pi_getRecord('tx_wseevents_speakers',$k);
 					if (isset($this->conf['singleSpeaker'])) {
 					    $label = $data['name'];  // the link text
@@ -323,7 +323,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			break;
 
 			case 'timeslots':
-				foreach(explode(",",$this->internal['currentRow'][$fN]) as $k){
+				foreach(explode(',',$this->internal['currentRow'][$fN]) as $k){
 					$data = $this->pi_getRecord('tx_wseevents_timeslots',$k);
 				    $timeslotname = $data['name'];
 					if (isset($content)) {

@@ -16,7 +16,7 @@ CREATE TABLE tx_wseevents_events (
 	comment text NOT NULL,
 	location int(11) DEFAULT '0' NOT NULL,
 	begin int(11) DEFAULT '0' NOT NULL,
-	end int(11) DEFAULT '0' NOT NULL,
+	length int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -89,9 +89,10 @@ CREATE TABLE tx_wseevents_timeslots (
 	name tinytext NOT NULL,
 	comment text NOT NULL,
 	event int(11) DEFAULT '0' NOT NULL,
-	begin int(11) DEFAULT '0' NOT NULL,
-	end int(11) DEFAULT '0' NOT NULL,
+	eventday int(11) DEFAULT '0' NOT NULL,
 	room int(11) DEFAULT '0' NOT NULL,
+	begin tinytext NOT NULL,
+	end tinytext NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
