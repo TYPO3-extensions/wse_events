@@ -56,6 +56,15 @@ $TCA["tx_wseevents_events"] = Array (
 				"eval" => "required",
 			)
 		),
+		"comment" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "3",
+			)
+		),
 		"location" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.location",		
@@ -109,7 +118,7 @@ $TCA["tx_wseevents_events"] = Array (
 		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, location, begin, end")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, location, begin, end")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -173,9 +182,18 @@ $TCA["tx_wseevents_locations"] = Array (
 				"eval" => "required",
 			)
 		),
+		"comment" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "3",
+			)
+		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -239,6 +257,15 @@ $TCA["tx_wseevents_rooms"] = Array (
 				"eval" => "required",
 			)
 		),
+		"comment" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "3",
+			)
+		),
 		"seats" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.seats",		
@@ -284,7 +311,7 @@ $TCA["tx_wseevents_rooms"] = Array (
 		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, seats, location")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, seats, location")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -348,6 +375,15 @@ $TCA["tx_wseevents_timeslots"] = Array (
 				"eval" => "required",
 			)
 		),
+		"comment" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "3",
+			)
+		),
 		"event" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.event",		
@@ -397,7 +433,7 @@ $TCA["tx_wseevents_timeslots"] = Array (
 		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, event, room, begin, end")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, event, room, begin, end")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -471,6 +507,15 @@ $TCA["tx_wseevents_sessions"] = Array (
 				"type" => "input",	
 				"size" => "30",	
 				"eval" => "required",
+			)
+		),
+		"comment" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "3",
 			)
 		),
 		"speaker" => Array (		
@@ -556,7 +601,7 @@ $TCA["tx_wseevents_sessions"] = Array (
 		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, speaker, room, timeslots, categorie, number, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, comment, speaker, room, timeslots, categorie, number, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -568,7 +613,7 @@ $TCA["tx_wseevents_sessions"] = Array (
 $TCA["tx_wseevents_speakers"] = Array (
 	"ctrl" => $TCA["tx_wseevents_speakers"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,name,email"
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,name,firstname,comment,email,info"
 	),
 	"feInterface" => $TCA["tx_wseevents_speakers"]["feInterface"],
 	"columns" => Array (
@@ -620,6 +665,23 @@ $TCA["tx_wseevents_speakers"] = Array (
 				"eval" => "required",
 			)
 		),
+		"firstname" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.firstname",		
+			"config" => Array (
+				"type" => "input",	
+				"size" => "30",	
+			)
+		),
+		"comment" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "3",
+			)
+		),
 		"email" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.email",		
@@ -628,9 +690,29 @@ $TCA["tx_wseevents_speakers"] = Array (
 				"size" => "30",
 			)
 		),
+		"info" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.info",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",
+				"rows" => "5",
+				"wizards" => Array(
+					"_PADDING" => 2,
+					"RTE" => Array(
+						"notNewRecords" => 1,
+						"RTEonly" => 1,
+						"type" => "script",
+						"title" => "Full screen Rich Text Editing|Formatteret redigering i hele vinduet",
+						"icon" => "wizard_rte2.gif",
+						"script" => "wizard_rte.php",
+					),
+				),
+			)
+		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, email")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, email, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -694,6 +776,15 @@ $TCA["tx_wseevents_categories"] = Array (
 				"eval" => "required",
 			)
 		),
+		"comment" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "3",
+			)
+		),
 		"shortkey" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories.shortkey",		
@@ -706,7 +797,7 @@ $TCA["tx_wseevents_categories"] = Array (
 		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, shortkey")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, shortkey")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")

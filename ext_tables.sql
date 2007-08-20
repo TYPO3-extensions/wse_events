@@ -13,6 +13,7 @@ CREATE TABLE tx_wseevents_events (
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	comment text NOT NULL,
 	location int(11) DEFAULT '0' NOT NULL,
 	begin int(11) DEFAULT '0' NOT NULL,
 	end int(11) DEFAULT '0' NOT NULL,
@@ -38,6 +39,7 @@ CREATE TABLE tx_wseevents_locations (
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	comment text NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -60,6 +62,7 @@ CREATE TABLE tx_wseevents_rooms (
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	comment text NOT NULL,
 	seats int(11) DEFAULT '0' NOT NULL,
 	location int(11) DEFAULT '0' NOT NULL,
 	
@@ -84,6 +87,7 @@ CREATE TABLE tx_wseevents_timeslots (
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	comment text NOT NULL,
 	event int(11) DEFAULT '0' NOT NULL,
 	begin int(11) DEFAULT '0' NOT NULL,
 	end int(11) DEFAULT '0' NOT NULL,
@@ -111,6 +115,7 @@ CREATE TABLE tx_wseevents_sessions (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	event int(11) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	comment text NOT NULL,
 	speaker blob NOT NULL,
 	timeslots blob NOT NULL,
 	categorie int(11) DEFAULT '0' NOT NULL,
@@ -139,7 +144,10 @@ CREATE TABLE tx_wseevents_speakers (
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	firstname tinytext NOT NULL,
+	comment text NOT NULL,
 	email tinytext NOT NULL,
+	info text NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -162,6 +170,7 @@ CREATE TABLE tx_wseevents_categories (
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	comment text NOT NULL,
 	shortkey tinytext NOT NULL,
 	
 	PRIMARY KEY (uid),

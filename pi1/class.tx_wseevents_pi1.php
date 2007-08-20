@@ -55,6 +55,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$conf['recursive'] = $this->cObj->data['recursive'];
 				$conf['singleSession'] = $this->pi_getFFvalue($piFlexForm, 'singleSession', 'display');
 				$conf['singleSpeaker'] = $this->pi_getFFvalue($piFlexForm, 'singleSpeaker', 'display');
+				$conf['fieldList'] = $this->pi_getFFvalue($piFlexForm, 'fieldList', 'display');
+				if ($conf['fieldList']=='') { $conf['fieldList'] = 'number,name,speaker,room,timeslots'; }
+				$conf['sorting'] = $this->pi_getFFvalue($piFlexForm, 'sorting', 'display');
+				if ($conf['sorting']=='') { $conf['sorting'] = 'name:0'; }
 				return $this->pi_wrapInBaseClass($this->listSessionView($content,$conf));
 			break;
 			case 'sessiondetail':
@@ -64,7 +68,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $this->pi_wrapInBaseClass($this->singleSessionView($content,$conf));
 			break;
 			case 'speakerlist':
-				return $this->pi_wrapInBaseClass('Speaker list');
+				return $this->pi_wrapInBaseClass('Speaker list, not yet implemented');
 			break;
 			case 'speakerdetail':
 				$this->internal['currentTable'] = 'tx_wseevents_speakers';
@@ -72,7 +76,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $this->pi_wrapInBaseClass($this->singleSpeakerView($content,$conf));
 			break;
 			case 'timeslots':
-				return $this->pi_wrapInBaseClass('Time slot list');
+				return $this->pi_wrapInBaseClass('Time slot list, not yet implemented');
 			break;
 			default:
 				return $this->pi_wrapInBaseClass('Not implemented: '.(string)$flexFormValuesArray['dynListType']);
@@ -96,9 +100,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if (!isset($this->piVars['pointer']))	$this->piVars['pointer']=0;
 		if (!isset($this->piVars['mode']))	$this->piVars['mode']=1;
 
-			// Initializing the query parameters:
-		list($this->internal['orderBy'],$this->internal['descFlag']) = explode(':',$this->piVars['sort']);
-		$this->internal['results_at_a_time']=t3lib_div::intInRange($lConf['results_at_a_time'],0,1000,3);		// Number of results to show in a listing.
+		// Initializing the query parameters:
+		$sorting = $this->conf['sorting'];
+		list($this->internal['orderBy'],$this->internal['descFlag']) = explode(':',$sorting);
+		$this->internal['results_at_a_time']=t3lib_div::intInRange($lConf['results_at_a_time'],0,1000,100);		// Number of results to show in a listing.
 		$this->internal['maxPages']=t3lib_div::intInRange($lConf['maxPages'],0,1000,2);;		// The maximum number of "pages" in the browse-box: "Page 1", "Page 2", etc.
 		$this->internal['searchFieldList']='uid,name,categorie,number,speaker,room,timeslots,teaser';
 		$this->internal['orderByList']='name';
@@ -112,7 +117,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		// Put the whole list together:
 		$fullTable='';	// Clear var;
-	#	$fullTable.=t3lib_div::view_array($this->piVars);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
+#		$fullTable.=t3lib_div::view_array($this->piVars);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
+#		$fullTable.=t3lib_div::view_array($this->conf);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
 		
 		// Adds the whole list table
 		$fullTable.=$this->pi_list_makelist($res);
@@ -153,6 +159,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					<td valign="top"><p>'.$this->getFieldContent('speaker').'</p></td>
 				</tr>
 				<tr>
+					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('timeslots').':</p></td>
+					<td valign="top"><p>'.$this->getFieldContent('timeslots').'</p></td>
+				</tr>
+				<tr>
 					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('description').':</p></td>
 					<td valign="top"><p>'.$this->getFieldContent('description').'</p></td>
 				</tr>
@@ -190,6 +200,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('email').':</p></td>
 					<td valign="top"><p>'.$this->getFieldContent('email').'</p></td>
 				</tr>
+				<tr>
+					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('info').':</p></td>
+					<td valign="top"><p>'.$this->getFieldContent('info').'</p></td>
+				</tr>
 			</table>
 		<p>'.$backlink.'</p></div>'.
 		$this->pi_getEditPanel();
@@ -214,25 +228,56 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$sessionname = $this->getFieldContent('name');
 		}
-		
-		return '<tr'.($c%2 ? $this->pi_classParam('listrow-odd') : '').'>
-				<td valign="top"><p>'.$this->getFieldContent('number').'</p></td>
-				<td valign="top" title="'.$this->getFieldContent('teaser').'"><p>'.$sessionname.'</p></td>
-				<td valign="top"><p>'.$this->getFieldContent('speaker').'</p></td>
-				<td valign="top"><p>'.$this->getFieldContent('room').'</p></td>
-			</tr>';
+		$thisrow ='<tr'.($c%2 ? $this->pi_classParam('listrow-odd') : '').'>';
+		foreach(explode(",",$this->conf['fieldList']) as $rowfield){
+			switch ((string)$rowfield) {
+				case 'number': 
+					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('number').'</p></td>';
+				break;
+				case 'name': 
+					$thisrow .= '<td valign="top" title="'.$this->getFieldContent('teaser').'"><p>'.$sessionname.'</p></td>';
+				break;
+				case 'speaker': 
+					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('speaker').'</p></td>';
+				break;
+				case 'room': 
+					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('room').'</p></td>';
+				break;
+				case 'timeslots': 
+					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('timeslots').'</p></td>';
+				break;
+			}
+		}
+		$thisrow .= '</tr>';
+		return $thisrow;
 	}
 
 	/**
 	 * Display header for session list
 	 */
 	function pi_list_header()	{
-		return '<tr'.$this->pi_classParam('listrow-header').'>
-				<td nowrap><p>'.$this->getFieldHeader('number').'</p></td>
-				<td nowrap><p>'.$this->getFieldHeader('name').'</p></td>
-				<td nowrap><p>'.$this->getFieldHeader('speaker').'</p></td>
-				<td nowrap><p>'.$this->getFieldHeader('room').'</p></td>
-			</tr>';
+		$thisrow ='<tr'.$this->pi_classParam('listrow-header').'>';
+		foreach(explode(",",$this->conf['fieldList']) as $rowfield){
+			switch ((string)$rowfield) {
+				case 'number': 
+					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('number').'</p></td>';
+				break;
+				case 'name': 
+					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('name').'</p></td>';
+				break;
+				case 'speaker': 
+					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('speaker').'</p></td>';
+				break;
+				case 'room': 
+					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('room').'</p></td>';
+				break;
+				case 'timeslots': 
+					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('timeslots').'</p></td>';
+				break;
+			}
+		}
+		$thisrow .= '</tr>';
+		return $thisrow;
 	}
 
 	/**
@@ -272,6 +317,19 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$content .= '<br />'.$speakername;
 					} else {
 						$content = $speakername;
+					}
+				}
+				return $content;
+			break;
+
+			case 'timeslots':
+				foreach(explode(",",$this->internal['currentRow'][$fN]) as $k){
+					$data = $this->pi_getRecord('tx_wseevents_timeslots',$k);
+				    $timeslotname = $data['name'];
+					if (isset($content)) {
+						$content .= '<br />'.$timeslotname;
+					} else {
+						$content = $timeslotname;
 					}
 				}
 				return $content;

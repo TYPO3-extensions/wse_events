@@ -12,8 +12,10 @@ $LOCAL_LANG = Array (
 		'tx_wseevents_sessions.listFieldHeader_speaker' => 'Speaker',
 		'tx_wseevents_sessions.listFieldHeader_room' => 'Room',
 		'tx_wseevents_sessions.listFieldHeader_teaser' => 'Teaser',
+		'tx_wseevents_sessions.listFieldHeader_timeslots' => 'Timeslots',
 		'tx_wseevents_sessions.listFieldHeader_description' => 'Description',
 		'tx_wseevents_speakers.listFieldHeader_email' => 'E-Mail',
+		'tx_wseevents_speakers.listFieldHeader_info' => 'Information',
 		'back' => 'Back',	
 	),
 	'de' => Array (

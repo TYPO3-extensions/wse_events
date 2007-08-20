@@ -27,7 +27,7 @@ $TCA["tx_wseevents_events"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_events.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, location, begin, end",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, comment, location, begin, end",
 	)
 );
 
@@ -56,7 +56,7 @@ $TCA["tx_wseevents_locations"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_locations.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, comment",
 	)
 );
 
@@ -85,7 +85,7 @@ $TCA["tx_wseevents_rooms"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_rooms.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, seats, location",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, comment, seats, location",
 	)
 );
 
@@ -115,7 +115,7 @@ $TCA["tx_wseevents_timeslots"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_timeslots.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, event, room, begin, end",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, comment, event, room, begin, end",
 	),
 );
 
@@ -144,7 +144,7 @@ $TCA["tx_wseevents_sessions"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_sessions.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, event, name, speaker, timeslots, categorie, number, teaser, description",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, event, name, comment, speaker, timeslots, categorie, number, teaser, description",
 	)
 );
 
@@ -164,7 +164,7 @@ $TCA["tx_wseevents_speakers"] = Array (
 		"languageField" => "sys_language_uid",	
 		"transOrigPointerField" => "l18n_parent",	
 		"transOrigDiffSourceField" => "l18n_diffsource",	
-		"default_sortby" => "ORDER BY crdate",	
+		"default_sortby" => "ORDER BY name",	
 		"delete" => "deleted",	
 		"enablecolumns" => Array (		
 			"disabled" => "hidden",
@@ -173,7 +173,7 @@ $TCA["tx_wseevents_speakers"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_speakers.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, email",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, firstname, comment, email, info",
 	)
 );
 
@@ -202,7 +202,7 @@ $TCA["tx_wseevents_categories"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_categories.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, shortkey",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, comment, shortkey",
 	)
 );
 
