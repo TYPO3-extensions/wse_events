@@ -47,7 +47,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		$sDef = current($piFlexForm['data']);       
 		$lDef = array_keys($sDef);
-		
+
 //		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);	
 		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[0]);
 		$conf['pidList'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
@@ -56,10 +56,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$conf['recursive'] = $this->cObj->data['recursive'];
 				$conf['singleSession'] = $this->pi_getFFvalue($piFlexForm, 'singleSession', 'display');
 				$conf['singleSpeaker'] = $this->pi_getFFvalue($piFlexForm, 'singleSpeaker', 'display');
-				$conf['fieldList'] = $this->pi_getFFvalue($piFlexForm, 'fieldList', 'display');
-				if ($conf['fieldList']=='') { $conf['fieldList'] = 'number,name,speaker,timeslots'; }
 				$conf['sorting'] = $this->pi_getFFvalue($piFlexForm, 'sorting', 'display');
 				if ($conf['sorting']=='') { $conf['sorting'] = 'name:0'; }
+				$conf['lastnameFirst'] = $this->pi_getFFvalue($piFlexForm, 'lastnameFirst', 'display');
 				return $this->pi_wrapInBaseClass($this->listSessionView($content,$conf));
 			break;
 			case 'sessiondetail':
@@ -120,18 +119,66 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		// Make listing query, pass query to SQL database:
 		$res = $this->pi_exec_query($this->internal['currentTable'],0,$where);
 
-		// Put the whole list together:
-		$fullTable='';	// Clear var;
-#		$fullTable.=t3lib_div::view_array($this->piVars);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
-#		$fullTable.=t3lib_div::view_array($this->conf);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
+		# Check if template file is set, if not use the default template
+		if (!isset($conf['templateFile'])) {
+			$templateFile = 'EXT:wse_events/template.html';
+		} else {
+			$templateFile = $conf['templateFile'];
+		}
+		# Get the template
+		$this->templateCode = $this->cObj->fileResource($templateFile);
 		
-//		$fullTable.='Index=['.$index.']<br><br>';
+		# Get the parts out of the template
+		$template['total'] = $this->cObj->getSubpart($this->templateCode,'###SESSIONLIST###');
+		$template['singlerow'] = $this->cObj->getSubpart($template['total'],'###SINGLEROW###');
+		$template['header'] = $this->cObj->getSubpart($template['singlerow'],'###HEADER###');
+		$template['row'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM###');
+		$template['row_alt'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM_ALT###');	
 
-		// Adds the whole list table
-		$fullTable.=$this->pi_list_makelist($res);
+		// Put the whole list together:
+		$content_item = '';	// Clear var;
 
-		// Returns the content from the plugin.
-		return $fullTable;
+		# Get the column names
+		$markerArray['###NUMBER###'] = $this->getFieldHeader('number');
+		$markerArray['###NAME###'] = $this->getFieldHeader('name');
+		$markerArray['###SPEAKER###'] = $this->getFieldHeader('speaker');
+		$markerArray['###ROOM###'] = $this->getFieldHeader('room');
+		$markerArray['###TIMESLOTS###'] = $this->getFieldHeader('timeslots');
+		$content_item .= $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray);
+
+		$switch_row = 0;
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$this->internal['currentRow'] = $row;
+			if (isset($this->conf['singleSession'])) {
+			    $label = $this->getFieldContent('name');  // the link text
+			    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
+			    $overrulePIvars = array('showUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
+			    $clearAnyway=1;    // the current values of piVars will NOT be preserved
+			    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+			    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+			} else {
+				$sessionname = $this->getFieldContent('name');
+			}
+
+			# Build content from template + array
+			$markerArray['###NUMBER###'] = $this->getFieldContent('number');
+			$markerArray['###TEASER###'] = $this->getFieldContent('teaser');
+			$markerArray['###NAME###'] = $sessionname;
+			$markerArray['###SPEAKER###'] = $this->getFieldContent('speaker');
+			$markerArray['###ROOM###'] = $this->getFieldContent('room');
+			$markerArray['###TIMESLOTS###'] = $this->getFieldContent('timeslots');
+
+			$switch_row = $switch_row ^ 1;
+			if($switch_row) {
+				$content_item .= $this->cObj->substituteMarkerArrayCached($template['row'], $markerArray);
+			} else {
+				$content_item .= $this->cObj->substituteMarkerArrayCached($template['row_alt'], $markerArray);
+			}
+		}   
+		$subpartArray['###SINGLEROW###'] = $content_item; 
+
+		$content = $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subpartArray);
+		return $content;
 	}
 
 	/**
@@ -143,7 +190,19 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->pi_loadLL();
 		
 		$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'],$this->piVars['showUid']);
-	
+
+		# Check if template file is set, if not use the default template
+		if (!isset($conf['templateFile'])) {
+			$templateFile = 'EXT:wse_events/template.html';
+		} else {
+			$templateFile = $conf['templateFile'];
+		}
+		# Get the template
+		$this->templateCode = $this->cObj->fileResource($templateFile);
+		
+		# Get the parts out of the template
+		$template['total'] = $this->cObj->getSubpart($this->templateCode,'###SESSIONVIEW###');
+		
 		// This sets the title of the page for use in indexed search results:
 		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
 
@@ -154,30 +213,20 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$altPageId=$this->piVars['backUid'];      // ID of the view page
 		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
 		
-		$content='<div'.$this->pi_classParam('singleView').'>
-			<H2>'.$this->getFieldContent('name').'</H2>
-			<table>
-				<tr>
-					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('teaser').':</p></td>
-					<td valign="top"><p>'.$this->getFieldContent('teaser').'</p></td>
-				</tr>
-				<tr>
-					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('speaker').':</p></td>
-					<td valign="top"><p>'.$this->getFieldContent('speaker').'</p></td>
-				</tr>
-				<tr>
-					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('timeslots').':</p></td>
-					<td valign="top"><p>'.$this->getFieldContent('timeslots').'</p></td>
-				</tr>
-				<tr>
-					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('description').':</p></td>
-					<td valign="top"><p>'.$this->getFieldContent('description').'</p></td>
-				</tr>
-			</table>
-		<p>'.$backlink.'</p></div>'.
-		$this->pi_getEditPanel();
+		$markerArray['###TITLE###'] = $this->getFieldContent('name');
+		$markerArray['###TEASERNAME###'] = $this->getFieldHeader('teaser');
+		$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
+		$markerArray['###SPEAKERNAME###'] = $this->getFieldHeader('speaker');
+		$markerArray['###SPEAKERDATA###'] = $this->getFieldContent('speaker');
+		$markerArray['###TIMESLOTSNAME###'] = $this->getFieldHeader('timeslots');
+		$markerArray['###TIMESLOTSDATA###'] = $this->getFieldContent('timeslots');
+		$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
+		$markerArray['###DESCRIPTIONDATA###'] = $this->getFieldContent('description');
+		$markerArray['###BACKLINK###'] = $backlink;
+		
+#		$this->pi_getEditPanel();
 	
-		return $content;
+		return $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray);;
 	}
 
 	/**
@@ -190,6 +239,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		
 		$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'],$this->piVars['showUid']);
 	
+		# Check if template file is set, if not use the default template
+		if (!isset($conf['templateFile'])) {
+			$templateFile = 'EXT:wse_events/template.html';
+		} else {
+			$templateFile = $conf['templateFile'];
+		}
+		# Get the template
+		$this->templateCode = $this->cObj->fileResource($templateFile);
+		
+		# Get the parts out of the template
+		$template['total'] = $this->cObj->getSubpart($this->templateCode,'###SPEAKERVIEW###');
+
 		// This sets the title of the page for use in indexed search results:
 		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
 
@@ -200,91 +261,16 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$altPageId=$this->piVars['backUid'];      // ID of the view page
 		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
 		
-		$content='<div'.$this->pi_classParam('singleView').'>
-			<H2>'.$this->getFieldContent('name').'</H2>
-			<table>
-				<tr>
-					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('email').':</p></td>
-					<td valign="top"><p>'.$this->getFieldContent('email').'</p></td>
-				</tr>
-				<tr>
-					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('info').':</p></td>
-					<td valign="top"><p>'.$this->getFieldContent('info').'</p></td>
-				</tr>
-			</table>
-		<p>'.$backlink.'</p></div>'.
-		$this->pi_getEditPanel();
+		$markerArray['###NAME###'] = $this->getFieldContent('name');
+		$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
+		$markerArray['###EMAILDATA###'] = $this->getFieldContent('email');
+		$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
+		$markerArray['###INFODATA###'] = $this->getFieldContent('info');
+		$markerArray['###BACKLINK###'] = $backlink;
+		
+#		$this->pi_getEditPanel();
 	
-		return $content;
-	}
-
-	/**
-	 * Display one record of session data
-	 */
-	function pi_list_row($c)	{
-		$editPanel = $this->pi_getEditPanel();
-		if ($editPanel)	$editPanel='<TD>'.$editPanel.'</TD>';
-
-		if (isset($this->conf['singleSession'])) {
-		    $label = $this->getFieldContent('name');  // the link text
-		    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
-		    $overrulePIvars = array('showUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
-		    $clearAnyway=1;    // the current values of piVars will NOT be preserved
-		    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
-		    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
-		} else {
-			$sessionname = $this->getFieldContent('name');
-		}
-		$thisrow ='<tr'.($c%2 ? $this->pi_classParam('listrow-odd') : '').'>';
-		foreach(explode(',',$this->conf['fieldList']) as $rowfield){
-			switch ((string)$rowfield) {
-				case 'number': 
-					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('number').'</p></td>';
-				break;
-				case 'name': 
-					$thisrow .= '<td valign="top" title="'.$this->getFieldContent('teaser').'"><p>'.$sessionname.'</p></td>';
-				break;
-				case 'speaker': 
-					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('speaker').'</p></td>';
-				break;
-				case 'room': 
-					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('room').'</p></td>';
-				break;
-				case 'timeslots': 
-					$thisrow .= '<td valign="top"><p>'.$this->getFieldContent('timeslots').'</p></td>';
-				break;
-			}
-		}
-		$thisrow .= '</tr>';
-		return $thisrow;
-	}
-
-	/**
-	 * Display header for session list
-	 */
-	function pi_list_header()	{
-		$thisrow ='<tr'.$this->pi_classParam('listrow-header').'>';
-		foreach(explode(',',$this->conf['fieldList']) as $rowfield){
-			switch ((string)$rowfield) {
-				case 'number': 
-					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('number').'</p></td>';
-				break;
-				case 'name': 
-					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('name').'</p></td>';
-				break;
-				case 'speaker': 
-					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('speaker').'</p></td>';
-				break;
-				case 'room': 
-					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('room').'</p></td>';
-				break;
-				case 'timeslots': 
-					$thisrow .= '<td nowrap><p>'.$this->getFieldHeader('timeslots').'</p></td>';
-				break;
-			}
-		}
-		$thisrow .= '</tr>';
-		return $thisrow;
+		return $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray);;
 	}
 
 	/**
@@ -305,10 +291,21 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'name':
 				switch ($this->internal['currentTable']) {
 					case 'tx_wseevents_sessions':
-						return $this->getTranslatedField('tx_wseevents_sessions', 11, $fN);
+						return $this->getTranslatedField('tx_wseevents_sessions', 11, 'name');
+					break;
+					case 'tx_wseevents_speakers':
+						if (isset($this->internal['currentRow']['firstname'])) {
+							if (isset($this->conf['lastnameFirst'])) {
+								return $this->internal['currentRow']['name'].', '.$this->internal['currentRow']['firstname'];
+							} else {
+								return $this->internal['currentRow']['firstname'].' '.$this->internal['currentRow']['name'];
+							}
+						} else {
+							return $this->internal['currentRow']['name'];
+						}
 					break;
 					default:
-						return $this->internal['currentRow'][$fN];
+						return $this->internal['currentRow']['name'];
 					break;
 				}
 			break;
@@ -344,8 +341,19 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'speaker':
 				foreach(explode(',',$this->internal['currentRow'][$fN]) as $k){
 					$data = $this->pi_getRecord('tx_wseevents_speakers',$k);
+
+					// Get the name and firstname
+					if (isset($data['firstname'])) {
+						if (isset($this->conf['lastnameFirst'])) {
+							$label =  $data['name'].', '.$data['firstname'];
+						} else {
+							$label =  $data['firstname'].' '.$data['name'];
+						}
+					} else {
+						$label =  $data['name'];
+					}
+
 					if (isset($this->conf['singleSpeaker'])) {
-					    $label = $data['name'];  // the link text
 					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 					    $overrulePIvars = array('showUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id);
 					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
@@ -355,7 +363,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$speakername = '';
 						}
 					} else {
-					    $speakername = $data['name'];
+					    $speakername = $label;
 					}
 					if (isset($content)) {
 						$content .= '<br />'.$speakername;
@@ -383,6 +391,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$content = $this->pi_getLL('tx_wseevents_sessions.notimeslots','[not yet sheduled]');
 				}
 				return $content;
+			break;
+
+			case 'info':
+				switch ($this->internal['currentTable']) {
+					case 'tx_wseevents_speakers':
+						$data = $this->getTranslatedField('tx_wseevents_speakers', 14, $fN);
+						return $this->pi_RTEcssText($data);
+					break;
+					default:
+						return $this->internal['currentRow'][$fN];
+					break;
+				}
 			break;
 
 			default:

@@ -132,23 +132,23 @@
 							</config>
 					   </TCEforms>
 					</singleSpeaker>
-					<fieldList>
+					<lastnameFirst>
 						<TCEforms>
 							<exclude>1</exclude>
-							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.fieldList</label>
+							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.lastnameFirst</label>
 							<config>
-								<type>input</type>
-								<size>45</size>
-							</config>
+								<type>check</type>
+								<default>0</default>
+ 							</config>
 					   </TCEforms>
-					</fieldList>
+					</lastnameFirst>
 					<sorting>
 						<TCEforms>
 							<exclude>1</exclude>
 							<label>LLL:EXT:wse_events/locallang_db.php:tx_wseevents.pi_flexform.sorting</label>
 							<config>
 								<type>input</type>
-								<size>45</size>
+								<size>20</size>
 							</config>
 					   </TCEforms>
 					</sorting>

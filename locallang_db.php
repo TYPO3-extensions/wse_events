@@ -58,7 +58,7 @@ $LOCAL_LANG = Array (
 		'tx_wseevents.pi_flexform.eventStorage' => 'Event storage',
 		'tx_wseevents.pi_flexform.singleSession' => 'Session single view page',
 		'tx_wseevents.pi_flexform.singleSpeaker' => 'Speaker single view page',
-		'tx_wseevents.pi_flexform.fieldList' => 'List of fields to display',
+		'tx_wseevents.pi_flexform.lastnameFirst' => 'Lastname, Firstname',
 		'tx_wseevents.pi_flexform.sorting' => 'Field to be sorted',
 	),
 	'de' => Array (
@@ -113,7 +113,7 @@ $LOCAL_LANG = Array (
 		'tx_wseevents.pi_flexform.eventStorage' => 'Veranstaltungsablage',
 		'tx_wseevents.pi_flexform.singleSession' => 'Seite mit Vortrags Einzelheiten',
 		'tx_wseevents.pi_flexform.singleSpeaker' => 'Seite mit Sprecher Einzelheiten',
-		'tx_wseevents.pi_flexform.fieldList' => 'Liste der anzuzeigenden Felder',
+		'tx_wseevents.pi_flexform.lastnameFirst' => 'Nachname, Vorname',
 		'tx_wseevents.pi_flexform.sorting' => 'Feld nach dem sotiert wird',
 	),
 	'fr' => Array (
