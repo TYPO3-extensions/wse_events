@@ -7,7 +7,7 @@
 
 $LOCAL_LANG = Array (
 	'default' => Array (
-		'listFieldHeader_categorie' => 'Categorie',
+		'listFieldHeader_number' => 'Session number',
 		'listFieldHeader_name' => 'Session name',
 		'listFieldHeader_speaker' => 'Speaker',
 		'listFieldHeader_room' => 'Room',

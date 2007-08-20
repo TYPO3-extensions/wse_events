@@ -48,6 +48,7 @@ $LOCAL_LANG = Array (
 	   'tt_content.pi_flexform.prepend_text' => 'Text to prepend errors with',
 		'wseevents.pi_flexform.dynListType' => 'Viewmode',
 		'wseevents.pi_flexform.eventStorage' => 'Event storage',
+		'wseevents.pi_flexform.singleSession' => 'Session single view page',
 	),
 	'de' => Array (
 		'tx_wseevents_events' => 'WSE Veranstaltungen',	

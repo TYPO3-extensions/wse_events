@@ -511,8 +511,8 @@ $TCA["tx_wseevents_sessions"] = Array (
 				"eval" => "int",
 				"checkbox" => "0",
 				"range" => Array (
-					"upper" => "1000",
-					"lower" => "10"
+					"upper" => "100",
+					"lower" => "1"
 				),
 				"default" => 0
 			)
