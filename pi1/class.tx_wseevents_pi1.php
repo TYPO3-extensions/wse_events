@@ -48,7 +48,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$sDef = current($piFlexForm['data']);       
 		$lDef = array_keys($sDef);
 		
-		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);	
+//		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);	
+		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[0]);
 		$conf['pidList'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
 		switch((string)$flexFormValuesArray['dynListType'])	{
 			case 'sessionlist':
@@ -79,7 +80,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $this->pi_wrapInBaseClass('Time slot list, not yet implemented');
 			break;
 			default:
-				return $this->pi_wrapInBaseClass('Not implemented: '.(string)$flexFormValuesArray['dynListType']);
+				return $this->pi_wrapInBaseClass('Not implemented: ['.(string)$flexFormValuesArray['dynListType'].']<br>Index=['.$index.']<br>');
 			break;
 		}
 	}
@@ -109,7 +110,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->internal['searchFieldList']='uid,name,categorie,number,speaker,room,timeslots,teaser';
 		$this->internal['orderByList']='name';
 
-	    $where = ' AND '.$this->internal['currentTable'].'.sys_language_uid = '.$index;
+//	    $where = ' AND '.$this->internal['currentTable'].'.sys_language_uid = '.$index;
+	    $where = ' AND '.$this->internal['currentTable'].'.sys_language_uid = 0';
 
 		// Get number of records:
 		$res = $this->pi_exec_query($this->internal['currentTable'],1,$where);
@@ -123,6 +125,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 #		$fullTable.=t3lib_div::view_array($this->piVars);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
 #		$fullTable.=t3lib_div::view_array($this->conf);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
 		
+//		$fullTable.='Index=['.$index.']<br><br>';
+
 		// Adds the whole list table
 		$fullTable.=$this->pi_list_makelist($res);
 
@@ -298,6 +302,40 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $datacat['shortkey'].sprintf ('%02d', $datanum);
 			break;
 
+			case 'name':
+				switch ($this->internal['currentTable']) {
+					case 'tx_wseevents_sessions':
+						return $this->getTranslatedField('tx_wseevents_sessions', 11, $fN);
+					break;
+					default:
+						return $this->internal['currentRow'][$fN];
+					break;
+				}
+			break;
+
+			case 'teaser':
+				switch ($this->internal['currentTable']) {
+					case 'tx_wseevents_sessions':
+						return $this->getTranslatedField('tx_wseevents_sessions', 17, $fN);
+					break;
+					default:
+						return $this->internal['currentRow'][$fN];
+					break;
+				}
+			break;
+
+			case 'description':
+				switch ($this->internal['currentTable']) {
+					case 'tx_wseevents_sessions':
+						$data = $this->getTranslatedField('tx_wseevents_sessions', 18, $fN);
+						return $this->pi_RTEcssText($data);
+					break;
+					default:
+						return $this->internal['currentRow'][$fN];
+					break;
+				}
+			break;
+
 			case 'room':
 				$data = $this->pi_getRecord('tx_wseevents_rooms',$this->internal['currentRow'][$fN]);
 				return $data['name'];
@@ -313,6 +351,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 					    $altPageId=$this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
 					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+						if (empty($label)) {
+							$speakername = '';
+						}
 					} else {
 					    $speakername = $data['name'];
 					}
@@ -321,6 +362,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					} else {
 						$content = $speakername;
 					}
+				}
+				if (empty($content)) {
+					$content = $this->pi_getLL('tx_wseevents_sessions.nospeakers','[no speaker assigned]');
 				}
 				return $content;
 			break;
@@ -347,6 +391,32 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 	}
 
+	/**
+	*
+	*/
+	function getTranslatedField($dbname, $fieldid, $fN) {
+		$index = $GLOBALS['TSFE']->sys_language_uid;
+		if ($index<>0) {
+			// for the name of a session, check if a translation is there
+			$where = 'AND l18n_parent='.$this->internal['currentRow']['uid'].' AND sys_language_uid='.$index;
+			$res = $this->pi_exec_query($dbname,1,$where);
+			list($datacount) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
+			if ($datacount==1) {
+				// a translation is there, get the translated field content
+				$res = $this->pi_exec_query($dbname,0,$where);
+				$datacat = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
+//			return t3lib_div::view_array($datacat);
+				return $datacat[$fieldid];
+			} else {
+				// no translation get the field content from the default record
+				return $this->internal['currentRow'][$fN];
+			}
+		} else {
+			//show default language
+			return $this->internal['currentRow'][$fN];
+		}
+	}
+	
 	/**
 	 * Get label of one field
 	 */
