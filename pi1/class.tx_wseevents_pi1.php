@@ -47,7 +47,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		$sDef = current($piFlexForm['data']);       
 		$lDef = array_keys($sDef);
-
+		
 		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);	
 		$conf['pidList'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
 		switch((string)$flexFormValuesArray['dynListType'])	{
@@ -91,6 +91,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();		// Loading the LOCAL_LANG values
+		$index = $GLOBALS['TSFE']->sys_language_uid;
 		
 		$lConf = $this->conf['listView.'];	// Local settings for the listView function
 	
@@ -108,12 +109,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->internal['searchFieldList']='uid,name,categorie,number,speaker,room,timeslots,teaser';
 		$this->internal['orderByList']='name';
 
+	    $where = ' AND '.$this->internal['currentTable'].'.sys_language_uid = '.$index;
+
 		// Get number of records:
-		$res = $this->pi_exec_query($this->internal['currentTable'],1);
+		$res = $this->pi_exec_query($this->internal['currentTable'],1,$where);
 		list($this->internal['res_count']) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
 
 		// Make listing query, pass query to SQL database:
-		$res = $this->pi_exec_query($this->internal['currentTable']);
+		$res = $this->pi_exec_query($this->internal['currentTable'],0,$where);
 
 		// Put the whole list together:
 		$fullTable='';	// Clear var;
@@ -331,6 +334,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					} else {
 						$content = $timeslotname;
 					}
+				}
+				if (empty($content)) {
+					$content = $this->pi_getLL('tx_wseevents_sessions.notimeslots','[not yet sheduled]');
 				}
 				return $content;
 			break;
