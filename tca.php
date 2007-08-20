@@ -315,6 +315,15 @@ $TCA["tx_wseevents_timeslots"] = Array (
 				"default" => "0"
 			)
 		),
+		"name" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.name",		
+			"config" => Array (
+				"type" => "input",	
+				"size" => "30",	
+				"eval" => "required",
+			)
+		),
 		"event" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.event",		
@@ -327,13 +336,16 @@ $TCA["tx_wseevents_timeslots"] = Array (
 				"maxitems" => 1,
 			)
 		),
-		"name" => Array (		
+		"room" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.name",		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.room",		
 			"config" => Array (
-				"type" => "input",	
-				"size" => "30",	
-				"eval" => "required",
+				"type" => "select",	
+				"foreign_table" => "tx_wseevents_rooms",	
+				"foreign_table_where" => "ORDER BY tx_wseevents_rooms.uid",	
+				"size" => 1,	
+				"minitems" => 0,
+				"maxitems" => 1,
 			)
 		),
 		"begin" => Array (		
@@ -360,24 +372,9 @@ $TCA["tx_wseevents_timeslots"] = Array (
 				"default" => "0"
 			)
 		),
-		"sessions" => Array (		
-			"exclude" => 1,		
-			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.sessions",		
-			"config" => Array (
-				"type" => "select",	
-				'items' => Array (
-					Array("LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.nosessions", '')
-				),
-				"foreign_table" => "tx_wseevents_sessions",	
-				"foreign_table_where" => "AND tx_wseevents_sessions.event=###REC_FIELD_event### ORDER BY tx_wseevents_sessions.name",	
-				"size" => 1,	
-				"minitems" => 0,
-				"maxitems" => 1,
-			)
-		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, begin, end, sessions")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, event, room, begin, end")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -463,18 +460,6 @@ $TCA["tx_wseevents_sessions"] = Array (
 				"size" => 4,	
 				"minitems" => 0,
 				"maxitems" => 4,
-			)
-		),
-		"room" => Array (		
-			"exclude" => 1,		
-			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.room",		
-			"config" => Array (
-				"type" => "select",	
-				"foreign_table" => "tx_wseevents_rooms",	
-				"foreign_table_where" => "ORDER BY tx_wseevents_rooms.uid",	
-				"size" => 1,	
-				"minitems" => 0,
-				"maxitems" => 1,
 			)
 		),
 		"timeslots" => Array (		

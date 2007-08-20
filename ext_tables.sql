@@ -81,11 +81,11 @@ CREATE TABLE tx_wseevents_timeslots (
 	l18n_diffsource mediumblob NOT NULL,
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
-	event int(11) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	event int(11) DEFAULT '0' NOT NULL,
 	begin int(11) DEFAULT '0' NOT NULL,
 	end int(11) DEFAULT '0' NOT NULL,
-	sessions blob NOT NULL,
+	room int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -110,7 +110,6 @@ CREATE TABLE tx_wseevents_sessions (
 	event int(11) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
 	speaker blob NOT NULL,
-	room int(11) DEFAULT '0' NOT NULL,
 	timeslots blob NOT NULL,
 	categorie int(11) DEFAULT '0' NOT NULL,
 	number int(11) DEFAULT '0' NOT NULL,

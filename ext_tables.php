@@ -115,7 +115,7 @@ $TCA["tx_wseevents_timeslots"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_timeslots.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, event, name, begin, end, sessions",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, event, room, begin, end",
 	),
 );
 
@@ -144,7 +144,7 @@ $TCA["tx_wseevents_sessions"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_sessions.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, event, name, speaker, room, timeslots, categorie, number, teaser, description",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, event, name, speaker, timeslots, categorie, number, teaser, description",
 	)
 );
 
