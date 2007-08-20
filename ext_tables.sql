@@ -151,6 +151,7 @@ CREATE TABLE tx_wseevents_speakers (
 	company tinytext NOT NULL,
 	companylink tinytext NOT NULL,
 	info text NOT NULL,
+	image blob NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)

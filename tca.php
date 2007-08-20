@@ -745,9 +745,24 @@ $TCA['tx_wseevents_speakers'] = Array (
 				),
 			)
 		),
+		'image' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.image',
+			'config' => Array (
+				'type' => 'group',
+				'internal_type' => 'file',
+				'allowed' => $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'],
+				'max_size' => 500,
+				'uploadfolder' => 'uploads/tx_wseevents',
+				'show_thumbs' => 1,
+				'size' => 1,
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, company, companylink, email, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, company, companylink, email, image, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')

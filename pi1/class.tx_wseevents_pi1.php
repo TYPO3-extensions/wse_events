@@ -399,6 +399,13 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		
 		$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'],$this->piVars['showSpeakerUid']);
 	
+		# Check if upload directory is set, if not use the default directory
+		if (!isset($conf['uploadDirectory'])) {
+			$uploadDirectory = 'uploads/tx_wseevents';
+		} else {
+			$uploadDirectory = $conf['uploadDirectory'];
+		}
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/template.html';
@@ -429,6 +436,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###COMPANYLINK###'] = $this->getFieldContent('companylink');
 		$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
 		$markerArray['###INFODATA###'] = $this->getFieldContent('info');
+		$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
+		$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$this->getFieldContent('image');
 		$markerArray['###BACKLINK###'] = $backlink;
 		
 #		$this->pi_getEditPanel();
