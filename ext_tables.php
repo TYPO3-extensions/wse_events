@@ -97,6 +97,7 @@ t3lib_extMgm::addToInsertRecords("tx_wseevents_timeslots");
 
 $TCA["tx_wseevents_timeslots"] = Array (
 	"ctrl" => Array (
+		"requestUpdate" => "event",
 		"title" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots",		
 		"label" => "name",	
 		"tstamp" => "tstamp",
@@ -115,7 +116,7 @@ $TCA["tx_wseevents_timeslots"] = Array (
 	),
 	"feInterface" => Array (
 		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, event, name, begin, end, sessions",
-	)
+	),
 );
 
 

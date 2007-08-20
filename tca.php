@@ -272,7 +272,7 @@ $TCA["tx_wseevents_rooms"] = Array (
 $TCA["tx_wseevents_timeslots"] = Array (
 	"ctrl" => $TCA["tx_wseevents_timeslots"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,event,name,begin,end"
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,event,name,begin,end,sessions"
 	),
 	"feInterface" => $TCA["tx_wseevents_timeslots"]["feInterface"],
 	"columns" => Array (
@@ -321,7 +321,7 @@ $TCA["tx_wseevents_timeslots"] = Array (
 			"config" => Array (
 				"type" => "select",	
 				"foreign_table" => "tx_wseevents_events",	
-				"foreign_table_where" => "ORDER BY tx_wseevents_events.uid",	
+				"foreign_table_where" => "AND tx_wseevents_events.pid=###CURRENT_PID### ORDER BY tx_wseevents_events.uid",	
 				"size" => 1,	
 				"minitems" => 0,
 				"maxitems" => 1,
@@ -365,8 +365,11 @@ $TCA["tx_wseevents_timeslots"] = Array (
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.sessions",		
 			"config" => Array (
 				"type" => "select",	
+				'items' => Array (
+					Array("LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.nosessions", '')
+				),
 				"foreign_table" => "tx_wseevents_sessions",	
-				"foreign_table_where" => "ORDER BY tx_wseevents_sessions.name",	
+				"foreign_table_where" => "AND tx_wseevents_sessions.event=###REC_FIELD_event### ORDER BY tx_wseevents_sessions.name",	
 				"size" => 1,	
 				"minitems" => 0,
 				"maxitems" => 1,
@@ -435,7 +438,7 @@ $TCA["tx_wseevents_sessions"] = Array (
 			"config" => Array (
 				"type" => "select",	
 				"foreign_table" => "tx_wseevents_events",	
-				"foreign_table_where" => "ORDER BY tx_wseevents_events.uid",	
+				"foreign_table_where" => "AND tx_wseevents_events.pid=###CURRENT_PID### ORDER BY tx_wseevents_events.uid",	
 				"size" => 1,	
 				"minitems" => 0,
 				"maxitems" => 1,
