@@ -149,7 +149,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * [Put your description here]
 	 */
-	function listView($content,$conf)	{
+	function old_listView($content,$conf)	{
 		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();		// Loading the LOCAL_LANG values
@@ -277,6 +277,28 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $this->pi_list_linkSingle($this->internal['currentRow'][$fN],$this->internal['currentRow']['uid'],1);	// The "1" means that the display of single items is CACHED! Set to zero to disable caching.
 			break;
 			
+			case 'categorie':
+				$data = $this->pi_getRecord('tx_wseevents_categories',$this->internal['currentRow'][$fN]);
+				return $data['name'];
+			break;
+
+			case 'room':
+				$data = $this->pi_getRecord('tx_wseevents_rooms',$this->internal['currentRow'][$fN]);
+				return $data['name'];
+			break;
+
+			case 'speaker':
+				foreach(explode(",",$this->internal['currentRow'][$fN]) as $k){
+					$data = $this->pi_getRecord('tx_wseevents_speakers',$k);
+					if (isset($content)) {
+						$content .= '<br />'.$data['name'];
+					} else {
+						$content = $data['name'];
+					}
+				}
+				return $content;
+			break;
+
 			default:
 				return $this->internal['currentRow'][$fN];
 			break;

@@ -7,28 +7,16 @@
 
 $LOCAL_LANG = Array (
 	'default' => Array (
-		'listFieldHeader_name' => 'Event name',	
-		'listFieldHeader_location' => 'Location',	
-		'list_mode_1' => 'Mode 1',	
-		'list_mode_2' => 'Mode 2',	
-		'list_mode_3' => 'Mode 3',	
+		'listFieldHeader_categorie' => 'Categorie',
+		'listFieldHeader_name' => 'Session name',
+		'listFieldHeader_speaker' => 'Speaker',
+		'listFieldHeader_room' => 'Room',
 		'back' => 'Back',	
 		'pi_list_browseresults_prev' => '< Previous',	
 		'pi_list_browseresults_page' => 'Page',	
 		'pi_list_browseresults_next' => 'Next >',	
 		'pi_list_browseresults_displays' => 'Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>',	
 		'pi_list_searchBox_search' => 'Search',	
-	),
-	'dk' => Array (
-		'list_mode_1' => 'Visning 1',	
-		'list_mode_2' => 'Visning 2',	
-		'list_mode_3' => 'Visning 3',	
-		'back' => 'Tilbage',	
-		'pi_list_browseresults_prev' => '< Forrige',	
-		'pi_list_browseresults_page' => 'Side',	
-		'pi_list_browseresults_next' => 'Næste >',	
-		'pi_list_browseresults_displays' => 'Viser resultaterne ###SPAN_BEGIN###%s til %s</span> ud af ###SPAN_BEGIN###%s</span>',	
-		'pi_list_searchBox_search' => 'Søg',	
 	),
 	'de' => Array (
 	),
