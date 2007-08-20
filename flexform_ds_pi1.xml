@@ -77,7 +77,28 @@
 							<label>LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType</label>
 							<config>
 								<type>select</type>
-								<itemsProcFunc>tx_wseevents_addFieldsToFlexForm->addFields</itemsProcFunc>
+								<items type="array">
+									<numIndex index="0" type="array">
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.0</numIndex>
+										<numIndex index="1">sessionlist</numIndex>
+									</numIndex>
+									<numIndex index="1" type="array">
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.1</numIndex>
+										<numIndex index="1">sessiondetail</numIndex>
+									</numIndex>
+									<numIndex index="2" type="array">
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.2</numIndex>
+										<numIndex index="1">speakerlist</numIndex>
+									</numIndex>
+									<numIndex index="3" type="array">
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.3</numIndex>
+										<numIndex index="1">speakerdetail</numIndex>
+									</numIndex>
+									<numIndex index="4" type="array">
+										<numIndex index="0">LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.dynListType.I.4</numIndex>
+										<numIndex index="1">timeslots</numIndex>
+									</numIndex>
+								</items>
 							</config>
 						</TCEforms>
 					</dynListType>
@@ -96,35 +117,23 @@
 							</config>
 					   </TCEforms>
 					</singleSession>
+					<singleSpeaker>
+						<TCEforms>
+							<exclude>1</exclude>
+							<label>LLL:EXT:wse_events/locallang_db.php:wseevents.pi_flexform.singleSpeaker</label>
+							<config>
+								<type>group</type>
+								<internal_type>db</internal_type>
+								<allowed>pages</allowed>
+								<size>1</size>
+								<maxitems>1</maxitems>
+								<minitems>0</minitems>
+								<show_thumbs>1</show_thumbs>
+							</config>
+					   </TCEforms>
+					</singleSpeaker>
 				</el>
 			</ROOT>
 		</display>
-		<error>
-			<ROOT>
-				<TCEforms>
-					<sheetTitle>LLL:EXT:wse_events/locallang_db.php:tt_content.pi_flexform.sheet_error</sheetTitle>
-				</TCEforms>
-				<type>array</type>
-				<el>
-					<show_errors>
-						<TCEforms>
-							<label>LLL:EXT:wse_events/locallang_db.php:tt_content.pi_flexform.show_errors</label>
-							<config>
-								<type>check</type>
-							</config>
-						</TCEforms>
-					</show_errors>
-					<prepend_text>
-						<TCEforms>
-							<label>LLL:EXT:wse_events/locallang_db.php:tt_content.pi_flexform.prepend_text</label>
-							<config>
-								<type>input</type>
-								<size>30</size>
-							</config>
-						</TCEforms>
-					</prepend_text>       
-				</el>
-			</ROOT>
-		</error>
 	</sheets>
 </T3DataStructure>

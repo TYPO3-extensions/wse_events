@@ -14,6 +14,8 @@ CREATE TABLE tx_wseevents_events (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
 	location int(11) DEFAULT '0' NOT NULL,
+	begin int(11) DEFAULT '0' NOT NULL,
+	end int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)

@@ -23,6 +23,7 @@
 ***************************************************************/
 /**
  * Plugin 'WSE Events' for the 'wse_events' extension.
+ * Displays session data as list and detail view
  *
  * @author	Michael Oehlhof <michael@oehlhof.de>
  */
@@ -37,7 +38,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	var $pi_checkCHash = TRUE;
 	
 	/**
-	 * [Put your description here]
+	 *Main function, decides in which form the data is displayed
 	 */
 	function main($content,$conf)	{
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
@@ -53,6 +54,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'sessionlist':
 				$conf['recursive'] = $this->cObj->data['recursive'];
 				$conf['singleSession'] = $this->pi_getFFvalue($piFlexForm, 'singleSession', 'display');
+				$conf['singleSpeaker'] = $this->pi_getFFvalue($piFlexForm, 'singleSpeaker', 'display');
 				return $this->pi_wrapInBaseClass($this->listSessionView($content,$conf));
 			break;
 			case 'sessiondetail':
@@ -64,6 +66,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'speakerlist':
 				return $this->pi_wrapInBaseClass('Speaker list');
 			break;
+			case 'speakerdetail':
+				$this->internal['currentTable'] = 'tx_wseevents_speakers';
+				$this->internal['currentRow']=$this->piVars['showUid'];
+				return $this->pi_wrapInBaseClass($this->singleSpeakerView($content,$conf));
+			break;
 			case 'timeslots':
 				return $this->pi_wrapInBaseClass('Time slot list');
 			break;
@@ -74,28 +81,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	}
 	
 	/**
-	 * [Put your description here]
-	 */
-	function main_old($content,$conf)	{
-		switch((string)$conf['CMD'])	{
-			case 'singleView':
-				list($t) = explode(':',$this->cObj->currentRecord);
-				$this->internal['currentTable']=$t;
-				$this->internal['currentRow']=$this->cObj->data;
-				return $this->pi_wrapInBaseClass($this->singleView($content,$conf));
-			break;
-			default:
-				if (strstr($this->cObj->currentRecord,'tt_content'))	{
-					$conf['pidList'] = $this->cObj->data['pages'];
-					$conf['recursive'] = $this->cObj->data['recursive'];
-				}
-				return $this->pi_wrapInBaseClass($this->listView($content,$conf));
-			break;
-		}
-	}
-	
-	/**
-	 * [Put your description here]
+	 * Display a list of sessions for the event that is set in the flex form settings
 	 */
 	function listSessionView($content,$conf)	{
 		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
@@ -107,91 +93,112 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		// Set table to session table
 		$this->internal['currentTable'] = 'tx_wseevents_sessions';
 		
-		if ($this->piVars['showUid'])	{	// If a single element should be displayed:
-			$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'],$this->piVars['showUid']);
-	
-			$content = $this->singleView($content,$conf);
-			return $content;
-		} else {
-			if (!isset($this->piVars['pointer']))	$this->piVars['pointer']=0;
-			if (!isset($this->piVars['mode']))	$this->piVars['mode']=1;
-	
-				// Initializing the query parameters:
-			list($this->internal['orderBy'],$this->internal['descFlag']) = explode(':',$this->piVars['sort']);
-			$this->internal['results_at_a_time']=t3lib_div::intInRange($lConf['results_at_a_time'],0,1000,3);		// Number of results to show in a listing.
-			$this->internal['maxPages']=t3lib_div::intInRange($lConf['maxPages'],0,1000,2);;		// The maximum number of "pages" in the browse-box: "Page 1", "Page 2", etc.
-			$this->internal['searchFieldList']='uid,name,categorie,number,speaker,room,timeslots,teaser';
-			$this->internal['orderByList']='name';
-	
-				// Get number of records:
-//			$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery("*",$this->internal['currentTable'],"deleted = 0 AND hidden = 0");
-			$res = $this->pi_exec_query($this->internal['currentTable'],1);
-			list($this->internal['res_count']) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
-	
-				// Make listing query, pass query to SQL database:
-			$res = $this->pi_exec_query($this->internal['currentTable']);
-	
-				// Put the whole list together:
-			$fullTable='';	// Clear var;
-		#	$fullTable.=t3lib_div::view_array($this->piVars);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
-	
-//			$fullTable.='<hr>';
-//			$fullTable.=t3lib_div::view_array($this->internal);
-//			$fullTable.=t3lib_div::view_array($this->conf);
-//			$fullTable.='<hr>';
-			
-				// Adds the whole list table
-			$fullTable.=$this->pi_list_makelist($res);
-	
-			// Adds the search box:
-//			$fullTable.=$this->pi_list_searchBox();
-	
-				// Adds the result browser:
-//			$fullTable.=$this->pi_list_browseresults();
-	
-				// Returns the content from the plugin.
-			return $fullTable;
-		}
+		if (!isset($this->piVars['pointer']))	$this->piVars['pointer']=0;
+		if (!isset($this->piVars['mode']))	$this->piVars['mode']=1;
+
+			// Initializing the query parameters:
+		list($this->internal['orderBy'],$this->internal['descFlag']) = explode(':',$this->piVars['sort']);
+		$this->internal['results_at_a_time']=t3lib_div::intInRange($lConf['results_at_a_time'],0,1000,3);		// Number of results to show in a listing.
+		$this->internal['maxPages']=t3lib_div::intInRange($lConf['maxPages'],0,1000,2);;		// The maximum number of "pages" in the browse-box: "Page 1", "Page 2", etc.
+		$this->internal['searchFieldList']='uid,name,categorie,number,speaker,room,timeslots,teaser';
+		$this->internal['orderByList']='name';
+
+		// Get number of records:
+		$res = $this->pi_exec_query($this->internal['currentTable'],1);
+		list($this->internal['res_count']) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
+
+		// Make listing query, pass query to SQL database:
+		$res = $this->pi_exec_query($this->internal['currentTable']);
+
+		// Put the whole list together:
+		$fullTable='';	// Clear var;
+	#	$fullTable.=t3lib_div::view_array($this->piVars);	// DEBUG: Output the content of $this->piVars for debug purposes. REMEMBER to comment out the IP-lock in the debug() function in t3lib/config_default.php if nothing happens when you un-comment this line!
+		
+		// Adds the whole list table
+		$fullTable.=$this->pi_list_makelist($res);
+
+		// Returns the content from the plugin.
+		return $fullTable;
 	}
+
 	/**
-	 * [Put your description here]
+	 * Display the details of a single session
 	 */
 	function singleSessionView($content,$conf)	{
 		$this->conf=$conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 		
+		$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'],$this->piVars['showUid']);
 	
 		// This sets the title of the page for use in indexed search results:
 		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
-	
+
+		// Link for back to list view
+		$label = $this->pi_getLL('back','Back');  // the link text
+		$overrulePIvars = '';
+		$clearAnyway=1;    // the current values of piVars will NOT be preserved
+		$altPageId=$this->piVars['backUid'];      // ID of the view page
+		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+		
 		$content='<div'.$this->pi_classParam('singleView').'>
-			<H2>Record "'.$this->internal['currentRow']['uid'].'" from table "'.$this->internal['currentTable'].'":</H2>
+			<H2>'.$this->getFieldContent('name').'</H2>
 			<table>
 				<tr>
-					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('name').'</p></td>
-					<td valign="top"><p>'.$this->getFieldContent('name').'</p></td>
+					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('teaser').':</p></td>
+					<td valign="top"><p>'.$this->getFieldContent('teaser').'</p></td>
 				</tr>
 				<tr>
-					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('location').'</p></td>
-					<td valign="top"><p>'.$this->getFieldContent('location').'</p></td>
+					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('speaker').':</p></td>
+					<td valign="top"><p>'.$this->getFieldContent('speaker').'</p></td>
 				</tr>
 				<tr>
-					<td nowrap'.$this->pi_classParam('singleView-HCell').'><p>Last updated:</p></td>
-					<td valign="top"><p>'.date('d-m-Y H:i',$this->internal['currentRow']['tstamp']).'</p></td>
-				</tr>
-				<tr>
-					<td nowrap'.$this->pi_classParam('singleView-HCell').'><p>Created:</p></td>
-					<td valign="top"><p>'.date('d-m-Y H:i',$this->internal['currentRow']['crdate']).'</p></td>
+					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('description').':</p></td>
+					<td valign="top"><p>'.$this->getFieldContent('description').'</p></td>
 				</tr>
 			</table>
-		<p>'.$this->pi_list_linkSingle($this->pi_getLL('back','Back'),0).'</p></div>'.
+		<p>'.$backlink.'</p></div>'.
 		$this->pi_getEditPanel();
 	
 		return $content;
 	}
+
 	/**
-	 * [Put your description here]
+	 * Display the details of a single speaker
+	 */
+	function singleSpeakerView($content,$conf)	{
+		$this->conf=$conf;
+		$this->pi_setPiVarDefaults();
+		$this->pi_loadLL();
+		
+		$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'],$this->piVars['showUid']);
+	
+		// This sets the title of the page for use in indexed search results:
+		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
+
+		// Link for back to list view
+		$label = $this->pi_getLL('back','Back');  // the link text
+		$overrulePIvars = '';
+		$clearAnyway=1;    // the current values of piVars will NOT be preserved
+		$altPageId=$this->piVars['backUid'];      // ID of the view page
+		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+		
+		$content='<div'.$this->pi_classParam('singleView').'>
+			<H2>'.$this->getFieldContent('name').'</H2>
+			<table>
+				<tr>
+					<td nowrap valign="top"'.$this->pi_classParam('singleView-HCell').'><p>'.$this->getFieldHeader('email').':</p></td>
+					<td valign="top"><p>'.$this->getFieldContent('email').'</p></td>
+				</tr>
+			</table>
+		<p>'.$backlink.'</p></div>'.
+		$this->pi_getEditPanel();
+	
+		return $content;
+	}
+
+	/**
+	 * Display one record of session data
 	 */
 	function pi_list_row($c)	{
 		$editPanel = $this->pi_getEditPanel();
@@ -199,7 +206,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		if (isset($this->conf['singleSession'])) {
 		    $label = $this->getFieldContent('name');  // the link text
-		    $overrulePIvars = array('session' => $this->getFieldContent('uid'));
+		    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
+		    $overrulePIvars = array('showUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
 		    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 		    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
 		    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
@@ -214,8 +222,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				<td valign="top"><p>'.$this->getFieldContent('room').'</p></td>
 			</tr>';
 	}
+
 	/**
-	 * [Put your description here]
+	 * Display header for session list
 	 */
 	function pi_list_header()	{
 		return '<tr'.$this->pi_classParam('listrow-header').'>
@@ -225,8 +234,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				<td nowrap><p>'.$this->getFieldHeader('room').'</p></td>
 			</tr>';
 	}
+
 	/**
-	 * [Put your description here]
+	 * Get content of one field
 	 */
 	function getFieldContent($fN)	{
 		switch($fN) {
@@ -248,10 +258,20 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'speaker':
 				foreach(explode(",",$this->internal['currentRow'][$fN]) as $k){
 					$data = $this->pi_getRecord('tx_wseevents_speakers',$k);
-					if (isset($content)) {
-						$content .= '<br />'.$data['name'];
+					if (isset($this->conf['singleSpeaker'])) {
+					    $label = $data['name'];  // the link text
+					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
+					    $overrulePIvars = array('showUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id);
+					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
+					    $altPageId=$this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
+					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
 					} else {
-						$content = $data['name'];
+					    $speakername = $data['name'];
+					}
+					if (isset($content)) {
+						$content .= '<br />'.$speakername;
+					} else {
+						$content = $speakername;
 					}
 				}
 				return $content;
@@ -262,26 +282,20 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			break;
 		}
 	}
+
 	/**
-	 * [Put your description here]
+	 * Get label of one field
 	 */
 	function getFieldHeader($fN)	{
 		switch($fN) {
 			
 			default:
-				return $this->pi_getLL('listFieldHeader_'.$fN,'['.$fN.']');
+				return $this->pi_getLL($this->internal['currentTable'].'.listFieldHeader_'.$fN,'['.$fN.']');
 			break;
 		}
 	}
 	
-	/**
-	 * [Put your description here]
-	 */
-	function getFieldHeader_sortLink($fN)	{
-		return $this->pi_linkTP_keepPIvars($this->getFieldHeader($fN),array('sort'=>$fN.':'.($this->internal['descFlag']?0:1)));
-	}
 }
-
 
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/pi1/class.tx_wseevents_pi1.php'])	{

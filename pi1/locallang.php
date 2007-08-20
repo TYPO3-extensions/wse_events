@@ -7,16 +7,14 @@
 
 $LOCAL_LANG = Array (
 	'default' => Array (
-		'listFieldHeader_number' => 'Session number',
-		'listFieldHeader_name' => 'Session name',
-		'listFieldHeader_speaker' => 'Speaker',
-		'listFieldHeader_room' => 'Room',
+		'tx_wseevents_sessions.listFieldHeader_number' => 'Session number',
+		'tx_wseevents_sessions.listFieldHeader_name' => 'Session name',
+		'tx_wseevents_sessions.listFieldHeader_speaker' => 'Speaker',
+		'tx_wseevents_sessions.listFieldHeader_room' => 'Room',
+		'tx_wseevents_sessions.listFieldHeader_teaser' => 'Teaser',
+		'tx_wseevents_sessions.listFieldHeader_description' => 'Description',
+		'tx_wseevents_speakers.listFieldHeader_email' => 'E-Mail',
 		'back' => 'Back',	
-		'pi_list_browseresults_prev' => '< Previous',	
-		'pi_list_browseresults_page' => 'Page',	
-		'pi_list_browseresults_next' => 'Next >',	
-		'pi_list_browseresults_displays' => 'Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>',	
-		'pi_list_searchBox_search' => 'Search',	
 	),
 	'de' => Array (
 	),

@@ -1,7 +1,7 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
-include_once(t3lib_extMgm::extPath($_EXTKEY).'class.tx_wseevents_addFieldsToFlexForm.php');
+//include_once(t3lib_extMgm::extPath($_EXTKEY).'class.tx_wseevents_addFieldsToFlexForm.php');
 
 t3lib_extMgm::allowTableOnStandardPages("tx_wseevents_events");
 
@@ -27,7 +27,7 @@ $TCA["tx_wseevents_events"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_wseevents_events.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, location",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, location, begin, end",
 	)
 );
 
@@ -186,7 +186,7 @@ t3lib_extMgm::addToInsertRecords("tx_wseevents_categories");
 $TCA["tx_wseevents_categories"] = Array (
 	"ctrl" => Array (
 		"title" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories",		
-		"label" => "shortkey",	
+		"label" => "name",	
 		"tstamp" => "tstamp",
 		"crdate" => "crdate",
 		"cruser_id" => "cruser_id",

@@ -83,9 +83,33 @@ $TCA["tx_wseevents_events"] = Array (
 				),
 			)
 		),
+		"begin" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.begin",		
+			"config" => Array (
+				"type" => "input",
+				"size" => "12",
+				"max" => "20",
+				"eval" => "date",
+				"checkbox" => "0",
+				"default" => "0"
+			)
+		),
+		"end" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.end",		
+			"config" => Array (
+				"type" => "input",
+				"size" => "12",
+				"max" => "20",
+				"eval" => "date",
+				"checkbox" => "0",
+				"default" => "0"
+			)
+		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, location")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, location, begin, end")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -341,8 +365,9 @@ $TCA["tx_wseevents_timeslots"] = Array (
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.room",		
 			"config" => Array (
 				"type" => "select",	
-				"foreign_table" => "tx_wseevents_rooms",	
-				"foreign_table_where" => "ORDER BY tx_wseevents_rooms.uid",	
+				"foreign_table" => "tx_wseevents_rooms",
+				"foreign_table_where" => "ORDER BY tx_wseevents_rooms.name", //AND tx_wseevents_events.uid=###REC_FIELDS_event AND tx_wseevents_events.location=tx_wseevents_rooms.location 
+//				'additional_foreign_table' => 'tx_wseevents_events',
 				"size" => 1,	
 				"minitems" => 0,
 				"maxitems" => 1,
@@ -353,10 +378,9 @@ $TCA["tx_wseevents_timeslots"] = Array (
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.begin",		
 			"config" => Array (
 				"type" => "input",
-				"size" => "12",
-				"max" => "20",
-				"eval" => "datetime",
-				"checkbox" => "0",
+				"size" => "5",
+				"max" => "5",
+				"eval" => "time,required",
 				"default" => "0"
 			)
 		),
@@ -365,10 +389,9 @@ $TCA["tx_wseevents_timeslots"] = Array (
 			"label" => "LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.end",		
 			"config" => Array (
 				"type" => "input",
-				"size" => "12",
-				"max" => "20",
-				"eval" => "datetime",
-				"checkbox" => "0",
+				"size" => "5",
+				"max" => "5",
+				"eval" => "time,required",
 				"default" => "0"
 			)
 		),
@@ -480,7 +503,7 @@ $TCA["tx_wseevents_sessions"] = Array (
 			"config" => Array (
 				"type" => "select",	
 				"foreign_table" => "tx_wseevents_categories",	
-				"foreign_table_where" => "ORDER BY tx_wseevents_categories.uid",	
+				"foreign_table_where" => "ORDER BY tx_wseevents_categories.name",
 				"size" => 1,	
 				"minitems" => 0,
 				"maxitems" => 1,
