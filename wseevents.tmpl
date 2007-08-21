@@ -4,9 +4,10 @@
 		<div class="tx-wseevents-pi1-choosecategory">
 			###LABEL###
 			<!-- Combobox to select category -->
-			<form action="###FORMACTION###">
+			<!-- ###FORMACTION### removed from action, because empty action referes to same page -->
+			<form action="" method="post" name="category_select">
 			<input type="hidden" name="no_cache" value="1">
-			<select name="###FORMSELECT###" onchange="this.form.submit()">
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.category_select.submit()">
 				<!-- ###SELECT### -->
 				<!-- ###OPTIONSELECTED### -->
 				<option value="###VALUE###" selected="selected">###OPTION###</option>
@@ -19,7 +20,7 @@
 			</form>
 		</div>
 <!-- ###SESSIONLIST### begin -->
-		<!-- wse_events default template: sessionlist -->		
+		<!-- wse_events default template: sessionlist begin -->
 		<div class="tx-wseevents-pi1-listrow">
 			<table>
 			<!-- ###SINGLEROW### begin -->
@@ -41,10 +42,11 @@
 			<!-- ###SINGLEROW### end -->
 			</table>
 		</div>
+		<!-- wse_events default template: sessionlist end -->
 <!-- ###SESSIONLIST### end -->
 
 <!-- ###SPEAKERLIST### begin -->
-		<!-- wse_events default template: sessionlist -->
+		<!-- wse_events default template: speakerlist begin -->
 		<div class="tx-wseevents-pi1-listrow">
 			<table>
 			<!-- ###SINGLEROW### begin -->
@@ -66,10 +68,11 @@
 			<!-- ###SINGLEROW### end -->
 			</table>
 		</div>
+		<!-- wse_events default template: speakerlist begin -->
 <!-- ###SPEAKERLIST### end -->
 
 <!-- ###SESSIONVIEW### begin -->
-		<!-- wse_events default template: session view -->
+		<!-- wse_events default template: session view begin -->
 		<div class="tx-wseevents-pi1-singleView">
 			<H2>###TITLE###</H2>
 			<table>
@@ -92,10 +95,11 @@
 
 			</table>
 		<p>###BACKLINK###</p></div>
+		<!-- wse_events default template: session view end -->
 <!-- ###SESSIONVIEW### end -->
 
 <!-- ###SPEAKERVIEW### begin -->
-		<!-- wse_events default template: speaker view -->
+		<!-- wse_events default template: speaker view begin -->
 		<div class="tx-wseevents-pi1-singleView">
 			<H2>###NAME###</H2>
 			<table>
@@ -118,6 +122,7 @@
 				<tr>
 			</table>
 		<p>###BACKLINK###</p></div>
+		<!-- wse_events default template: speaker view begin -->
 <!-- ###SPEAKERVIEW### end -->
 
 <!-- ###TEMPLATE### end -->
