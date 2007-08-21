@@ -525,7 +525,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$label =  $data['name'];
 					}
 
-					if (isset($this->conf['singleSpeaker'])) {
+					if (!empty($this->conf['singleSpeaker'])) {
 					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 					    $overrulePIvars = array('showSpeakerUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id);
 					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
