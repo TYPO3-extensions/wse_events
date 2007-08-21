@@ -94,7 +94,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'begin' => Array (		
 			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.begin',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.begin',
 			'config' => Array (
 				'type' => 'input',
 				'size' => '12',
@@ -106,13 +106,75 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'length' => Array (		
 			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.length',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.length',
 			'config' => Array (
 				'type' => 'input',
 				'size' => '2',
 				'max' => '2',
 				'eval' => 'int',
-				'checkbox' => '0',
+				'range' => Array (
+					'upper' => '99',
+					'lower' => '1'
+				),
+				'default' => 1
+			)
+		),
+		'timebegin' => Array (
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.timebegin',
+			'config' => Array (
+				'type' => 'input',	
+				'size' => '5',	
+				'max' => '5',
+			)
+		),
+		'timeend' => Array (
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.timeend',
+			'config' => Array (
+				'type' => 'input',	
+				'size' => '5',	
+				'max' => '5',
+			)
+		),
+		'slotsize' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.slotsize',
+			'config' => Array (
+				'type' => 'input',
+				'size' => '2',
+				'max' => '2',
+				'eval' => 'int',
+				'range' => Array (
+					'upper' => '99',
+					'lower' => '1'
+				),
+				'default' => 1
+			)
+		),
+		'maxslot' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.maxslot',
+			'config' => Array (
+				'type' => 'input',
+				'size' => '1',
+				'max' => '1',
+				'eval' => 'int',
+				'range' => Array (
+					'upper' => '99',
+					'lower' => '1'
+				),
+				'default' => 1
+			)
+		),
+		'defslotcount' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.defslotcount',
+			'config' => Array (
+				'type' => 'input',
+				'size' => '1',
+				'max' => '1',
+				'eval' => 'int',
 				'range' => Array (
 					'upper' => '99',
 					'lower' => '1'
@@ -122,7 +184,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, location, begin, length')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, location, begin, length, timebegin, timeend, slotsize, maxslot, defslotcount')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -410,7 +472,7 @@ $TCA['tx_wseevents_timeslots'] = Array (
 				'eval' => 'int',
 				'range' => Array (
 					'upper' => '99',
-					'lower' => '1'
+					'lower' => '1',
 				),
 				'default' => 1
 			)
@@ -433,26 +495,34 @@ $TCA['tx_wseevents_timeslots'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.begin',		
 			'config' => Array (
 				'type' => 'input',
-				'size' => '5',
-				'max' => '5',
-				'eval' => 'required',
-				'default' => '00:00'
+				'size' => '2',
+				'max' => '2',
+				'eval' => 'int',
+				'range' => Array (
+					'upper' => '99',
+					'lower' => '1',
+				),
+				'default' => 1
 			)
 		),
-		'end' => Array (		
+		'length' => Array (		
 			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.end',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.length',		
 			'config' => Array (
 				'type' => 'input',
-				'size' => '5',
-				'max' => '5',
-				'eval' => 'required',
-				'default' => '00:00'
+				'size' => '2',
+				'max' => '2',
+				'eval' => 'int',
+				'range' => Array (
+					'upper' => '99',
+					'lower' => '1',
+				),
+				'default' => 1
 			)
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, event, eventday, room, begin, end')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, event, eventday, room, begin, length')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')

@@ -17,6 +17,11 @@ CREATE TABLE tx_wseevents_events (
 	location int(11) DEFAULT '0' NOT NULL,
 	begin int(11) DEFAULT '0' NOT NULL,
 	length int(11) DEFAULT '0' NOT NULL,
+	timebegin text NOT NULL,
+	timeend text NOT NULL,
+	slotsize int(11) DEFAULT '0' NOT NULL,
+	maxslot int(11) DEFAULT '0' NOT NULL,
+	defslotcount int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -91,8 +96,8 @@ CREATE TABLE tx_wseevents_timeslots (
 	event int(11) DEFAULT '0' NOT NULL,
 	eventday int(11) DEFAULT '0' NOT NULL,
 	room int(11) DEFAULT '0' NOT NULL,
-	begin tinytext NOT NULL,
-	end tinytext NOT NULL,
+	begin int(11) DEFAULT '0' NOT NULL,
+	length int(11) DEFAULT '3' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
