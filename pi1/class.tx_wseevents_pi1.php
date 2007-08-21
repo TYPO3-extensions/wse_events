@@ -57,15 +57,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		//		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);	
 		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[0]);
+		$conf['pidListEvents'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
+		$conf['pidListCommon'] = $this->pi_getFFvalue($piFlexForm, 'commonpages', 'sDEF');
+		$conf['recursive'] = $this->cObj->data['recursive'];
+		$conf['singleSession'] = $this->pi_getFFvalue($piFlexForm, 'singleSession', 'display');
+		$conf['singleSpeaker'] = $this->pi_getFFvalue($piFlexForm, 'singleSpeaker', 'display');
+		$conf['lastnameFirst'] = $this->pi_getFFvalue($piFlexForm, 'lastnameFirst', 'display');
 		switch((string)$flexFormValuesArray['dynListType'])	{
 			case 'sessionlist':
-				$conf['pidListEvents'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
-				$conf['pidListCommon'] = $this->pi_getFFvalue($piFlexForm, 'commonpages', 'sDEF');
 				$conf['pidList'] = $conf['pidListEvents'];
-				$conf['recursive'] = $this->cObj->data['recursive'];
-				$conf['singleSession'] = $this->pi_getFFvalue($piFlexForm, 'singleSession', 'display');
-				$conf['singleSpeaker'] = $this->pi_getFFvalue($piFlexForm, 'singleSpeaker', 'display');
-				$conf['lastnameFirst'] = $this->pi_getFFvalue($piFlexForm, 'lastnameFirst', 'display');
 				return $this->pi_wrapInBaseClass($this->listSessionView($content,$conf));
 			break;
 			case 'sessiondetail':
@@ -75,13 +75,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $this->pi_wrapInBaseClass($this->singleSessionView($content,$conf));
 			break;
 			case 'speakerlist':
-				$conf['pidListCommon'] = $this->pi_getFFvalue($piFlexForm, 'commonpages', 'sDEF');
-				$conf['pidListEvents'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
 				$conf['pidList'] = $conf['pidListCommon'];
-				$conf['recursive'] = $this->cObj->data['recursive'];
-				$conf['singleSession'] = $this->pi_getFFvalue($piFlexForm, 'singleSession', 'display');
-				$conf['singleSpeaker'] = $this->pi_getFFvalue($piFlexForm, 'singleSpeaker', 'display');
-				$conf['lastnameFirst'] = $this->pi_getFFvalue($piFlexForm, 'lastnameFirst', 'display');
 				return $this->pi_wrapInBaseClass($this->listSpeakerView($content,$conf));
 			break;
 			case 'speakerdetail':
@@ -160,12 +154,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$select_item .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
 		}
+		// Get list of categories
 		// Make query, pass query to SQL database:
-		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('*', 'tx_wseevents_categories', 'deleted=0 AND hidden=0', '', 'shortkey');
+		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('*', 'tx_wseevents_categories', 'deleted=0 AND hidden=0 AND sys_language_uid=0', '', 'shortkey');
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$catname = $this->getTranslatedCategory('tx_wseevents_categories', $row['uid'], 10, $row['name']);
 			# Set one category option 
 			$markerArray['###VALUE###'] = $row['uid'];
-			$markerArray['###OPTION###'] = $row['shortkey'].' - '.$row['name'];
+			$markerArray['###OPTION###'] = $row['shortkey'].' - '.$catname;
 			if ($showcat==$row['uid']) {
 				$select_item .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
 			} else {
@@ -417,6 +413,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		
 		# Get the parts out of the template
 		$template['total'] = $this->cObj->getSubpart($this->templateCode,'###SPEAKERVIEW###');
+		$template['sessionrow'] = $this->cObj->getSubpart($template['total'],'###SESSIONROW###');
 
 		// This sets the title of the page for use in indexed search results:
 		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
@@ -440,9 +437,35 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$this->getFieldContent('image');
 		$markerArray['###BACKLINK###'] = $backlink;
 		
+		# Check if the speaker has a session on this event
+		$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid']);
+		foreach(explode(',',$sessionids) as $k){
+			$data = $this->pi_getRecord('tx_wseevents_sessions',$k);
+
+			$label =  $data['name'];
+			if (!empty($this->conf['singleSession'])) {
+				$overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
+				$overrulePIvars = array('showSessionUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id);
+				$clearAnyway=1;    // the current values of piVars will NOT be preserved
+				$altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+				$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+			} else {
+				$sessionname = $label;
+			}
+
+			# Build content from template + array
+			$markerarray1 = array();
+			$markerArray1['###SESSIONNAME###'] = $sessionname;
+			$markerArray1['###SESSIONTEASER###'] = $data['teaser'];
+			$markerArray1['###SESSIONDESCRIPTION###'] = $data['description'];
+
+			$content_item .= $this->cObj->substituteMarkerArrayCached($template['sessionrow'], $markerArray1);
+		}
+		
 #		$this->pi_getEditPanel();
-	
-		return $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray);;
+		$subpartArray['###SESSIONROW###'] = $content_item; 
+
+		return $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray, $subpartArray);
 	}
 
 	/**
@@ -607,7 +630,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	}
 
 	/**
-	*
+	* Get the translated content of a field
+	* Returns english content if no translation is found
 	*/
 	function getTranslatedField($dbname, $fieldid, $fN) {
 		$index = $GLOBALS['TSFE']->sys_language_uid;
@@ -629,6 +653,29 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			//show default language
 			return $this->internal['currentRow'][$fN];
+		}
+	}
+	
+	/**
+	* Get the translated name of a category
+	* Returns english name if no translation is found
+	*/
+	function getTranslatedCategory($dbname, $rowuid, $fieldid, $fN) {
+		$index = $GLOBALS['TSFE']->sys_language_uid;
+		if ($index<>0) {
+			// for the name of a session, check if a translation is there
+			$where = 'deleted=0 AND hidden=0 AND l18n_parent='.$rowuid.' AND sys_language_uid='.$index;
+			$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('name', 'tx_wseevents_categories', $where);
+			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$datacount = $row['name'];
+			if (!empty($datacount)) {
+				return $datacount;
+			} else {
+				return $fN;
+			}
+		} else {
+			//show default language
+			return $fN;
 		}
 	}
 	
