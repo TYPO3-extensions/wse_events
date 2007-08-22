@@ -31,12 +31,12 @@
 				<!-- ###HEADER### -->
 				<!-- ###ITEM### -->
 				<tr class="tx-wseevents-pi1-listrow-even">
-					<td valign="top"><p>###NUMBER###</p></td><td valign="top" title="###TEASER###"><p>###NAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###ROOM###</p></td><td valign="top"><p>###TIMESLOTS###</p></td>
+					<td valign="top"><p>###NUMBER###</p></td><td valign="top" title="###TEASERDATA###"><p>###NAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###ROOM###</p></td><td valign="top"><p>###TIMESLOTS###</p></td>
 				</tr>
 				<!-- ###ITEM### -->
 				<!-- ###ITEM_ALT### -->
 				<tr class="tx-wseevents-pi1-listrow-odd">
-					<td valign="top"><p>###NUMBER###</p></td><td valign="top" title="###TEASER###"><p>###NAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###ROOM###</p></td><td valign="top"><p>###TIMESLOTS###</p></td>
+					<td valign="top"><p>###NUMBER###</p></td><td valign="top" title="###TEASERDATA###"><p>###NAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###ROOM###</p></td><td valign="top"><p>###TIMESLOTS###</p></td>
 				</tr>
 				<!-- ###ITEM_ALT### -->
 			<!-- ###SINGLEROW### end -->
@@ -52,17 +52,17 @@
 			<!-- ###SINGLEROW### begin -->
 				<!-- ###HEADER### -->
 				<tr class="tx-wseevents-pi1-listrow-header">
-					<td valign="top"><p>###NAME###</p></td><td valign="top"><p>###SESSIONS###</p></td>
+					<td valign="top"><p>###NAME### (###COUNTRYNAME###)</p></td><td valign="top"><p>###SESSIONS###</p></td>
 				</tr>
 				<!-- ###HEADER### -->
 				<!-- ###ITEM### -->
 				<tr class="tx-wseevents-pi1-listrow-even">
-					<td valign="top"><p>###NAME###</p></td><td valign="top"><p>###SESSIONS###</p></td>
+					<td valign="top"><p>###NAME### (###COUNTRYDATA###)</p></td><td valign="top"><p>###SESSIONS###</p></td>
 				</tr>
 				<!-- ###ITEM### -->
 				<!-- ###ITEM_ALT### -->
 				<tr class="tx-wseevents-pi1-listrow-odd">
-					<td valign="top"><p>###NAME###</p></td><td valign="top"><p>###SESSIONS###</p></td>
+					<td valign="top"><p>###NAME### (###COUNTRYDATA###)</p></td><td valign="top"><p>###SESSIONS###</p></td>
 				</tr>
 				<!-- ###ITEM_ALT### -->
 			<!-- ###SINGLEROW### end -->
@@ -76,10 +76,6 @@
 		<div class="tx-wseevents-pi1-singleView">
 			<H2>###TITLE###</H2>
 			<table>
-				<tr>
-					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###TEASERNAME###:</p></td>
-					<td valign="top"><p>###TEASERDATA###</p></td>
-				</tr>
 				<tr>
 					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###SPEAKERNAME###:</p></td>
 					<td valign="top"><p>###SPEAKERDATA###</p></td>
@@ -108,6 +104,10 @@
 					<td valign="top"><p>###EMAILDATA###</p></td>
 				</tr>
 				<tr>
+					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###COUNTRYNAME###:</p></td>
+					<td valign="top"><p>###COUNTRYDATA###</p></td>
+				</tr>
+				<tr>
 					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###COMPANYNAME###:</p></td>
 					<td valign="top"><p><a href="###COMPANYLINK###">###COMPANYDATA###</a></p></td>
 				</tr>
@@ -118,6 +118,9 @@
 				<tr>
 					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###INFONAME###:</p></td>
 					<td valign="top"><p>###INFODATA###</p></td>
+				</tr>
+				<tr>
+					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###SESSIONSNAME###:</p></td>
 				</tr>
 				<tr>
 				<!-- ###SESSIONROW### begin -->

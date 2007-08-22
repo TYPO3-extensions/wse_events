@@ -248,6 +248,23 @@ $TCA['tx_wseevents_locations'] = Array (
 				'eval' => 'required',
 			)
 		),
+		'website' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_locations.website',		
+			'config' => Array (
+				'type' => 'input',	
+				'size' => '30',
+				'wizards' => Array(
+					'link' => Array(
+					    'type' => 'popup',
+					    'title' => 'Link',
+					    'icon' => 'link_popup.gif',
+					    'script' => 'browse_links.php?mode=wizard',
+					    'JSopenParams' => 'height=300,width=500,status=0,menubar=0,scrollbars=1'
+					),
+				),
+			)
+		),
 		'comment' => Array (		
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',		
@@ -259,7 +276,7 @@ $TCA['tx_wseevents_locations'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, website, comment')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -771,12 +788,33 @@ $TCA['tx_wseevents_speakers'] = Array (
 				'rows' => '3',
 			)
 		),
+		'country' => Array (
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.country',		
+			'config' => Array (
+				'type' => 'select',	
+				'foreign_table' => 'static_countries',
+				'foreign_table_where' => 'ORDER BY cn_short_en',
+				'size' => 1,
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
 		'email' => Array (		
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.email',		
 			'config' => Array (
 				'type' => 'input',	
 				'size' => '30',
+				'wizards' => Array(
+					'link' => Array(
+					    'type' => 'popup',
+					    'title' => 'Link',
+					    'icon' => 'link_popup.gif',
+					    'script' => 'browse_links.php?mode=wizard',
+					    'JSopenParams' => 'height=300,width=500,status=0,menubar=0,scrollbars=1'
+					),
+				),
 			)
 		),
 		'company' => Array (		
@@ -793,6 +831,15 @@ $TCA['tx_wseevents_speakers'] = Array (
 			'config' => Array (
 				'type' => 'input',	
 				'size' => '30',
+				'wizards' => Array(
+					'link' => Array(
+					    'type' => 'popup',
+					    'title' => 'Link',
+					    'icon' => 'link_popup.gif',
+					    'script' => 'browse_links.php?mode=wizard',
+					    'JSopenParams' => 'height=300,width=500,status=0,menubar=0,scrollbars=1'
+					),
+				),
 			)
 		),
 		'info' => Array (		
@@ -832,7 +879,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, company, companylink, email, image, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, company, companylink, country, email, image, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')

@@ -44,6 +44,7 @@ CREATE TABLE tx_wseevents_locations (
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
+	website tinytext NOT NULL,
 	comment text NOT NULL,
 	
 	PRIMARY KEY (uid),
@@ -152,6 +153,7 @@ CREATE TABLE tx_wseevents_speakers (
 	name tinytext NOT NULL,
 	firstname tinytext NOT NULL,
 	comment text NOT NULL,
+	country tinytext NOT NULL,
 	email tinytext NOT NULL,
 	company tinytext NOT NULL,
 	companylink tinytext NOT NULL,
