@@ -1,32 +1,3 @@
-    * In der Speaker Single View würde ich gern auch die Vorträge aufführen können, die der Referent hält, und mit Link auf die entsprechende Detailanzeige versehen. Ich stelle mir das vom Aussehen so vor, wie auf der derzeitigen Seite Agenda > Speaker. Cool wäre noch, wenn es auch dort die TEASER gäbe. Dann könnte man dem Link auf eine Veranstaltung den Teaser als title-Attribut geben.
-##>> Erledigt 21.08.2007
-
-    * Die Marker TEASER und TEASERNAME werden in der Session Single View nicht benötigt. Dort soll ja die vollständige Beschreibung angezeigt werden.
-##>> Erledigt 22.08.2007: Habe ich aus dem Template entfernt
-	
-    * Die Marker TEASER und TEASERNAME werden in der Doku derzeit nur für die Session Single View erwähnt, nicht für die Session List View.
-##>> Die Marker TEASERNAME und TEASERDATA können im Session Single View verwendet werden und zeigen Feldnamen und Feldinhalt an. Im Session List View gibt es nur TEASER, welches den Feldinhalt anzeigt. 
-##>> Erledigt 22.08.2007: Damit es einheitlicher ist, habe ich im Session List View TEASER in TEASERDATA geändert und TEASERNAME hinzugefügt.
-	
-    * In der Doku sollte erwähnt werden, daß die Marker ITEM und ITEM_ALT beide vorhanden sein müssen und daß man ITEM-ALT einfach den gleichen Inhalt geben soll wie ITEM, wenn man keine wechselnde Anzeige benötigt.
-##>> Erledigt 22.08.2007
-	
-    * Für den Marker ROOM sollte es auch einen Standardinhalt geben, der angezeigt wird, wenn noch kein Raum zugewiesen wurde. Man kann zwar einen "wird noch bekanntgegeben"-Raum anlegen, aber da die Räume immer einer Location zugewiesen werden müssen, ist das fehlerträchtig.
-##>> Eigentlich kann man die Räume weglassen, da die Info zu den Timeslots gehört.
-	
-    * Der englische Standardinhalt für den Marker TIMESLOT sollte "not yet scheduled" lauten. (Bis jetzt fehlt das "c".)
-##>> Erledigt 22.08.2007
-	
-Es wäre noch zu überlegen, ob wir überhaupt eine Einzelansicht für die Referenten benötigen. In Köln sah das so aus. Fand ich soweit in Ordnung. Wenn die Liste noch länger würde, wäre eine Kurzversion allerdings angeraten. Könntest Du die Marker der Speaker Single View auch in der Speaker List View zur Verfügung stellen? Dann könnten wir das nach Bedarf anpassen.
-##>> Erledigt 22.08.2007: Die Marker der Single Speaker View könne jetzt auch alle in der Speaker List verwendet werden.
-
-Es wäre noch schick, wenn die Referenten ein Feld "Herkunftsland" hätten. Dann könnten wir das so wie 2006 in Kölle angeben.
-##>> Erledigt 22.08.2007
-
-Ginge es, die Felder, die URLs enthalten sollen, als "richtige URL-Felder" zu deklarieren? Ich meine damit die Felder für die E-Mail-Adresse und die Adresse der Firmen-Web-Site. In manchen Eingabeformularen des Backends sieht man neben der E-Mail-Adresse oder einem URL-Feld einen Link-Button, mit dem man das Fenster zur Eingabe von URLs aufrufen kann.
-##>> Erledigt 22.08.2007
-
-
 
     * Beim Bild für die Referenten ist man darauf angewiesen, ein für die angegebenen Dimensionen passendes zu verwenden. Könntest Du eine automatische Anpassung per GIFBUILDER einbauen? Die Dimensionen könnten über TypoScript festgelegt werden.
 

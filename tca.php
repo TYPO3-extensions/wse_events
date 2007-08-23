@@ -806,10 +806,11 @@ $TCA['tx_wseevents_speakers'] = Array (
 			'config' => Array (
 				'type' => 'input',	
 				'size' => '30',
+				'eval' => 'trim',
 				'wizards' => Array(
 					'link' => Array(
 					    'type' => 'popup',
-					    'title' => 'Link',
+					    'title' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.emailwizard',
 					    'icon' => 'link_popup.gif',
 					    'script' => 'browse_links.php?mode=wizard',
 					    'JSopenParams' => 'height=300,width=500,status=0,menubar=0,scrollbars=1'
@@ -831,10 +832,11 @@ $TCA['tx_wseevents_speakers'] = Array (
 			'config' => Array (
 				'type' => 'input',	
 				'size' => '30',
+				'eval' => 'trim',
 				'wizards' => Array(
 					'link' => Array(
 					    'type' => 'popup',
-					    'title' => 'Link',
+					    'title' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.companylinkwizard',
 					    'icon' => 'link_popup.gif',
 					    'script' => 'browse_links.php?mode=wizard',
 					    'JSopenParams' => 'height=300,width=500,status=0,menubar=0,scrollbars=1'

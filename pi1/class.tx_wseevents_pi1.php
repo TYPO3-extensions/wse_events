@@ -300,27 +300,28 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['header'] = $this->cObj->getSubpart($template['singlerow'],'###HEADER###');
 		$template['row'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM###');
 		$template['row_alt'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM_ALT###');	
+		$template['sessionrow'] = $this->cObj->getSubpart($template['singlerow'],'###SESSIONROW###');
 
 		// Put the whole list together:
 		$content_item = '';	// Clear var;
 
 		# Get the column names
-		$markerArray = Array();
-		$markerArray['###NAME###'] = $this->getFieldHeader('name');
-		$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
-		$markerArray['###COUNTRYNAME###'] = $this->getFieldHeader('country');
-		$markerArray['###COMPANYNAME###'] = $this->getFieldHeader('company');
-		$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
-		$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
-		$markerArray['###SESSIONS###'] = $this->getFieldHeader('speakersessions');
-		$content_item .= $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray);
+		$markerArray0 = Array();
+		$markerArray0['###NAME###'] = $this->getFieldHeader('name');
+		$markerArray0['###EMAILNAME###'] = $this->getFieldHeader('email');
+		$markerArray0['###COUNTRYNAME###'] = $this->getFieldHeader('country');
+		$markerArray0['###COMPANYNAME###'] = $this->getFieldHeader('company');
+		$markerArray0['###INFONAME###'] = $this->getFieldHeader('info');
+		$markerArray0['###IMAGENAME###'] = $this->getFieldHeader('image');
+		$markerArray0['###SESSIONSNAME###'] = $this->getFieldHeader('speakersessions');
+		$content_item .= $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray0);
 
 		$switch_row = 0;
 		$content = '';
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			$this->internal['currentRow'] = $row;
 			# Check if the speaker has a session on this event
-			$sessionids = $this->getSpeakerSessionList($this->internal['currentRow']['uid']);
+			$sessionids = $this->getSpeakerSessionList($this->internal['currentRow']['uid'],$this->conf['pidListEvents']);
 			#$content .= '<br>SessionIDs=['.$sessionids.']';
 
 			# display only speaker with sessions
@@ -343,23 +344,36 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				# Build content from template + array
 				$markerArray = Array();
 				$markerArray['###NAME###'] = $speakername;
+				$markerArray['###IMAGENAME###'] = $this->getFieldContent('name');
 				$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
 				$markerArray['###EMAILDATA###'] = $this->getFieldContent('email');
 				$markerArray['###COUNTRYNAME###'] = $this->getFieldHeader('country');
 				$markerArray['###COUNTRYDATA###'] = $this->getFieldContent('country');
 				$markerArray['###COMPANYNAME###'] = $this->getFieldHeader('company');
 				$markerArray['###COMPANYDATA###'] = $this->getFieldContent('company');
-				$markerArray['###COMPANYLINK###'] = $this->getFieldContent('companylink');
+				$markerArray['###COMPANYLINK###'] = 'http://'.$this->getFieldContent('companylink');
+				$markerArray['###SESSIONSNAME###'] = $this->getFieldHeader('speakersessions');
+				$markerArray['###SESSIONS###'] = $this->getFieldContent('speakersessions');
 				$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
 				$markerArray['###INFODATA###'] = $this->getFieldContent('info');
 				$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
 				$image = trim($this->getFieldContent('image'));
 				if (!empty($image)) {
-					$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$image;
+#					$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$image;
+					$img = $this->conf['image.'];
+					if (empty($img)) {
+					    $img['file'] = 'GIFBUILDER';
+						$img['file.']['XY'] = '100,150';
+						$img['file.']['5'] = 'IMAGE';
+					}
+					$img['file.']['5.']['file'] = $uploadDirectory.'/'.$image;
+					$markerArray['###IMAGELINK###'] = $this->cObj->IMAGE($img);
+					$markerArray['###IMAGEFILE###'] = $image;
 				} else {
+					$markerArray['###IMAGELINK###'] = $uploadDirectory.'/'.$image;
 					$markerArray['###IMAGEFILE###'] = '';
 				}
-				$markerArray['###SESSIONS###'] = $this->getFieldContent('speakersessions');
+
 
 				$switch_row = $switch_row ^ 1;
 				if($switch_row) {
@@ -367,11 +381,36 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				} else {
 					$content_item .= $this->cObj->substituteMarkerArrayCached($template['row_alt'], $markerArray);
 				}
+
+				# For every session get information
+				foreach(explode(',',$sessionids) as $k){
+					$data = $this->pi_getRecord('tx_wseevents_sessions',$k);
+
+					$label =  $data['name'];
+					if (!empty($this->conf['singleSession'])) {
+						$overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
+						$overrulePIvars = array('showSessionUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id);
+						$clearAnyway=1;    // the current values of piVars will NOT be preserved
+						$altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+						$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+					} else {
+						$sessionname = $label;
+					}
+
+					# Build content from template + array
+					$markerarray1 = array();
+					$markerArray1['###SESSIONNAME###'] = $sessionname;
+					$markerArray1['###SESSIONTEASER###'] = $data['teaser'];
+					$markerArray1['###SESSIONDESCRIPTION###'] = $data['description'];
+
+					$content_item .= $this->cObj->substituteMarkerArrayCached($template['sessionrow'], $markerArray1);
+				}
+				//$subpartArray['###SESSIONROW###'] = $content_item; 
 			}
 		}   
 		$subpartArray['###SINGLEROW###'] = $content_item; 
 
-		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subpartArray);
+		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray0, $subpartArray);
 		return $content;
 	}
 
@@ -464,7 +503,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
 		
 		# Check if the speaker has a session on this event
-		$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid']);
+		$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid'],$this->conf['pidListEvents']);
 
 		$markerArray['###NAME###'] = $this->getFieldContent('name');
 		$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
@@ -473,13 +512,28 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###COUNTRYDATA###'] = $this->getFieldContent('country');
 		$markerArray['###COMPANYNAME###'] = $this->getFieldHeader('company');
 		$markerArray['###COMPANYDATA###'] = $this->getFieldContent('company');
-		$markerArray['###COMPANYLINK###'] = $this->getFieldContent('companylink');
+		$markerArray['###COMPANYLINK###'] = 'http://'.$this->getFieldContent('companylink');
 		$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
 		$markerArray['###INFODATA###'] = $this->getFieldContent('info');
 		$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
-		$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$this->getFieldContent('image');
+		$image = trim($this->getFieldContent('image'));
+		if (!empty($image)) {
+#					$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$image;
+			$img = $this->conf['image.'];
+			if (empty($img)) {
+			    $img['file'] = 'GIFBUILDER';
+				$img['file.']['XY'] = '100,150';
+				$img['file.']['5'] = 'IMAGE';
+			}
+			$img['file.']['5.']['file'] = $uploadDirectory.'/'.$image;
+			$markerArray['###IMAGELINK###'] = $this->cObj->IMAGE($img);
+			$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$image;
+		} else {
+			$markerArray['###IMAGELINK##'] = '';
+			$markerArray['###IMAGEFILE###'] = '';
+		}
 		$markerArray['###SESSIONSNAME###'] = $this->getFieldHeader('speakersessions');
-		$this->internal['speakersessions'] =$sessionids;
+		$this->internal['speakersessions'] = $sessionids;
 		$markerArray['###SESSIONS###'] = $this->getFieldContent('speakersessions');
 		$markerArray['###BACKLINK###'] = $backlink;
 		
@@ -732,9 +786,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get list of session UIDs for the speaker
 	 */
-	function getSpeakerSessionList($speakerid) {
+	function getSpeakerSessionList($speakerid,$eventPid) {
 		$where = '';
-		$this->conf['pidList'] = $this->conf['pidListEvents'];
+		$this->conf['pidList'] = $eventPid;
 		$res = $this->pi_exec_query('tx_wseevents_sessions',0,$where);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			foreach(explode(',',$row['speaker']) as $k){
