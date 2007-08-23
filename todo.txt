@@ -3,3 +3,7 @@
 
 
 	* Bei der Einzelansicht (Session und Speaker) funktioniert die Übersetzung nicht.
+	
+	
+	* Bei Links von Single nach Single funktioniert Back nicht
+	
