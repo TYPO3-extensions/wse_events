@@ -17,7 +17,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'author' => 'Michael Oehlhof',
 	'author_email' => 'michael@oehlhof.de',
 	'shy' => '',
-	'dependencies' => 'cms',
+	'dependencies' => 'cms,static_info_tables',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
@@ -33,6 +33,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'constraints' => array(
 		'depends' => array(
 			'cms' => '',
+			'static_info_tables' => '',
 		),
 		'conflicts' => array(
 		),
