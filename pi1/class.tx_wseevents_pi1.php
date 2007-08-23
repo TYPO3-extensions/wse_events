@@ -368,9 +368,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					}
 					$img['file.']['5.']['file'] = $uploadDirectory.'/'.$image;
 					$markerArray['###IMAGELINK###'] = $this->cObj->IMAGE($img);
-					$markerArray['###IMAGEFILE###'] = $image;
+					$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$image;
 				} else {
-					$markerArray['###IMAGELINK###'] = $uploadDirectory.'/'.$image;
+					$markerArray['###IMAGELINK###'] = '';
 					$markerArray['###IMAGEFILE###'] = '';
 				}
 
