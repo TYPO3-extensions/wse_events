@@ -3,7 +3,7 @@
 ########################################################################
 # Extension Manager/Repository config file for ext: "wse_events"
 #
-# Auto generated 24-08-2007 22:28
+# Auto generated 25-08-2007 01:33
 #
 # Manual updates:
 # Only the data in the array - anything else is removed by next write.
@@ -40,7 +40,7 @@ $EM_CONF[$_EXTKEY] = array(
 		'suggests' => array(
 		),
 	),
-	'_md5_values_when_last_written' => 'a:25:{s:9:"ChangeLog";s:4:"bd73";s:10:"README.txt";s:4:"d74e";s:12:"ext_icon.gif";s:4:"138e";s:17:"ext_localconf.php";s:4:"2215";s:14:"ext_tables.php";s:4:"b308";s:14:"ext_tables.sql";s:4:"a5cc";s:19:"flexform_ds_pi1.xml";s:4:"1335";s:32:"icon_tx_wseevents_categories.gif";s:4:"138e";s:28:"icon_tx_wseevents_events.gif";s:4:"138e";s:31:"icon_tx_wseevents_locations.gif";s:4:"138e";s:27:"icon_tx_wseevents_rooms.gif";s:4:"138e";s:30:"icon_tx_wseevents_sessions.gif";s:4:"138e";s:30:"icon_tx_wseevents_speakers.gif";s:4:"138e";s:31:"icon_tx_wseevents_timeslots.gif";s:4:"138e";s:16:"locallang_db.php";s:4:"0893";s:7:"tca.php";s:4:"0fff";s:8:"todo.txt";s:4:"93a3";s:14:"wseevents.tmpl";s:4:"61f5";s:14:"doc/manual.sxw";s:4:"4a9c";s:19:"doc/wizard_form.dat";s:4:"9500";s:20:"doc/wizard_form.html";s:4:"25ab";s:30:"pi1/class.tx_wseevents_pi1.php";s:4:"462d";s:17:"pi1/locallang.php";s:4:"7051";s:24:"pi1/static/editorcfg.txt";s:4:"87c1";s:20:"pi1/static/setup.txt";s:4:"108f";}',
+	'_md5_values_when_last_written' => 'a:27:{s:9:"ChangeLog";s:4:"bd73";s:10:"README.txt";s:4:"d74e";s:12:"ext_icon.gif";s:4:"138e";s:17:"ext_localconf.php";s:4:"2215";s:14:"ext_tables.php";s:4:"b308";s:14:"ext_tables.sql";s:4:"a5cc";s:19:"flexform_ds_pi1.xml";s:4:"1335";s:32:"icon_tx_wseevents_categories.gif";s:4:"138e";s:28:"icon_tx_wseevents_events.gif";s:4:"138e";s:31:"icon_tx_wseevents_locations.gif";s:4:"138e";s:27:"icon_tx_wseevents_rooms.gif";s:4:"138e";s:30:"icon_tx_wseevents_sessions.gif";s:4:"138e";s:30:"icon_tx_wseevents_speakers.gif";s:4:"138e";s:31:"icon_tx_wseevents_timeslots.gif";s:4:"138e";s:16:"locallang_db.php";s:4:"80e5";s:20:"locallang_db.php.txt";s:4:"0893";s:7:"tca.php";s:4:"3bf0";s:8:"todo.txt";s:4:"0e60";s:14:"wseevents.tmpl";s:4:"61f5";s:14:"doc/manual.sxw";s:4:"4a9c";s:19:"doc/wizard_form.dat";s:4:"9500";s:20:"doc/wizard_form.html";s:4:"25ab";s:30:"pi1/class.tx_wseevents_pi1.php";s:4:"cb2b";s:17:"pi1/locallang.php";s:4:"7051";s:21:"pi1/locallang.php.txt";s:4:"7051";s:24:"pi1/static/editorcfg.txt";s:4:"87c1";s:20:"pi1/static/setup.txt";s:4:"108f";}',
 	'suggests' => array(
 	),
 );
