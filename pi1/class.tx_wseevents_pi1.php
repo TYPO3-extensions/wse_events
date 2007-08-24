@@ -295,11 +295,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->templateCode = $this->cObj->fileResource($templateFile);
 		
 		# Get the parts out of the template
-		$template['total'] = $this->cObj->getSubpart($this->templateCode,'###SPEAKERLIST###');
-		$template['singlerow'] = $this->cObj->getSubpart($template['total'],'###SINGLEROW###');
-		$template['header'] = $this->cObj->getSubpart($template['singlerow'],'###HEADER###');
-		$template['row'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM###');
-		$template['row_alt'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM_ALT###');	
+		$template['total']      = $this->cObj->getSubpart($this->templateCode,   '###SPEAKERLIST###');
+		$template['header']     = $this->cObj->getSubpart($template['total'],    '###HEADER###');
+		$template['singlerow']  = $this->cObj->getSubpart($template['total'],    '###SINGLEROW###');
+		$template['row']        = $this->cObj->getSubpart($template['singlerow'],'###ITEM###');
+		$template['row_alt']    = $this->cObj->getSubpart($template['singlerow'],'###ITEM_ALT###');	
 		$template['sessionrow'] = $this->cObj->getSubpart($template['singlerow'],'###SESSIONROW###');
 
 		// Put the whole list together:
@@ -307,14 +307,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Get the column names
 		$markerArray0 = Array();
-		$markerArray0['###NAME###'] = $this->getFieldHeader('name');
-		$markerArray0['###EMAILNAME###'] = $this->getFieldHeader('email');
-		$markerArray0['###COUNTRYNAME###'] = $this->getFieldHeader('country');
-		$markerArray0['###COMPANYNAME###'] = $this->getFieldHeader('company');
-		$markerArray0['###INFONAME###'] = $this->getFieldHeader('info');
-		$markerArray0['###IMAGENAME###'] = $this->getFieldHeader('image');
+		$markerArray0['###NAME###']         = $this->getFieldHeader('name');
+		$markerArray0['###EMAILNAME###']    = $this->getFieldHeader('email');
+		$markerArray0['###COUNTRYNAME###']  = $this->getFieldHeader('country');
+		$markerArray0['###COMPANYNAME###']  = $this->getFieldHeader('company');
+		$markerArray0['###INFONAME###']     = $this->getFieldHeader('info');
+		$markerArray0['###IMAGENAME###']    = $this->getFieldHeader('image');
 		$markerArray0['###SESSIONSNAME###'] = $this->getFieldHeader('speakersessions');
-		$content_item .= $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray0);
+		$subpartArray['###HEADER###']       = $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray0);
 
 		$switch_row = 0;
 		$content = '';
@@ -322,7 +322,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$this->internal['currentRow'] = $row;
 			# Check if the speaker has a session on this event
 			$sessionids = $this->getSpeakerSessionList($this->internal['currentRow']['uid'],$this->conf['pidListEvents']);
-			#$content .= '<br>SessionIDs=['.$sessionids.']';
+#$content .= '<br>SessionIDs=['.$sessionids.']';
 
 			# display only speaker with sessions
 			if (!empty($sessionids)) {
@@ -374,15 +374,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###IMAGEFILE###'] = '';
 				}
 
-
-				$switch_row = $switch_row ^ 1;
-				if($switch_row) {
-					$content_item .= $this->cObj->substituteMarkerArrayCached($template['row'], $markerArray);
-				} else {
-					$content_item .= $this->cObj->substituteMarkerArrayCached($template['row_alt'], $markerArray);
-				}
-
 				# For every session get information
+				$sess_content_item = '';
 				foreach(explode(',',$sessionids) as $k){
 					$data = $this->pi_getRecord('tx_wseevents_sessions',$k);
 
@@ -403,9 +396,17 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray1['###SESSIONTEASER###'] = $data['teaser'];
 					$markerArray1['###SESSIONDESCRIPTION###'] = $data['description'];
 
-					$content_item .= $this->cObj->substituteMarkerArrayCached($template['sessionrow'], $markerArray1);
+					$sess_content_item .= $this->cObj->substituteMarkerArrayCached($template['sessionrow'], $markerArray1);
 				}
-				//$subpartArray['###SESSIONROW###'] = $content_item; 
+				$subpartArraySession['###SESSIONROW###'] = $sess_content_item;
+				if ($switch_row==0) {
+					$content_item .= $this->cObj->substituteMarkerArrayCached($template['row'], $markerArray, $subpartArraySession);
+				} else {
+					$content_item .= $this->cObj->substituteMarkerArrayCached($template['row_alt'], $markerArray, $subpartArraySession);
+				}
+				if (!empty($template['row_alt'])) {
+					$switch_row = $switch_row ^ 1;
+				}
 			}
 		}   
 		$subpartArray['###SINGLEROW###'] = $content_item; 
