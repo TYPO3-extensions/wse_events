@@ -2,8 +2,5 @@
     * Beim Bild für die Referenten ist man darauf angewiesen, ein für die angegebenen Dimensionen passendes zu verwenden. Könntest Du eine automatische Anpassung per GIFBUILDER einbauen? Die Dimensionen könnten über TypoScript festgelegt werden.
 
 
-	* Bei der Einzelansicht (Session und Speaker) funktioniert die Übersetzung nicht.
-	
-	
 	* Bei Links von Single nach Single funktioniert Back nicht
 	

@@ -719,7 +719,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 $TCA['tx_wseevents_speakers'] = Array (
 	'ctrl' => $TCA['tx_wseevents_speakers']['ctrl'],
 	'interface' => Array (
-		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,name,firstname,comment,email,info'
+		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,name,firstname,comment,country,email,company,companylink,info,image'
 	),
 	'feInterface' => $TCA['tx_wseevents_speakers']['feInterface'],
 	'columns' => Array (
@@ -857,7 +857,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 						'notNewRecords' => 1,
 						'RTEonly' => 1,
 						'type' => 'script',
-						'title' => 'Full screen Rich Text Editing|Formatteret redigering i hele vinduet',
+						'title' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.info_rte',
 						'icon' => 'wizard_rte2.gif',
 						'script' => 'wizard_rte.php',
 					),
