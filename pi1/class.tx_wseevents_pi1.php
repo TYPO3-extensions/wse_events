@@ -529,7 +529,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$markerArray['###IMAGELINK###'] = $this->cObj->IMAGE($img);
 			$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$image;
 		} else {
-			$markerArray['###IMAGELINK##'] = '';
+			$markerArray['###IMAGELINK###'] = '';
 			$markerArray['###IMAGEFILE###'] = '';
 		}
 		$markerArray['###SESSIONSNAME###'] = $this->getFieldHeader('speakersessions');
