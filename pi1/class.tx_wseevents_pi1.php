@@ -103,6 +103,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			break;
 		}
 	}
+
+	
+	
+	
+	
 	
 	/**
 	 * Display a list of sessions for the event that is set in the flex form settings
@@ -213,7 +218,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			if (!empty($this->conf['singleSession'])) {
 			    $label = $this->getFieldContent('name');  // the link text
 			    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
-			    $overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
+			    $overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
 			    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 			    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
 			    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
@@ -243,6 +248,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray1, $subpartArray);
 		return $content;
 	}
+
+
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * Display a list of speakers for the event that is set in the flex form settings
@@ -381,7 +395,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$label = $this->getTranslatedField('tx_wseevents_sessions', 'name', $k);
 					if (!empty($this->conf['singleSession'])) {
 						$overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
-						$overrulePIvars = array('showSessionUid' => $k, 'backUid' => $GLOBALS['TSFE']->id);
+						$overrulePIvars = array('showSessionUid' => $k, 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
 						$clearAnyway=1;    // the current values of piVars will NOT be preserved
 						$altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
 						$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
@@ -414,6 +428,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		return $content;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Display the details of a single session
 	 */
@@ -441,7 +463,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		// Link for back to list view
 		$label = $this->pi_getLL('back','Back');  // the link text
-		$overrulePIvars = array ('showSessionUid' => $this->piVars['showSessionUid']);
+		if ($this->piVars['back2list']<>1) {
+			# Back to single view
+			$overrulePIvars = array ('showSessionUid' => $this->piVars['showSessionUid']);
+		}
 		$clearAnyway=1;    // the current values of piVars will NOT be preserved
 		$altPageId=$this->piVars['backUid'];      // ID of the view page
 		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
@@ -462,6 +487,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		return $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray);;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Display the details of a single speaker
 	 */
@@ -565,6 +598,13 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		return $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray, $subpartArray);
 	}
 
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Get content of one field
 	 */
@@ -732,17 +772,24 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 	}
 
+	
+	
+	
+	
+	
+	
+	
 	/**
 	* Get the translated content of a field
 	* Returns english content if no translation is found
 	*/
 	function getTranslatedField($dbname, $fN, $fUid=-1) {
 		$index = $GLOBALS['TSFE']->sys_language_uid;
+		if ($fUid<0) {
+			$fUid = $this->internal['currentRow']['uid'];
+		}
 		if ($index<>0) {
 			// for the name of a session, check if a translation is there
-			if ($fUid<0) {
-				$fUid = $this->internal['currentRow']['uid'];
-			}
 			$where = 'deleted=0 AND hidden=0 AND l18n_parent='.$fUid.' AND sys_language_uid='.$index;
 			$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery($fN, $dbname, $where);
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -759,9 +806,21 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			}
 		} else {
 			//show default language
-			return $this->internal['currentRow'][$fN];
+//			return $this->internal['currentRow'][$fN];
+			$where = 'deleted=0 AND hidden=0 AND uid='.$fUid;
+			$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery($fN, $dbname, $where);
+			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$datacount = $row[$fN];
+			return $datacount;
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	* Get the translated name of a category
@@ -786,13 +845,20 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Get list of session UIDs for the speaker
 	 */
 	function getSpeakerSessionList($speakerid,$eventPid) {
-		$where = '';
+		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0';
 		$this->conf['pidList'] = $eventPid;
-		$res = $this->pi_exec_query('tx_wseevents_sessions',0,$where);
+#		$res = $this->pi_exec_query('tx_wseevents_sessions',0,$where);
+		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('speaker, uid', 'tx_wseevents_sessions', $where);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			foreach(explode(',',$row['speaker']) as $k){
 				if ($k==$speakerid) {
@@ -806,6 +872,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 		return $sessions;
 	}
+	 
+	 
+	 
+	 
+	 
 	 
 	 /**
 	 * Get label of one field
