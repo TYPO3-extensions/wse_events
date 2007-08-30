@@ -1,5 +1,32 @@
-(add new changes on top of this file)
+2007-08-28
+	* Project homepage and Trac bug tracking are installed
 
-07-07-31 Michael Oehlhof  <michael@oehlhof.de>
+2007-08-24
+	* Added marker for session data to the speaker list view
 
+2007-08-22
+	* Added marker from single speaker view to the speaker list view
+	* Added field country to speaker record
+	* Added field website to localization record
+	* Added web link selection to country, website and email fields
+	* Changed some marker names to get unique names in different views
+
+2007-08-20
+	* Subversion repository created at netlabs.org to save the development steps.
+
+2007-08-19
+	* Added display of speaker list to the front end plugin.
+
+2007-08-17
+	* Update screenshot for display settings
+	* Insert information about template usage and tables with template configuration data
+
+2007-08-13
+	* Update with syntax corrections from Christian Hennecke
+	* Update of changes in field structure
+
+2007-08-10
+	* Create first version of documentation.
+
+2007-07-31 Michael Oehlhof  <typo3@oehlhof.de>
 	* Initial release
