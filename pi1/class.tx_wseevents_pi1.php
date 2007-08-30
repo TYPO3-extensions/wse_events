@@ -96,7 +96,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $this->pi_wrapInBaseClass($this->singleSpeakerView($content,$conf));
 			break;
 			case 'timeslots':
-				return $this->pi_wrapInBaseClass('Time slot list, not yet implemented');
+				return $this->pi_wrapInBaseClass($this->listTimeslotView($content,$conf));
 			break;
 			default:
 				return $this->pi_wrapInBaseClass('Not implemented: ['.(string)$flexFormValuesArray['dynListType'].']<br>Index=['.$index.']<br>');
@@ -431,6 +431,136 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	
 	
 	
+
+
+
+
+	/**
+	 * Display a list of time slots for the event that is set in the flex form settings
+	 */
+	function listTimeslotView($content,$conf)	{
+		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
+		$this->pi_setPiVarDefaults();
+		$this->pi_loadLL();		// Loading the LOCAL_LANG values
+		$index = $GLOBALS['TSFE']->sys_language_uid;
+		
+		$lConf = $this->conf['listView.'];	// Local settings for the listView function
+	
+		// Set table to session table
+		$this->internal['currentTable'] = 'tx_wseevents_sessions';
+		
+		if (!isset($this->piVars['pointer']))	$this->piVars['pointer']=0;
+		if (!isset($this->piVars['mode']))	$this->piVars['mode']=1;
+
+		# Check if template file is set, if not use the default template
+		if (!isset($conf['templateFile'])) {
+			$templateFile = 'EXT:wse_events/wseevents.tmpl';
+		} else {
+			$templateFile = $conf['templateFile'];
+		}
+		# Get the template
+		$this->templateCode = $this->cObj->fileResource($templateFile);
+		
+		# Get the parts out of the template
+		$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSALL###');
+		$template['titlerow']  = $this->cObj->getSubpart($template['total'], '###TITLEROW###');
+		$template['titlecol']  = $this->cObj->getSubpart($template['titlerow'], '###TITLECOLUMN###');
+		$template['headerrow'] = $this->cObj->getSubpart($template['total'], '###HEADERROW###');
+		$template['headercol'] = $this->cObj->getSubpart($template['headerrow'],'###HEADERCOLUMN###');
+		$template['slotrow']   = $this->cObj->getSubpart($template['total'], '###SLOTROW###');
+		$template['slotcol']   = $this->cObj->getSubpart($template['slotrow'],  '###SLOTCOLUMN###');
+
+		# Get count of days and name of days
+		$daycount = 3;
+		$dayname = array( 1 => 'Freitag', 2 => 'Samstag', 3 => 'Sonntag');
+		# Get count of rooms and name of rooms
+		$roomcount = 3;
+		$roomname = array( 1 => 'Raum 1', 2 => 'Raum 2', 3 => 'Raum 3');
+		# Get count of slots and name of slots
+		$slotcount = 40;
+		for ( $s = 1; $s <= $slotcount; $s++ ) {
+			$slotname[$s] = 'Slot '.$s;
+			$slotbegin[$s] = 'Begin'.$s;
+		}
+
+		$content_title = '';
+		$content_header = '';
+		$content_slot = '';
+		# Loop over all days
+		for ( $d = 1; $d <= $daycount; $d++ ) {
+			$markerArray = array();
+			$markerArray['###ROOMCOUNT###'] = $roomcount;
+			$markerArray['###TITLEDAY###'] = $dayname[$d];
+			$content_title .= $this->cObj->substituteMarkerArrayCached($template['titlecol'], $markerArray);
+			
+			# Loop over all rooms
+			for ( $r = 1; $r <= $roomcount; $r++ ) {
+				$markerArray = array();
+				$markerArray['###HEADERROOM###'] = $roomname[$r];
+				$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercol'], $markerArray);
+			}
+		}
+			
+		# Loop over all slots of a day
+		for ( $s = 1; $s <= $slotcount; $s++ ) {
+			$content_slotrow = '';
+			# Loop over all days
+			for ( $d = 1; $d <= $daycount; $d++ ) {
+				# Loop over all rooms
+				for ( $r = 1; $r <= $roomcount; $r++ ) {
+					$slot_id = $this->getSlot($d, $r, $s);
+					if (!empty($slot_id)) {
+						$slot_len = $this->getSlotLength($slot_id);
+						$markerArray = array();
+						$markerArray['###SLOTSIZE###'] = $slot_len;
+						$markerArray['###SLOTNAME###'] = 'Session-'.$d.'-'.$r.'-'.$s;
+						$markerArray['###SLOTCATEGORY###'] = 1;
+						$markerArray['###SLOTLINK###'] = 'Link';
+						$markerArray['###SLOTSESSION###'] = 'CatNum-D'.$d.'-R'.$r.'-S'.$s;
+						$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
+						for ( $x = $s+1; $x < $s+$slot_len; $x++) {
+							$used[$x][$d][$r] = 1;
+						}
+					} else {
+						if (empty($used[$s][$d][$r])) {
+							$markerArray = array();
+							$markerArray['###SLOTSIZE###'] = 1;
+							$markerArray['###SLOTNAME###'] = '-';
+							$markerArray['###SLOTCATEGORY###'] = 1;
+							$markerArray['###SLOTLINK###'] = '';
+							$markerArray['###SLOTSESSION###'] = '&nbsp;';
+							$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
+						}
+					}
+				}
+			}
+			$subpartArray1['###SLOTCOLUMN###'] = $content_slotrow;
+			$markerArray = array();
+			$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+			$content_slot .= $this->cObj->substituteMarkerArrayCached($template['slotrow'], $markerArray, $subpartArray1);
+		}
+		
+		$subpartArray['###SLOTROW###']  = $content_slot;
+
+		
+
+		$subpartArray1['###HEADERCOLUMN###'] = $content_header;
+		$markerArray = array();
+		$markerArray['###HEADERBEGIN###'] = 'Time';
+		$subpartArray['###HEADERROW###']  = $this->cObj->substituteMarkerArrayCached($template['headerrow'], $markerArray, $subpartArray1);
+
+		$subpartArray1['###TITLECOLUMN###'] = $content_title;
+		$markerArray = array();
+		$markerArray['###TITLEBEGIN###'] = '';
+		$subpartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subpartArray1);
+
+		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subpartArray);
+		return $content;
+	}
+
+
+
+
 	
 	
 	
@@ -878,7 +1008,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 
 	 
 	 
-	 /**
+	/**
 	 * Get label of one field
 	 */
 	function getFieldHeader($fN)	{
@@ -889,6 +1019,33 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			break;
 		}
 	}
+	
+	 
+	 
+	 
+	/**
+	 * Get id of record from time slot for given day, room and slot
+	 */
+	function getSlot($day, $room, $slot) {
+		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND eventday='.$day.' AND room='.$room.' AND begin='.$slot;
+		$this->conf['pidList'] = $eventPid;
+		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('uid', 'tx_wseevents_timeslots', $where);
+		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		return $row['uid'];
+	}
+
+	
+	/**
+	 * Get length of time slot for given uid
+	 */
+	function getSlotLength($slot_id) {
+		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$slot_id;
+		$this->conf['pidList'] = $eventPid;
+		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('length', 'tx_wseevents_timeslots', $where);
+		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		return $row['length'];
+	}
+	
 	
 }
 
