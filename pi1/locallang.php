@@ -27,6 +27,8 @@ $LOCAL_LANG = Array (
 		'tx_wseevents_speakers.listFieldHeader_info' => 'Information',
 		'tx_wseevents_speakers.listFieldHeader_image' => 'Image',
 		'tx_wseevents_speakers.listFieldHeader_speakersessions' => 'Sessions',
+		'tx_wseevents_sessions.slot_titlebegin' => '',
+		'tx_wseevents_sessions.slot_headerbegin' => 'Begin',
 		'back' => 'Back',	
 	),
 	'de' => Array (
@@ -50,6 +52,8 @@ $LOCAL_LANG = Array (
 		'tx_wseevents_speakers.listFieldHeader_info' => 'Information',
 		'tx_wseevents_speakers.listFieldHeader_image' => 'Bild',
 		'tx_wseevents_speakers.listFieldHeader_speakersessions' => 'Vorträge',
+		'tx_wseevents_sessions.slot_titlebegin' => '',
+		'tx_wseevents_sessions.slot_headerbegin' => 'Beginn',
 		'back' => 'Zurück',	
 	),
 	'nl' => Array (

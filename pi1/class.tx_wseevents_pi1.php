@@ -452,6 +452,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if (!isset($this->piVars['pointer']))	$this->piVars['pointer']=0;
 		if (!isset($this->piVars['mode']))	$this->piVars['mode']=1;
 
+#ToDo: Hier muss die Combobox abgefragt werden
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -463,6 +464,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		
 		# Get the parts out of the template
 		$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSALL###');
+#		$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSDAY###');
 		$template['titlerow']  = $this->cObj->getSubpart($template['total'], '###TITLEROW###');
 		$template['titlecol']  = $this->cObj->getSubpart($template['titlerow'], '###TITLECOLUMN###');
 		$template['headerrow'] = $this->cObj->getSubpart($template['total'], '###HEADERROW###');
@@ -470,19 +472,48 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['slotrow']   = $this->cObj->getSubpart($template['total'], '###SLOTROW###');
 		$template['slotcol']   = $this->cObj->getSubpart($template['slotrow'],  '###SLOTCOLUMN###');
 
+		# Get event info
+#ToDo: uid des Event ermitteln
+		$event = $this->getEventInfo(1);
 		# Get count of days and name of days
-		$daycount = 3;
-		$dayname = array( 1 => 'Freitag', 2 => 'Samstag', 3 => 'Sonntag');
-		# Get count of rooms and name of rooms
-		$roomcount = 3;
-		$roomname = array( 1 => 'Raum 1', 2 => 'Raum 2', 3 => 'Raum 3');
-		# Get count of slots and name of slots
-		$slotcount = 40;
-		for ( $s = 1; $s <= $slotcount; $s++ ) {
-			$slotname[$s] = 'Slot '.$s;
-			$slotbegin[$s] = 'Begin'.$s;
+		$secofday = 60*60*24;
+		$daycount = $event['length'];
+		for ( $d = 1; $d <= $daycount; $d++ ) {
+			$thisday = $event['begin']+($d-1)*$secofday;
+			$thisweekday = date('w', $thisday);
+#ToDo: Mit TYPO3 den Wochentag ermitteln nd das Datum formatieren
+			$dayname[$d] = date('D d.m.Y', $thisday);
 		}
 
+		# Get count of rooms and name of rooms
+		$rooms = $this->getRoomInfo($event['location']);
+		$roomcount = count($rooms);
+		for ( $r = 1; $r <= $roomcount; $r++ ) {
+			$roomname[$r] = $rooms[$r]['name'];
+		}
+#$content .= t3lib_div::view_array($roomname);
+		# Create a list with the times of slot begins
+		$timeoffsetGMT = date('O');
+		$timeoffset = date('Z');
+		# Get begin of slots
+		$timebegin = $event['timebegin'];
+		list($t_hr,$t_min) = explode(':',$timebegin);
+		$t_start = ($t_hr*60 +$t_min)*60;
+		# Get end of slots
+		$timeend   = $event['timeend'];
+		list($t_hr,$t_min) = explode(':',$timeend);
+		$t_end = ($t_hr*60 +$t_min)*60;
+		# Get count of slots
+		$slotlen = $event['slotsize']*60;
+		$slotcount = ($t_end - $t_start)/$slotlen;
+//		$slotcount = 40;
+		for ( $s = 1; $s <= $slotcount; $s++ ) {
+			$slotname[$s] = 'Slot '.$s;
+			$slotbegin[$s] = date('H:i', (($s-1)*$slotlen+$t_start)-$timeoffset).' GMT'; #-$timeoffset
+		}
+		
+//$content .= 'Start='.$timebegin.'<br>Sekunden='.$t_start.'<br>Zeitzone'.date('T Z O').'<br>';
+		
 		$content_title = '';
 		$content_header = '';
 		$content_slot = '';
@@ -511,12 +542,34 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$slot_id = $this->getSlot($d, $r, $s);
 					if (!empty($slot_id)) {
 						$slot_len = $this->getSlotLength($slot_id);
-						$markerArray = array();
-						$markerArray['###SLOTSIZE###'] = $slot_len;
-						$markerArray['###SLOTNAME###'] = 'Session-'.$d.'-'.$r.'-'.$s;
-						$markerArray['###SLOTCATEGORY###'] = 1;
-						$markerArray['###SLOTLINK###'] = 'Link';
-						$markerArray['###SLOTSESSION###'] = 'CatNum-D'.$d.'-R'.$r.'-S'.$s;
+						$sessiondata = $this->getSlotSession($slot_id);
+						if (!empty($sessiondata)) {
+						    $label = $sessiondata['catnum'];  // the link text
+						    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
+						    $overrulePIvars = array('showSessionUid' => $sessiondata['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
+						    $clearAnyway=1;    // the current values of piVars will NOT be preserved
+						    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+						    $sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+						    $label = $sessiondata['name'];  // the link text
+						    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+							$markerArray = array();
+							$markerArray['###SLOTSIZE###'] = $slot_len;
+							$markerArray['###SLOTNAME###'] = $sessiondata['name'];
+							$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
+							$markerArray['###SLOTLINK###'] = $sessionlink;
+							$markerArray['###SLOTLINKNAME###'] = $sessionlinkname;
+							$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
+							$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
+						} else {
+							$markerArray = array();
+							$markerArray['###SLOTSIZE###'] = $slot_len;
+							$markerArray['###SLOTNAME###'] = 'not assigned';
+							$markerArray['###SLOTCATEGORY###'] = '';
+							$markerArray['###SLOTLINK###'] = '';
+							$markerArray['###SLOTLINKNAME###'] = '';
+							$markerArray['###SLOTSESSION###'] = 'not assigned';
+							$markerArray['###SLOTTEASER###'] = 'not assigned';
+						}
 						$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
 						for ( $x = $s+1; $x < $s+$slot_len; $x++) {
 							$used[$x][$d][$r] = 1;
@@ -529,6 +582,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$markerArray['###SLOTCATEGORY###'] = 1;
 							$markerArray['###SLOTLINK###'] = '';
 							$markerArray['###SLOTSESSION###'] = '&nbsp;';
+							$markerArray['###SLOTTEASER###'] = 'Teaser';
 							$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
 						}
 					}
@@ -553,6 +607,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray = array();
 		$markerArray['###TITLEBEGIN###'] = '';
 		$subpartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subpartArray1);
+
+#ToDo: Hier muss die Combobox ins Template gepackt werden
 
 		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subpartArray);
 		return $content;
@@ -1024,6 +1080,46 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 
 	 
 	/**
+	 * Get info about an event
+	 */
+	function getEventInfo($event) {
+		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$event;
+		$this->conf['pidList'] = $eventPid;
+		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('name,location,begin,length,timebegin,timeend,slotsize,maxslot,defslotcount', 'tx_wseevents_events', $where);
+		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		return $row;
+	}
+
+	
+	/**
+	 * Get info about a location
+	 */
+	function getLocationInfo($loc_id) {
+		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$loc_id;
+		$this->conf['pidList'] = $eventPid;
+		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('name,website,comment', 'tx_wseevents_locations', $where);
+		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		return $row;
+	}
+
+	
+	/**
+	 * Get info about rooms of an location
+	 */
+	function getRoomInfo($loc_id) {
+		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND location='.$loc_id;
+		$this->conf['pidList'] = $eventPid;
+		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('name,comment,seats', 'tx_wseevents_rooms', $where);
+		$id = 1;
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$rows[$id] = $row;
+			$id++;
+		}
+		return $rows;
+	}
+
+	
+	/**
 	 * Get id of record from time slot for given day, room and slot
 	 */
 	function getSlot($day, $room, $slot) {
@@ -1046,6 +1142,28 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		return $row['length'];
 	}
 	
+
+
+	/**
+	 * Get session data for given slot
+	 */
+	function getSlotSession($slot_id) {
+		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0';
+		$this->conf['pidList'] = $eventPid;
+		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('uid,name,category,number,teaser,timeslots', 'tx_wseevents_sessions', $where);
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			foreach(explode(',',$row['timeslots']) as $k){
+				if ($k==$slot_id) {
+					$session = $row;
+					$datacat = $this->pi_getRecord('tx_wseevents_categories',$row['category']);
+					$session['catnum'] = $datacat['shortkey'].sprintf ('%02d', $row['number']);
+					$session['name'] = $this->getTranslatedField('tx_wseevents_sessions', 'name', $row['uid']);
+					$session['teaser'] = $this->getTranslatedField('tx_wseevents_sessions', 'teaser', $row['uid']);
+				}
+			}
+		}
+		return $session;
+	}
 	
 }
 
