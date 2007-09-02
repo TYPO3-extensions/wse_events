@@ -553,6 +553,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						    $label = $sessiondata['name'];  // the link text
 						    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
 							$markerArray = array();
+							$markerArray['###SLOTDAY###'] = $d;
+							$markerArray['###SLOTROOM###'] = $r;
+							$markerArray['###SLOTNUM###'] = $s;
 							$markerArray['###SLOTSIZE###'] = $slot_len;
 							$markerArray['###SLOTNAME###'] = $sessiondata['name'];
 							$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
@@ -562,6 +565,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
 						} else {
 							$markerArray = array();
+							$markerArray['###SLOTDAY###'] = $d;
+							$markerArray['###SLOTROOM###'] = $r;
+							$markerArray['###SLOTNUM###'] = $s;
 							$markerArray['###SLOTSIZE###'] = $slot_len;
 							$markerArray['###SLOTNAME###'] = 'not assigned';
 							$markerArray['###SLOTCATEGORY###'] = '';
@@ -577,6 +583,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					} else {
 						if (empty($used[$s][$d][$r])) {
 							$markerArray = array();
+							$markerArray['###SLOTDAY###'] = $d;
+							$markerArray['###SLOTROOM###'] = $r;
+							$markerArray['###SLOTNUM###'] = $s;
 							$markerArray['###SLOTSIZE###'] = 1;
 							$markerArray['###SLOTNAME###'] = '-';
 							$markerArray['###SLOTCATEGORY###'] = 1;
@@ -1152,14 +1161,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->conf['pidList'] = $eventPid;
 		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTquery('uid,name,category,number,teaser,timeslots', 'tx_wseevents_sessions', $where);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			foreach(explode(',',$row['timeslots']) as $k){
-				if ($k==$slot_id) {
+//			foreach(explode(',',$row['timeslots']) as $k){
+//				if ($k==$slot_id) {
+			if (t3lib_div::inList($row['timeslots'],$slot_id)) {
 					$session = $row;
 					$datacat = $this->pi_getRecord('tx_wseevents_categories',$row['category']);
 					$session['catnum'] = $datacat['shortkey'].sprintf ('%02d', $row['number']);
 					$session['name'] = $this->getTranslatedField('tx_wseevents_sessions', 'name', $row['uid']);
 					$session['teaser'] = $this->getTranslatedField('tx_wseevents_sessions', 'teaser', $row['uid']);
-				}
+//				}
 			}
 		}
 		return $session;
