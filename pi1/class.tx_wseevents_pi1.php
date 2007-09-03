@@ -471,6 +471,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['headercol'] = $this->cObj->getSubpart($template['headerrow'],'###HEADERCOLUMN###');
 		$template['slotrow']   = $this->cObj->getSubpart($template['total'], '###SLOTROW###');
 		$template['slotcol']   = $this->cObj->getSubpart($template['slotrow'],  '###SLOTCOLUMN###');
+		$template['slotcolempty']   = $this->cObj->getSubpart($template['slotrow'],  '###SLOTCOLUMNEMPTY###');
 
 		# Get event info
 #ToDo: uid des Event ermitteln
@@ -481,8 +482,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		for ( $d = 1; $d <= $daycount; $d++ ) {
 			$thisday = $event['begin']+($d-1)*$secofday;
 			$thisweekday = date('w', $thisday);
-#ToDo: Mit TYPO3 den Wochentag ermitteln nd das Datum formatieren
-			$dayname[$d] = date('D d.m.Y', $thisday);
+#ToDo: Mit TYPO3 den Wochentag ermitteln und das Datum formatieren
+#			setlocale(LC_TIME, 'de_DE');
+			$dayname[$d] = strftime('%A<br />%d.%m.%Y', $thisday);
 		}
 
 		# Get count of rooms and name of rooms
@@ -492,27 +494,33 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$roomname[$r] = $rooms[$r]['name'];
 		}
 #$content .= t3lib_div::view_array($roomname);
+#$content .= t3lib_div::view_array($GLOBALS['TSFE']);
 		# Create a list with the times of slot begins
 		$timeoffsetGMT = date('O');
 		$timeoffset = date('Z');
 		# Get begin of slots
 		$timebegin = $event['timebegin'];
 		list($t_hr,$t_min) = explode(':',$timebegin);
-		$t_start = ($t_hr*60 +$t_min)*60;
+#		$t_start = ($t_hr*60 +$t_min)*60;
+		$t_start = strtotime($timebegin);
 		# Get end of slots
 		$timeend   = $event['timeend'];
 		list($t_hr,$t_min) = explode(':',$timeend);
-		$t_end = ($t_hr*60 +$t_min)*60;
+#		$t_end = ($t_hr*60 +$t_min)*60;
+		$t_end = strtotime($timeend);
 		# Get count of slots
 		$slotlen = $event['slotsize']*60;
 		$slotcount = ($t_end - $t_start)/$slotlen;
-//		$slotcount = 40;
-		for ( $s = 1; $s <= $slotcount; $s++ ) {
+		for ( $s = 1; $s <= $slotcount+1; $s++ ) {
 			$slotname[$s] = 'Slot '.$s;
-			$slotbegin[$s] = date('H:i', (($s-1)*$slotlen+$t_start)-$timeoffset).' GMT'; #-$timeoffset
+			$slotbegin[$s] = date('H:i', (($s-1)*$slotlen+$t_start));
+			// %H:%M
 		}
 		
-//$content .= 'Start='.$timebegin.'<br>Sekunden='.$t_start.'<br>Zeitzone'.date('T Z O').'<br>';
+#$content .= '<br>Zeitzone'.date('T Z O').'<br>';
+#$content .= 'Start='.$timebegin.'<br>Sekunden='.$t_start.'<br>';
+#$content .= 'Ende='.$timeend.'<br>Sekunden='.$t_end.'<br>';
+#$content .= 'Slotlen='.$slotlen.'<br>Slotcount='.$slotcount.'<br>';
 		
 		$content_title = '';
 		$content_header = '';
@@ -553,10 +561,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						    $label = $sessiondata['name'];  // the link text
 						    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
 							$markerArray = array();
-							$markerArray['###SLOTDAY###'] = $d;
-							$markerArray['###SLOTROOM###'] = $r;
-							$markerArray['###SLOTNUM###'] = $s;
-							$markerArray['###SLOTSIZE###'] = $slot_len;
 							$markerArray['###SLOTNAME###'] = $sessiondata['name'];
 							$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
 							$markerArray['###SLOTLINK###'] = $sessionlink;
@@ -565,17 +569,19 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
 						} else {
 							$markerArray = array();
-							$markerArray['###SLOTDAY###'] = $d;
-							$markerArray['###SLOTROOM###'] = $r;
-							$markerArray['###SLOTNUM###'] = $s;
-							$markerArray['###SLOTSIZE###'] = $slot_len;
-							$markerArray['###SLOTNAME###'] = 'not assigned';
+							$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
 							$markerArray['###SLOTCATEGORY###'] = '';
 							$markerArray['###SLOTLINK###'] = '';
 							$markerArray['###SLOTLINKNAME###'] = '';
-							$markerArray['###SLOTSESSION###'] = 'not assigned';
-							$markerArray['###SLOTTEASER###'] = 'not assigned';
+							$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+							$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
 						}
+						$markerArray['###SLOTDAY###'] = $d;
+						$markerArray['###SLOTROOM###'] = $r;
+						$markerArray['###SLOTNUM###'] = $s;
+						$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+						$markerArray['###SLOTEND###'] = $slotbegin[$s+$slot_len];
+						$markerArray['###SLOTSIZE###'] = $slot_len;
 						$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
 						for ( $x = $s+1; $x < $s+$slot_len; $x++) {
 							$used[$x][$d][$r] = 1;
@@ -586,18 +592,21 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$markerArray['###SLOTDAY###'] = $d;
 							$markerArray['###SLOTROOM###'] = $r;
 							$markerArray['###SLOTNUM###'] = $s;
+							$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+							$markerArray['###SLOTEND###'] = $slotbegin[$s+1];
 							$markerArray['###SLOTSIZE###'] = 1;
-							$markerArray['###SLOTNAME###'] = '-';
+							$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
 							$markerArray['###SLOTCATEGORY###'] = 1;
 							$markerArray['###SLOTLINK###'] = '';
-							$markerArray['###SLOTSESSION###'] = '&nbsp;';
-							$markerArray['###SLOTTEASER###'] = 'Teaser';
-							$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
+							$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+							$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+							$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
 						}
 					}
 				}
 			}
 			$subpartArray1['###SLOTCOLUMN###'] = $content_slotrow;
+			$subpartArray1['###SLOTCOLUMNEMPTY###'] = '';
 			$markerArray = array();
 			$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
 			$content_slot .= $this->cObj->substituteMarkerArrayCached($template['slotrow'], $markerArray, $subpartArray1);
