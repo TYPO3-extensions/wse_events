@@ -452,7 +452,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if (!isset($this->piVars['pointer']))	$this->piVars['pointer']=0;
 		if (!isset($this->piVars['mode']))	$this->piVars['mode']=1;
 
-#ToDo: Hier muss die Combobox abgefragt werden
+		# Check for event day selection
+		$showday = $this->piVars['showDay'];
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -463,9 +465,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->templateCode = $this->cObj->fileResource($templateFile);
 		
 		# Get the parts out of the template
-		$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSALL###');
-#		$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSDAY###');
+		$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSDAY###');
+		if ((empty($template['total'])) or ($showday==0)) {
+			$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSALL###');
+		}
 		$template['titlerow']  = $this->cObj->getSubpart($template['total'], '###TITLEROW###');
+		$template['select']    = $this->cObj->getSubpart($template['titlerow'],'###SELECT###');
+		$template['option']    = $this->cObj->getSubpart($template['select'],'###OPTIONNOTSELECTED###');
+		$template['optionsel'] = $this->cObj->getSubpart($template['select'],'###OPTIONSELECTED###');	
 		$template['titlecol']  = $this->cObj->getSubpart($template['titlerow'], '###TITLECOLUMN###');
 		$template['headerrow'] = $this->cObj->getSubpart($template['total'], '###HEADERROW###');
 		$template['headercol'] = $this->cObj->getSubpart($template['headerrow'],'###HEADERCOLUMN###');
@@ -476,6 +483,16 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		# Get event info
 #ToDo: uid des Event ermitteln
 		$event = $this->getEventInfo(1);
+
+		# Create template data for eventday combobox
+		$content_select = '';	// Clear var;
+		$markerArray['###VALUE###'] = 0;
+		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.choosealldays','[-All-]');
+		if ($showday==0) {
+			$content_select .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
+		} else {
+			$content_select .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
+		}
 		# Get count of days and name of days
 		$secofday = 60*60*24;
 		$daycount = $event['length'];
@@ -484,7 +501,17 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$thisweekday = date('w', $thisday);
 #ToDo: Mit TYPO3 den Wochentag ermitteln und das Datum formatieren
 #			setlocale(LC_TIME, 'de_DE');
-			$dayname[$d] = strftime('%A<br />%d.%m.%Y', $thisday);
+#ToDo: Trenner durch TypoScript einstellbar machen
+			$dayname[$d] = strftime('%A - %d.%m.%Y', $thisday);
+
+			# Set one event day  option 
+			$markerArray['###VALUE###'] = $d;
+			$markerArray['###OPTION###'] = $dayname[$d];
+			if ($showday==$d) {
+				$content_select .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
+			} else {
+				$content_select .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
+			}
 		}
 
 		# Get count of rooms and name of rooms
@@ -521,22 +548,26 @@ class tx_wseevents_pi1 extends tslib_pibase {
 #$content .= 'Start='.$timebegin.'<br>Sekunden='.$t_start.'<br>';
 #$content .= 'Ende='.$timeend.'<br>Sekunden='.$t_end.'<br>';
 #$content .= 'Slotlen='.$slotlen.'<br>Slotcount='.$slotcount.'<br>';
-		
+
+
+		# Here the output begins
 		$content_title = '';
 		$content_header = '';
 		$content_slot = '';
 		# Loop over all days
 		for ( $d = 1; $d <= $daycount; $d++ ) {
-			$markerArray = array();
-			$markerArray['###ROOMCOUNT###'] = $roomcount;
-			$markerArray['###TITLEDAY###'] = $dayname[$d];
-			$content_title .= $this->cObj->substituteMarkerArrayCached($template['titlecol'], $markerArray);
-			
-			# Loop over all rooms
-			for ( $r = 1; $r <= $roomcount; $r++ ) {
+			if (($showday==$d) or ($showday==0)) {
 				$markerArray = array();
-				$markerArray['###HEADERROOM###'] = $roomname[$r];
-				$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercol'], $markerArray);
+				$markerArray['###ROOMCOUNT###'] = $roomcount;
+				$markerArray['###TITLEDAY###'] = $dayname[$d];
+				$content_title .= $this->cObj->substituteMarkerArrayCached($template['titlecol'], $markerArray);
+				
+				# Loop over all rooms
+				for ( $r = 1; $r <= $roomcount; $r++ ) {
+					$markerArray = array();
+					$markerArray['###HEADERROOM###'] = $roomname[$r];
+					$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercol'], $markerArray);
+				}
 			}
 		}
 			
@@ -545,62 +576,64 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$content_slotrow = '';
 			# Loop over all days
 			for ( $d = 1; $d <= $daycount; $d++ ) {
-				# Loop over all rooms
-				for ( $r = 1; $r <= $roomcount; $r++ ) {
-					$slot_id = $this->getSlot($d, $r, $s);
-					if (!empty($slot_id)) {
-						$slot_len = $this->getSlotLength($slot_id);
-						$sessiondata = $this->getSlotSession($slot_id);
-						if (!empty($sessiondata)) {
-						    $label = $sessiondata['catnum'];  // the link text
-						    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
-						    $overrulePIvars = array('showSessionUid' => $sessiondata['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
-						    $clearAnyway=1;    // the current values of piVars will NOT be preserved
-						    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
-						    $sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
-						    $label = $sessiondata['name'];  // the link text
-						    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
-							$markerArray = array();
-							$markerArray['###SLOTNAME###'] = $sessiondata['name'];
-							$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
-							$markerArray['###SLOTLINK###'] = $sessionlink;
-							$markerArray['###SLOTLINKNAME###'] = $sessionlinkname;
-							$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
-							$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
-						} else {
-							$markerArray = array();
-							$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
-							$markerArray['###SLOTCATEGORY###'] = '';
-							$markerArray['###SLOTLINK###'] = '';
-							$markerArray['###SLOTLINKNAME###'] = '';
-							$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
-							$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
-						}
-						$markerArray['###SLOTDAY###'] = $d;
-						$markerArray['###SLOTROOM###'] = $r;
-						$markerArray['###SLOTNUM###'] = $s;
-						$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
-						$markerArray['###SLOTEND###'] = $slotbegin[$s+$slot_len];
-						$markerArray['###SLOTSIZE###'] = $slot_len;
-						$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
-						for ( $x = $s+1; $x < $s+$slot_len; $x++) {
-							$used[$x][$d][$r] = 1;
-						}
-					} else {
-						if (empty($used[$s][$d][$r])) {
-							$markerArray = array();
+				if (($showday==$d) or ($showday==0)) {
+					# Loop over all rooms
+					for ( $r = 1; $r <= $roomcount; $r++ ) {
+						$slot_id = $this->getSlot($d, $r, $s);
+						if (!empty($slot_id)) {
+							$slot_len = $this->getSlotLength($slot_id);
+							$sessiondata = $this->getSlotSession($slot_id);
+							if (!empty($sessiondata)) {
+							    $label = $sessiondata['catnum'];  // the link text
+							    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
+							    $overrulePIvars = array('showSessionUid' => $sessiondata['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
+							    $clearAnyway=1;    // the current values of piVars will NOT be preserved
+							    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+							    $sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+							    $label = $sessiondata['name'];  // the link text
+							    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+								$markerArray = array();
+								$markerArray['###SLOTNAME###'] = $sessiondata['name'];
+								$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
+								$markerArray['###SLOTLINK###'] = $sessionlink;
+								$markerArray['###SLOTLINKNAME###'] = $sessionlinkname;
+								$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
+								$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
+							} else {
+								$markerArray = array();
+								$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+								$markerArray['###SLOTCATEGORY###'] = '';
+								$markerArray['###SLOTLINK###'] = '';
+								$markerArray['###SLOTLINKNAME###'] = '';
+								$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+								$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+							}
 							$markerArray['###SLOTDAY###'] = $d;
 							$markerArray['###SLOTROOM###'] = $r;
 							$markerArray['###SLOTNUM###'] = $s;
 							$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
-							$markerArray['###SLOTEND###'] = $slotbegin[$s+1];
-							$markerArray['###SLOTSIZE###'] = 1;
-							$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
-							$markerArray['###SLOTCATEGORY###'] = 1;
-							$markerArray['###SLOTLINK###'] = '';
-							$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
-							$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
-							$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
+							$markerArray['###SLOTEND###'] = $slotbegin[$s+$slot_len];
+							$markerArray['###SLOTSIZE###'] = $slot_len;
+							$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
+							for ( $x = $s+1; $x < $s+$slot_len; $x++) {
+								$used[$x][$d][$r] = 1;
+							}
+						} else {
+							if (empty($used[$s][$d][$r])) {
+								$markerArray = array();
+								$markerArray['###SLOTDAY###'] = $d;
+								$markerArray['###SLOTROOM###'] = $r;
+								$markerArray['###SLOTNUM###'] = $s;
+								$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+								$markerArray['###SLOTEND###'] = $slotbegin[$s+1];
+								$markerArray['###SLOTSIZE###'] = 1;
+								$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+								$markerArray['###SLOTCATEGORY###'] = 1;
+								$markerArray['###SLOTLINK###'] = '';
+								$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+								$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+								$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
+							}
 						}
 					}
 				}
@@ -622,8 +655,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$subpartArray['###HEADERROW###']  = $this->cObj->substituteMarkerArrayCached($template['headerrow'], $markerArray, $subpartArray1);
 
 		$subpartArray1['###TITLECOLUMN###'] = $content_title;
+		$subpartArray1['###SELECT###'] = $content_select;
 		$markerArray = array();
 		$markerArray['###TITLEBEGIN###'] = '';
+		$markerArray['###FORMSELECT###'] = $this->prefixId.'[showDay]';
 		$subpartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subpartArray1);
 
 #ToDo: Hier muss die Combobox ins Template gepackt werden
