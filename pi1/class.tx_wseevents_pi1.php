@@ -469,15 +469,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if ((empty($template['total'])) or ($showday==0)) {
 			$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSALL###');
 		}
-		$template['titlerow']  = $this->cObj->getSubpart($template['total'], '###TITLEROW###');
-		$template['select']    = $this->cObj->getSubpart($template['titlerow'],'###SELECT###');
-		$template['option']    = $this->cObj->getSubpart($template['select'],'###OPTIONNOTSELECTED###');
-		$template['optionsel'] = $this->cObj->getSubpart($template['select'],'###OPTIONSELECTED###');	
-		$template['titlecol']  = $this->cObj->getSubpart($template['titlerow'], '###TITLECOLUMN###');
-		$template['headerrow'] = $this->cObj->getSubpart($template['total'], '###HEADERROW###');
-		$template['headercol'] = $this->cObj->getSubpart($template['headerrow'],'###HEADERCOLUMN###');
-		$template['slotrow']   = $this->cObj->getSubpart($template['total'], '###SLOTROW###');
-		$template['slotcol']   = $this->cObj->getSubpart($template['slotrow'],  '###SLOTCOLUMN###');
+		$template['titlerow']       = $this->cObj->getSubpart($template['total'],    '###TITLEROW###');
+		$template['select']         = $this->cObj->getSubpart($template['titlerow'], '###SELECT###');
+		$template['option']         = $this->cObj->getSubpart($template['select'],   '###OPTIONNOTSELECTED###');
+		$template['optionsel']      = $this->cObj->getSubpart($template['select'],   '###OPTIONSELECTED###');	
+		$template['titlecol']       = $this->cObj->getSubpart($template['titlerow'], '###TITLECOLUMN###');
+		$template['headerrow']      = $this->cObj->getSubpart($template['total'],    '###HEADERROW###');
+		$template['headercol']      = $this->cObj->getSubpart($template['headerrow'],'###HEADERCOLUMN###');
+		$template['slotrow']        = $this->cObj->getSubpart($template['total'],    '###SLOTROW###');
+		$template['slotcol']        = $this->cObj->getSubpart($template['slotrow'],  '###SLOTCOLUMN###');
 		$template['slotcolempty']   = $this->cObj->getSubpart($template['slotrow'],  '###SLOTCOLUMNEMPTY###');
 
 		# Get event info
@@ -658,7 +658,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$subpartArray1['###SELECT###'] = $content_select;
 		$markerArray = array();
 		$markerArray['###TITLEBEGIN###'] = '';
+		$markerArray['###LABEL###'] = $this->pi_getLL('tx_wseevents_sessions.chooseeventday','[Choose event day]');
+		$markerArray['###FORMACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->page['uid']);
 		$markerArray['###FORMSELECT###'] = $this->prefixId.'[showDay]';
+		$markerArray['###FORMSEND###'] = htmlspecialchars($this->pi_getLL('tx_wseevents_sessions.showselection','[Show selection]'));
 		$subpartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subpartArray1);
 
 #ToDo: Hier muss die Combobox ins Template gepackt werden
