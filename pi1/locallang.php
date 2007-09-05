@@ -33,6 +33,8 @@ $LOCAL_LANG = Array (
 		'tx_wseevents_sessions.slot_headerbegin' => 'Begin',
 		'tx_wseevents_sessions.slot_notassigned' => 'not assigned',
 		'tx_wseevents_sessions.slot_notdefined' => 'free',
+		'tx_wseevents_sessions.slot_notassigned_catkey' => 'default',
+		'tx_wseevents_sessions.slot_notdefined_catkey' => 'free',
 		'back' => 'Back',	
 	),
 	'de' => Array (
@@ -67,6 +69,26 @@ $LOCAL_LANG = Array (
 	'nl' => Array (
 	),
 	'fr' => Array (
+		'tx_wseevents_sessions.listFieldHeader_number' => 'Numéro de session',
+		'tx_wseevents_sessions.listFieldHeader_name' => 'Nom de session',
+		'tx_wseevents_sessions.listFieldHeader_speaker' => 'Intervenant',
+		'tx_wseevents_sessions.listFieldHeader_room' => 'Salle',
+		'tx_wseevents_sessions.listFieldHeader_teaser' => 'Introduction',
+		'tx_wseevents_sessions.listFieldHeader_timeslots' => 'Créneaux horaires',
+		'tx_wseevents_sessions.listFieldHeader_description' => 'Description',
+		'tx_wseevents_sessions.notimeslots' => 'pas encore planifiée',
+		'tx_wseevents_sessions.nospeakers' => 'pas d\'intervenant assigné',
+		'tx_wseevents_sessions.choosecategory' => 'Choisir la catégorie',
+		'tx_wseevents_sessions.chooseall' => '- Toutes les catégories -',
+		'tx_wseevents_sessions.showselection' => 'Afficher la catégorie sélectionnée',
+		'tx_wseevents_speakers.listFieldHeader_name' => 'Nom de l\'intervenant',
+		'tx_wseevents_speakers.listFieldHeader_email' => 'Courriel',
+		'tx_wseevents_speakers.listFieldHeader_country' => 'Pays d\'origine',
+		'tx_wseevents_speakers.listFieldHeader_company' => 'Compagnie',
+		'tx_wseevents_speakers.listFieldHeader_companylink' => 'Lien vers la compagnie',
+		'tx_wseevents_speakers.listFieldHeader_info' => 'Informations',
+		'tx_wseevents_speakers.listFieldHeader_image' => 'Photographie',
+		'tx_wseevents_speakers.listFieldHeader_speakersessions' => 'Sessions',
 	),
 );
 ?>
