@@ -710,7 +710,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$label = $this->pi_getLL('back','Back');  // the link text
 		if ($this->piVars['back2list']<>1) {
 			# Back to single view
-			$overrulePIvars = array ('showSessionUid' => $this->piVars['showSessionUid']);
+			$overrulePIvars = array ('showSessionUid' => $this->piVars['showSessionUid'],
+									'showSpeakerUid' => $this->piVars['showSpeakerUid']);
 		}
 		$clearAnyway=1;    // the current values of piVars will NOT be preserved
 		$altPageId=$this->piVars['backUid'];      // ID of the view page
@@ -775,7 +776,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		// Link for back to list view
 		$label = $this->pi_getLL('back','Back');  // the link text
-		$overrulePIvars = array ('showSpeakerUid' => $this->piVars['showSpeakerUid']);
+		if ($this->piVars['back2list']<>1) {
+			# Back to single view
+			$overrulePIvars = array ('showSessionUid' => $this->piVars['showSessionUid'],
+									'showSpeakerUid' => $this->piVars['showSpeakerUid']);
+		}
 		$clearAnyway=1;    // the current values of piVars will NOT be preserved
 		$altPageId=$this->piVars['backUid'];      // ID of the view page
 		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
@@ -932,7 +937,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 					if (!empty($this->conf['singleSpeaker'])) {
 					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
-					    $overrulePIvars = array('showSpeakerUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id);
+					    $overrulePIvars = array('showSpeakerUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'showSessionUid' => $this->internal['currentRow']['uid']);
 					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 					    $altPageId=$this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
 					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
