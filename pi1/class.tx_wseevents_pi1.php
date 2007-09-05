@@ -595,6 +595,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray = array();
 								$markerArray['###SLOTNAME###'] = $sessiondata['name'];
 								$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
+								$markerArray['###SLOTCATEGORYKEY###'] = $sessiondata['catkey'];
 								$markerArray['###SLOTLINK###'] = $sessionlink;
 								$markerArray['###SLOTLINKNAME###'] = $sessionlinkname;
 								$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
@@ -602,7 +603,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							} else {
 								$markerArray = array();
 								$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
-								$markerArray['###SLOTCATEGORY###'] = '';
+								$markerArray['###SLOTCATEGORY###'] = 0;
+								$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned_catkey');
 								$markerArray['###SLOTLINK###'] = '';
 								$markerArray['###SLOTLINKNAME###'] = '';
 								$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
@@ -628,7 +630,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTEND###'] = $slotbegin[$s+1];
 								$markerArray['###SLOTSIZE###'] = 1;
 								$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
-								$markerArray['###SLOTCATEGORY###'] = 1;
+								$markerArray['###SLOTCATEGORY###'] = 0;
+								$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined_catkey');
 								$markerArray['###SLOTLINK###'] = '';
 								$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
 								$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
@@ -1214,6 +1217,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$session = $row;
 					$datacat = $this->pi_getRecord('tx_wseevents_categories',$row['category']);
 					$session['catnum'] = $datacat['shortkey'].sprintf ('%02d', $row['number']);
+					$session['catkey'] = $datacat['shortkey'];
 					$session['name'] = $this->getTranslatedField('tx_wseevents_sessions', 'name', $row['uid']);
 					$session['teaser'] = $this->getTranslatedField('tx_wseevents_sessions', 'teaser', $row['uid']);
 //				}
