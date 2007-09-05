@@ -33,8 +33,8 @@ $LOCAL_LANG = Array (
 		'tx_wseevents_sessions.slot_headerbegin' => 'Begin',
 		'tx_wseevents_sessions.slot_notassigned' => 'not assigned',
 		'tx_wseevents_sessions.slot_notdefined' => 'free',
-		'tx_wseevents_sessions.slot_notassigned_catkey' => 'default',
-		'tx_wseevents_sessions.slot_notdefined_catkey' => 'free',
+		'tx_wseevents_sessions.slot_notassigned_catkey' => 'free',
+		'tx_wseevents_sessions.slot_notdefined_catkey' => 'default',
 		'back' => 'Back',	
 	),
 	'de' => Array (

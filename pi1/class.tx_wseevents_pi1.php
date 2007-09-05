@@ -498,15 +498,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$daycount = $event['length'];
 		for ( $d = 1; $d <= $daycount; $d++ ) {
 			$thisday = $event['begin']+($d-1)*$secofday;
-			$thisweekday = date('w', $thisday);
 #ToDo: Mit TYPO3 den Wochentag ermitteln und das Datum formatieren
 #			setlocale(LC_TIME, 'de_DE');
 #ToDo: Trenner durch TypoScript einstellbar machen
-			$dayname[$d] = strftime('%A - %d.%m.%Y', $thisday);
+			$dayname[$d] = strftime('%d.%m.%Y', $thisday);
+			$weekdays[$d] = strftime('%A', $thisday);
 
 			# Set one event day  option 
 			$markerArray['###VALUE###'] = $d;
-			$markerArray['###OPTION###'] = $dayname[$d];
+			$markerArray['###OPTION###'] = $weekdays[$d].' - '.$dayname[$d];
 			if ($showday==$d) {
 				$content_select .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
 			} else {
@@ -560,6 +560,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray = array();
 				$markerArray['###ROOMCOUNT###'] = $roomcount;
 				$markerArray['###TITLEDAY###'] = $dayname[$d];
+				$markerArray['###TITLEWEEKDAY###'] = $weekdays[$d];
 				$content_title .= $this->cObj->substituteMarkerArrayCached($template['titlecol'], $markerArray);
 				
 				# Loop over all rooms
