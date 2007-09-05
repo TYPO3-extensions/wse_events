@@ -152,7 +152,7 @@ $LOCAL_LANG = Array (
 		'tx_wseevents_events' => 'Conférence WSE',
 		'tx_wseevents_events.name' => 'Nom de la conférence',
 		'tx_wseevents_events.location' => 'Lieu',
-		'tx_wseevents_events.comment' => 'Remarque',=09
+		'tx_wseevents_events.comment' => 'Remarque',
 		'tx_wseevents_events.begin' => 'Premier jour de l\'événement',
 		'tx_wseevents_events.length' => 'durée de l\'événement (jours)',
 		'tx_wseevents_events.timebegin' => 'Heure de début (hh:mm)',
