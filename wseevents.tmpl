@@ -3,10 +3,29 @@
 <!-- ###TEMPLATE### begin -->
 <!-- ###SESSIONLIST### begin -->
 		<!-- wse_events default template: sessionlist begin -->
+		<!-- ###EVENTSELECT### begin -->
+		<div class="tx-wseevents-pi1-chooseevent">
+			###LABEL###
+			<!-- Combobox to select event -->
+			<form action="" method="post" name="event_select">
+			<input type="hidden" name="no_cache" value="1">
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.event_select.submit()">
+				<!-- ###SELECT### -->
+				<!-- ###OPTIONSELECTED### -->
+				<option value="###VALUE###" selected="selected">###OPTION###</option>
+				<!-- ###OPTIONSELECTED### -->
+				<!-- ###OPTIONNOTSELECTED### -->
+				<option value="###VALUE###">###OPTION###</option>
+				<!-- ###OPTIONNOTSELECTED### -->
+				<!-- ###SELECT### -->
+			</select>
+			</form>
+		</div>
+		<!-- ###EVENTSELECT### end -->
+		<!-- ###CATEGORYSELECT### begin -->
 		<div class="tx-wseevents-pi1-choosecategory">
 			###LABEL###
 			<!-- Combobox to select category -->
-			<!-- ###FORMACTION### removed from action, because empty action referes to same page -->
 			<form action="" method="post" name="category_select">
 			<input type="hidden" name="no_cache" value="1">
 			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.category_select.submit()">
@@ -21,6 +40,7 @@
 			</select>
 			</form>
 		</div>
+		<!-- ###CATEGORYSELECT### end -->
 		<div class="tx-wseevents-pi1-listrow">
 			<table>
 			<!-- ###SINGLEROW### begin -->

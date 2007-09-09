@@ -137,9 +137,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		
 		# Get the parts out of the template
 		$template['total'] = $this->cObj->getSubpart($this->templateCode,'###SESSIONLIST###');
-		$template['select'] = $this->cObj->getSubpart($template['total'],'###SELECT###');
-		$template['option'] = $this->cObj->getSubpart($template['select'],'###OPTIONNOTSELECTED###');
-		$template['optionsel'] = $this->cObj->getSubpart($template['select'],'###OPTIONSELECTED###');	
+		$template['catsection'] = $this->cObj->getSubpart($template['total'],'###CATEGORYSELECT###');
+		$template['catselect'] = $this->cObj->getSubpart($template['catsection'],'###SELECT###');
+		$template['catoption'] = $this->cObj->getSubpart($template['catselect'],'###OPTIONNOTSELECTED###');
+		$template['catoptionsel'] = $this->cObj->getSubpart($template['catselect'],'###OPTIONSELECTED###');	
+		$template['evtsection'] = $this->cObj->getSubpart($template['total'],'###EVENTSELECT###');
+		$template['evtselect'] = $this->cObj->getSubpart($template['evtsection'],'###SELECT###');
+		$template['evtoption'] = $this->cObj->getSubpart($template['evtselect'],'###OPTIONNOTSELECTED###');
+		$template['evtoptionsel'] = $this->cObj->getSubpart($template['evtselect'],'###OPTIONSELECTED###');	
 		$template['singlerow'] = $this->cObj->getSubpart($template['total'],'###SINGLEROW###');
 		$template['header'] = $this->cObj->getSubpart($template['singlerow'],'###HEADER###');
 		$template['row'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM###');
@@ -167,15 +172,68 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if (empty($hidecat)) {
 			$hidecat = 0;
 		}
+
+		
+		# Check for event selection in URL
+		$showevent = $this->piVars['showEvent'];
+		if (empty($showevent)) {
+			$showevent = 0;
+		}
+
+		# Check for amount of events
+		$this->conf['pidList'] = $this->conf['pidListEvents'];
+	    $where1 = ' AND sys_language_uid = 0';
+		$res = $this->pi_exec_query('tx_wseevents_events',1,$where1,'','','name,uid');
+		list($eventcount) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
+		
+		# Create template data for event combobox
+		$event_item = '';	// Clear var;
+		$markerArray = array();
+		// Make listing query, pass query to SQL database:
+		$res = $this->pi_exec_query('tx_wseevents_events',0,$where1);
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			# Take the first event as selected if no event is selected in the URL
+			if ($showevent==0) {
+				$showevent = $row['uid'];
+			}
+			$eventname = $this->getTranslatedCategory('tx_wseevents_events', $row['uid'], $row['name']);
+			# Set one event option 
+			$markerArray['###VALUE###'] = $row['uid'];
+			$markerArray['###OPTION###'] = $eventname;
+			if ($showevent==$row['uid']) {
+				$event_item .= $this->cObj->substituteMarkerArrayCached($template['evtoptionsel'], $markerArray);
+			} else {
+				$event_item .= $this->cObj->substituteMarkerArrayCached($template['evtoption'], $markerArray);
+			}
+		}
+		# Show selection combo box if more than one event is found
+		if ($eventcount>1) {
+			# Set select options
+			$subpartArray1['###SELECT###'] = $event_item; 
+			# Set label for selection box
+			$markerArray1['###LABEL###'] = $this->pi_getLL('tx_wseevents_sessions.chooseeventday','[Choose event day]');
+			//$markerArray1['###FORMACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->page['uid']);
+			$markerArray1['###FORMSELECT###'] = $this->prefixId.'[showEvent]';
+			$markerArray1['###FORMSEND###'] = htmlspecialchars($this->pi_getLL('tx_wseevents_sessions.showselection','[Show selection]'));
+			$subpartArray['###EVENTSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['evtsection'], $markerArray1, $subpartArray1);
+		} else {
+			$subpartArray['###EVENTSELECT###'] = '';
+		}
+		# show only sessions of selected event
+		if ($showevent>0) {
+			$where .= ' AND event='.$showevent;
+		}
+		
 		
 		# Create template data for category combobox
 		$select_item = '';	// Clear var;
+		$markerArray = array();
 		$markerArray['###VALUE###'] = 0;
 		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.chooseall','[-All-]');
 		if ($showcat==0) {
-			$select_item .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
+			$select_item .= $this->cObj->substituteMarkerArrayCached($template['catoptionsel'], $markerArray);
 		} else {
-			$select_item .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
+			$select_item .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
 		}
 		// Get list of categories
 		// Make query, pass query to SQL database:
@@ -187,20 +245,20 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray['###VALUE###'] = $row['uid'];
 				$markerArray['###OPTION###'] = $row['shortkey'].' - '.$catname;
 				if ($showcat==$row['uid']) {
-					$select_item .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
+					$select_item .= $this->cObj->substituteMarkerArrayCached($template['catoptionsel'], $markerArray);
 				} else {
-					$select_item .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
+					$select_item .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
 				}
 			}
 		}
 		# Set select options
-		$subpartArray['###SELECT###'] = $select_item; 
-#		$content = $this->cObj->substituteMarkerArrayCached($template['choosecat'], array(), $subpartArray);
+		$subpartArray1['###SELECT###'] = $select_item; 
 		# Set label for selection box
 		$markerArray1['###LABEL###'] = $this->pi_getLL('tx_wseevents_sessions.choosecategory','[Choose category]');
-		$markerArray1['###FORMACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->page['uid']);
+		//$markerArray1['###FORMACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->page['uid']);
 		$markerArray1['###FORMSELECT###'] = $this->prefixId.'[showCategory]';
 		$markerArray1['###FORMSEND###'] = htmlspecialchars($this->pi_getLL('tx_wseevents_sessions.showselection','[Show selection]'));
+		$subpartArray['###CATEGORYSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['catsection'], $markerArray1, $subpartArray1);
 		
 		# Get number of records:
 		$this->conf['pidList'] = $this->conf['pidListEvents'];
@@ -255,7 +313,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}   
 		$subpartArray['###SINGLEROW###'] = $content_item; 
 
-		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray1, $subpartArray);
+		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subpartArray);
 		return $content;
 	}
 
