@@ -280,10 +280,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 //		list($this->internal['orderBy'],$this->internal['descFlag']) = explode(':',$sorting);
 		$this->internal['results_at_a_time']=t3lib_div::intInRange($lConf['results_at_a_time'],0,1000,100);		// Number of results to show in a listing.
 		$this->internal['maxPages']=t3lib_div::intInRange($lConf['maxPages'],0,1000,2);;		// The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
-		$this->internal['searchFieldList']='uid,name,firstname,email,info';
-		$this->internal['orderByList']='name';
-
-//	    $where = ' AND '.$this->internal['currentTable'].'.sys_language_uid = '.$index;
+		$this->internal['searchFieldList']='name,firstname,email,info,uid';
+		$this->internal['orderByList']='name,firstname,email,info,uid';
+		$this->internal['orderBy']='name';
+		$this->internal['descFlag']=0;
+		// Check for setting sort order via TypoScript
+		if (isset($this->conf['sortSpeakerlist'])) {
+			list($this->internal['orderBy'],$this->internal['descFlag']) = explode(':',$this->conf['sortSpeakerlist']);
+		}
+		
 	    $where = ' AND '.$this->internal['currentTable'].'.sys_language_uid = 0';
 
 		// Get number of records:
@@ -374,7 +379,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
 				$image = trim($this->getFieldContent('image'));
 				if (!empty($image)) {
-#					$markerArray['###IMAGEFILE###'] = $uploadDirectory.'/'.$image;
 					$img = $this->conf['image.'];
 					if (empty($img)) {
 					    $img['file'] = 'GIFBUILDER';
@@ -493,6 +497,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$content_select .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
 		}
+
+		# Get date format
+#$content .= t3lib_div::view_array($conf);
+#$content .= 'conf strftime='.$conf['strftime'].'<br>';
+		if (!$conf['strftime']){
+			$conf['strftime'] = '%d.%m.%Y';
+		}
+#$content .= 'conf strftime='.$conf['strftime'].'<br>';
 		# Get count of days and name of days
 		$secofday = 60*60*24;
 		$daycount = $event['length'];
@@ -500,8 +512,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$thisday = $event['begin']+($d-1)*$secofday;
 #ToDo: Mit TYPO3 den Wochentag ermitteln und das Datum formatieren
 #			setlocale(LC_TIME, 'de_DE');
-#ToDo: Trenner durch TypoScript einstellbar machen
-			$dayname[$d] = strftime('%d.%m.%Y', $thisday);
+
+			$dayname[$d] = strftime($conf['strftime'], $thisday);
 			$weekdays[$d] = strftime('%A', $thisday);
 
 			# Set one event day  option 
@@ -520,7 +532,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		for ( $r = 1; $r <= $roomcount; $r++ ) {
 			$roomname[$r] = $rooms[$r]['name'];
 		}
-#$content .= t3lib_div::view_array($roomname);
+#$content .= t3lib_div::view_array($GLOBALS["TSFE"]->config["config"]);
 #$content .= t3lib_div::view_array($GLOBALS['TSFE']);
 		# Create a list with the times of slot begins
 		$timeoffsetGMT = date('O');
