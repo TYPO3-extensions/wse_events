@@ -498,11 +498,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$content_select .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
 		}
 
-		# Get date format
+		# Get date format for selected language
 #$content .= t3lib_div::view_array($conf);
-#$content .= 'conf strftime='.$conf['strftime'].'<br>';
-		if (!$conf['strftime']){
+#$content .= 'index='.$index.'<br>';
+#$content .= 'conf fmtDate='.$conf[$index.'.']['fmtDate'].'<br>';
+		if (!$conf[$index.'.']['fmtDate']){
 			$conf['strftime'] = '%d.%m.%Y';
+		} else {
+			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 #$content .= 'conf strftime='.$conf['strftime'].'<br>';
 		# Get count of days and name of days
