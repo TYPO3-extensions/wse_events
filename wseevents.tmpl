@@ -164,6 +164,25 @@
 
 <!-- ###SLOTSALL### begin -->
 		<!-- wse_events default template: time slot view begin -->
+		<!-- ###EVENTSELECT### begin -->
+		<div class="tx-wseevents-pi1-chooseevent">
+			###LABEL###
+			<!-- Combobox to select event -->
+			<form action="" method="post" name="event_select">
+			<input type="hidden" name="no_cache" value="1">
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.event_select.submit()">
+				<!-- ###SELECT### -->
+				<!-- ###OPTIONSELECTED### -->
+				<option value="###VALUE###" selected="selected">###OPTION###</option>
+				<!-- ###OPTIONSELECTED### -->
+				<!-- ###OPTIONNOTSELECTED### -->
+				<option value="###VALUE###">###OPTION###</option>
+				<!-- ###OPTIONNOTSELECTED### -->
+				<!-- ###SELECT### -->
+			</select>
+			</form>
+		</div>
+		<!-- ###EVENTSELECT### end -->
 		<table border=1>
 		<!-- ###TITLEROW### begin -->
 		<!-- Combobox to select category -->
