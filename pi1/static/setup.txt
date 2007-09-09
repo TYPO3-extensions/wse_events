@@ -18,4 +18,4 @@ plugin.tx_wseevents_pi1._LOCAL_LANG.default {
   pi_list_searchBox_search = Search!
 }
   # Example of how to set default values from TS in the incoming array, $this->piVars of the plugin:
-plugin.tx_wseevents_pi1._DEFAULT_PI_VARS.test = test
+#plugin.tx_wseevents_pi1._DEFAULT_PI_VARS.test = test
