@@ -7,7 +7,10 @@ t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_wseevents_speakers=1
 ');
 t3lib_extMgm::addUserTSConfig('
-	options.saveDocNew.tx_wseevents_categories=1
+	options.saveDocNew.tx_wseevents_speakers=1
+');
+t3lib_extMgm::addUserTSConfig('
+	options.saveDocNew.tx_wseevents_speaker_attendance=1
 ');
 
   ## Extending TypoScript from static template uid=43 to set up userdefined tag:

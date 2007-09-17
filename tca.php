@@ -890,6 +890,132 @@ $TCA['tx_wseevents_speakers'] = Array (
 
 
 
+$TCA['tx_wseevents_speaker_attendance'] = Array (
+	'ctrl' => $TCA['tx_wseevents_speaker_attendance']['ctrl'],
+	'interface' => Array (
+		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,speaker,event,eventday,begin,end'
+	),
+	'feInterface' => $TCA['tx_wseevents_speaker_attendance']['feInterface'],
+	'columns' => Array (
+		'sys_language_uid' => Array (		
+			'exclude' => 1,
+			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
+			'config' => Array (
+				'type' => 'select',
+				'foreign_table' => 'sys_language',
+				'foreign_table_where' => 'ORDER BY sys_language.title',
+				'items' => Array(
+					Array('LLL:EXT:lang/locallang_general.php:LGL.allLanguages',-1),
+					Array('LLL:EXT:lang/locallang_general.php:LGL.default_value',0)
+				)
+			)
+		),
+		'l18n_parent' => Array (		
+			'displayCond' => 'FIELD:sys_language_uid:>:0',
+			'exclude' => 1,
+			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
+			'config' => Array (
+				'type' => 'select',
+				'items' => Array (
+					Array('', 0),
+				),
+				'foreign_table' => 'tx_wseevents_timeslots',
+				'foreign_table_where' => 'AND tx_wseevents_speaker_attendance.pid=###CURRENT_PID### AND tx_wseevents_speaker_attendance.sys_language_uid IN (-1,0)',
+			)
+		),
+		'l18n_diffsource' => Array (		
+			'config' => Array (
+				'type' => 'passthrough'
+			)
+		),
+		'hidden' => Array (		
+			'exclude' => 1,
+			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
+			'config' => Array (
+				'type' => 'check',
+				'default' => '0'
+			)
+		),
+		'speaker' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speaker_attendance.speaker',		
+			'config' => Array (
+				'type' => 'select',	
+				'foreign_table' => 'tx_wseevents_speakers',	
+				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.uid',	
+				'size' => 1,	
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
+		'event' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speaker_attendance.event',		
+			'config' => Array (
+				'type' => 'select',	
+				'foreign_table' => 'tx_wseevents_events',	
+				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### ORDER BY tx_wseevents_events.uid',	
+				'size' => 1,	
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
+		'eventday' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speaker_attendance.eventday',		
+			'config' => Array (
+				'type' => 'input',
+				'size' => '2',
+				'max' => '2',
+				'eval' => 'int',
+				'range' => Array (
+					'upper' => '99',
+					'lower' => '1',
+				),
+				'default' => 1
+			)
+		),
+		'begin' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speaker_attendance.begin',		
+			'config' => Array (
+				'type' => 'input',
+				'size' => '2',
+				'max' => '2',
+				'eval' => 'int',
+				'range' => Array (
+					'upper' => '99',
+					'lower' => '1',
+				),
+				'default' => 1
+			)
+		),
+		'length' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speaker_attendance.length',		
+			'config' => Array (
+				'type' => 'input',
+				'size' => '2',
+				'max' => '2',
+				'eval' => 'int',
+				'range' => Array (
+					'upper' => '99',
+					'lower' => '1',
+				),
+				'default' => 1
+			)
+		),
+	),
+	'types' => Array (
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, speaker, event, eventday, begin, length')
+	),
+	'palettes' => Array (
+		'1' => Array('showitem' => '')
+	)
+);
+
+
+
 $TCA['tx_wseevents_categories'] = Array (
 	'ctrl' => $TCA['tx_wseevents_categories']['ctrl'],
 	'interface' => Array (

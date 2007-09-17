@@ -5,7 +5,6 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_events');
 
-
 t3lib_extMgm::addToInsertRecords('tx_wseevents_events');
 
 $TCA['tx_wseevents_events'] = Array (
@@ -33,7 +32,6 @@ $TCA['tx_wseevents_events'] = Array (
 
 
 t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_locations');
-
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_locations');
 
@@ -63,7 +61,6 @@ $TCA['tx_wseevents_locations'] = Array (
 
 t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_rooms');
 
-
 t3lib_extMgm::addToInsertRecords('tx_wseevents_rooms');
 
 $TCA['tx_wseevents_rooms'] = Array (
@@ -91,7 +88,6 @@ $TCA['tx_wseevents_rooms'] = Array (
 
 
 t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_timeslots');
-
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_timeslots');
 
@@ -122,7 +118,6 @@ $TCA['tx_wseevents_timeslots'] = Array (
 
 t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_sessions');
 
-
 t3lib_extMgm::addToInsertRecords('tx_wseevents_sessions');
 
 $TCA['tx_wseevents_sessions'] = Array (
@@ -151,7 +146,6 @@ $TCA['tx_wseevents_sessions'] = Array (
 
 t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_speakers');
 
-
 t3lib_extMgm::addToInsertRecords('tx_wseevents_speakers');
 
 $TCA['tx_wseevents_speakers'] = Array (
@@ -178,8 +172,36 @@ $TCA['tx_wseevents_speakers'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_categories');
+t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_speaker_attendance');
 
+t3lib_extMgm::addToInsertRecords('tx_wseevents_speaker_attendance');
+
+$TCA['tx_wseevents_speaker_attendance'] = Array (
+	'ctrl' => Array (
+		'requestUpdate' => 'event',
+		'title' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speaker_attendance',		
+		'label' => 'speaker',	
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'cruser_id' => 'cruser_id',
+		'languageField' => 'sys_language_uid',	
+		'transOrigPointerField' => 'l18n_parent',	
+		'transOrigDiffSourceField' => 'l18n_diffsource',	
+		'default_sortby' => 'ORDER BY event,speaker',	
+		'delete' => 'deleted',	
+		'enablecolumns' => Array (		
+			'disabled' => 'hidden',
+		),
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY)."tx_wseevents_speaker_attendance.gif",
+	),
+	'feInterface' => Array (
+		'fe_admin_fieldList' => 'sys_language_uid, l18n_parent, l18n_diffsource, hidden, speaker, event, eventday, begin, end',
+	),
+);
+
+
+t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_categories');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_categories');
 
