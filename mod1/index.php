@@ -35,6 +35,7 @@ require_once($BACK_PATH.'template.php');
 
 $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_eventslist.php');
 
 
 // This checks permissions and exits if the users has no permission for entry.
@@ -124,7 +125,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id))	{
 
 			// Draw the header.
-			$this->doc = t3lib_div::makeInstance('mediumDoc');
+			$this->doc = t3lib_div::makeInstance('bigDoc');
 			$this->doc->backPath = $BACK_PATH;
 			$this->doc->form='<form action="" method="POST">';
 
@@ -157,8 +158,8 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 			$this->moduleContent();
 
 			// For debuging purpose only
-			$this->content .= '<hr />
-						<br />This is the GET/POST vars sent to the script:<br />'.
+			$this->content .= '<br /><br /><hr />
+						<br />### DEBUG ###<br />This is the GET/POST vars sent to the script:<br /><br />'.
 						'GET:'.t3lib_div::view_array($_GET).'<br />'.
 						'POST:'.t3lib_div::view_array($_POST).'<br />'.
 						'';
@@ -172,7 +173,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		} else {
 			// If no access or if ID == zero
 
-			$this->doc = t3lib_div::makeInstance('mediumDoc');
+			$this->doc = t3lib_div::makeInstance('bigDoc');
 			$this->doc->backPath = $BACK_PATH;
 
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
@@ -278,8 +279,10 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				$this->content .= $LANG->getLL('not_implemented');
 				break;
 			case 4:
-				$this->content .= 'Edit events here<br />';
-				$this->content .= $LANG->getLL('not_implemented');
+				$this->content .= '<br />';
+					$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_eventslist');
+					$eventsList = new $eventsListClassname($this);
+					$this->content .= $eventsList->show();
 				break;
 			default:
 				$this->content .= '';

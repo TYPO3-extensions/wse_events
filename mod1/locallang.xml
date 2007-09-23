@@ -12,6 +12,11 @@
 			<label index="subModuleTitle_sessions">Sessions</label>
 			<label index="subModuleTitle_speaker_attendance">Speaker attendance</label>
 			<label index="subModuleTitle_events">Events</label>
+			<label index="events.name">Name of event</label>
+			<label index="events.begin">First day</label>
+			<label index="events.length">Days</label>
+			<label index="events.timebegin">Begin</label>
+			<label index="events.timeend">End</label>
 			<label index="function2">Common data</label>
 			<label index="subModuleTitle_locations">Locations</label>
 			<label index="subModuleTitle_rooms">Rooms</label>
