@@ -7,9 +7,18 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="title">WSE Events</label>
-			<label index="function1">Function #1</label>
-			<label index="function2">Function #2</label>
-			<label index="function3">Function #3</label>
+			<label index="function1">Event data</label>
+			<label index="subModuleTitle_time_slots">Time slots</label>
+			<label index="subModuleTitle_sessions">Sessions</label>
+			<label index="subModuleTitle_speaker_attendance">Speaker attendance</label>
+			<label index="subModuleTitle_events">Events</label>
+			<label index="function2">Common data</label>
+			<label index="subModuleTitle_locations">Locations</label>
+			<label index="subModuleTitle_rooms">Rooms</label>
+			<label index="subModuleTitle_speakers">Speaker</label>
+			<label index="subModuleTitle_categories">Categories</label>
+			<label index="function3">Session planning</label>
+			<label index="not_implemented">Editing is currently not implemented. Use the Web->List module instead to edit the data records.</label>
 		</languageKey>
 		<languageKey index="nl" type="array">
 			<label index="title">WSE Events</label>
