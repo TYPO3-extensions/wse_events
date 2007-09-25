@@ -22,7 +22,7 @@
 * This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /***************************************************************
-*  Because I dont want to redefine the wheel again, some ideas 
+*  Because I dont want to redefine the wheel again, some ideas
 *  and code snippets are taken from the seminar manager extension
 *  tx_seminars
 ***************************************************************/
@@ -45,21 +45,21 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
-	 * 
+	 *
 	 * @param	object		the current back-end page object
+	 * @return	[type]		...
 	 */
 	function tx_wseevents_eventslist(&$page) {
 		parent::tx_wseevents_backendlist($page);
 		$this->tableName = $this->tableEvents;
-		$this->pid = $page->id;
+#		$this->page = $page;
 	}
 
 	/**
 	 * Generates and prints out an event list.
 	 *
 	 * @return	string		the HTML source code of the event list
-	 *
-	 * @access	public
+	 * @access public
 	 */
 	function show() {
 		global $LANG, $BE_USER;
@@ -135,6 +135,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		$globalConfiguration = unserialize(
 			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
 		);
+
 		# Get date format for selected language
 		if (!$conf[$index.'.']['fmtDate']){
 			$conf['strftime'] = '%d.%m.%Y';
@@ -143,7 +144,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		}
 
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->pid.' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -204,10 +205,8 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	 * @param	string		the name of the table where the record is in
 	 * @param	integer		the UID of the record
 	 * @param	boolean		indicates if the record is hidden (true) or is visible (false)
-	 *
 	 * @return	string		the HTML source code of the linked hide or unhide icon
-	 *
-	 * @access	protected
+	 * @access protected
 	 */
 	function getHideUnhideIcon($uid, $hidden) {
 		global $BACK_PATH, $LANG, $BE_USER;

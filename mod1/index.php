@@ -5,7 +5,7 @@
 *  (c) 2007 Michael Oehlhof (michael@oehlhof.de)
 *  All rights reserved
 *
-*  Because I dont want to redefine the wheel again, some ideas 
+*  Because I dont want to redefine the wheel again, some ideas
 *  and code snippets are taken from the seminar manager extension
 *  tx_seminars
 *
@@ -33,25 +33,28 @@ require_once('conf.php');
 require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 
-$LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_eventslist.php');
 
+$LANG->includeLLFile('EXT:lang/locallang_show_rechis.xml');
+$LANG->includeLLFile('EXT:lang/locallang_mod_web_list.xml');
+$LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
+
 
 // This checks permissions and exits if the users has no permission for entry.
-$BE_USER->modAccess($MCONF,1);	
+$BE_USER->modAccess($MCONF,1);
 
 
 
 /**
  * Module 'WSE Events' for the 'wse_events' extension.
  *
- * @author	 	Michael Oehlhof 
+ * @author	 	Michael Oehlhof
  * @package	TYPO3
  * @subpackage	wse_events
  */
 class  tx_wseevents_module1 extends t3lib_SCbase {
-	var $pageinfo;
+	var $pageInfo;
 
 	/** an array of available sub modules */
 	var $availableSubModules;
@@ -62,10 +65,11 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 
 	/**
 	 * Initializes the Module
+	 *
 	 * @return	void
 	 */
 	function init()	{
-		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+#		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
 
 		/*
 		 * This is a workaround for the wrong generated links. The workaround is needed to
@@ -115,12 +119,12 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * @return	[type]		...
 	 */
 	function main()	{
-		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+		global $BE_USER,$LANG,$BACK_PATH; //,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
 
 		// Access check!
 		// The page will show only if there is a valid page and if this page may be viewed by the user
-		$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
-		$access = is_array($this->pageinfo) ? 1 : 0;
+		$this->pageInfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
+		$access = is_array($this->pageInfo) ? 1 : 0;
 
 		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id))	{
 
@@ -145,7 +149,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				</script>
 			';
 
-			$headerSection = $this->doc->getHeader('pages',$this->pageinfo,$this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.t3lib_div::fixed_lgd_pre($this->pageinfo['_thePath'],50);
+			$headerSection = $this->doc->getHeader('pages',$this->pageInfo,$this->pageInfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.t3lib_div::fixed_lgd_pre($this->pageInfo['_thePath'],50);
 
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
 			$this->content.=$this->doc->header($LANG->getLL('title'));
@@ -162,6 +166,8 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 						<br />### DEBUG ###<br />This is the GET/POST vars sent to the script:<br /><br />'.
 						'GET:'.t3lib_div::view_array($_GET).'<br />'.
 						'POST:'.t3lib_div::view_array($_POST).'<br />'.
+#						'pageInfo:'.t3lib_div::view_array($this->pageInfo).'<br />'.
+#						debug($_GET,'GET:').
 						'';
 
 			// ShortCut
@@ -189,7 +195,6 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function printContent()	{
-
 		$this->content.=$this->doc->endPage();
 		echo $this->content;
 	}
@@ -213,7 +218,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Generates the content for event data
 	 *
@@ -221,7 +226,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 */
 	function moduleEventContent()	{
 		global $BE_USER,$LANG;
-		
+
 		// define the sub modules that should be available in the tabmenu
 		$this->availableSubModules = array();
 
@@ -280,9 +285,9 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				break;
 			case 4:
 				$this->content .= '<br />';
-					$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_eventslist');
-					$eventsList = new $eventsListClassname($this);
-					$this->content .= $eventsList->show();
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_eventslist');
+				$eventsList = new $eventsListClassname($this);
+				$this->content .= $eventsList->show();
 				break;
 			default:
 				$this->content .= '';
@@ -297,7 +302,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 */
 	function moduleCommonContent()	{
 		global $BE_USER,$LANG;
-		
+
 		// define the sub modules that should be available in the tabmenu
 		$this->availableSubModules = array();
 
@@ -363,7 +368,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				break;
 		}
 	}
-	
+
 }
 
 

@@ -46,10 +46,10 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 
 	/**
 	 * The constructor. Sets the table name and the back-end page object.
-	 * 
+	 *
 	 * @param	object		the current back-end page object
-	 * 
-	 * @access	public
+	 * @return	[type]		...
+	 * @access public
 	 */
 	function tx_wseevents_backendlist(&$page) {
 		$this->setTableNames();
@@ -62,10 +62,8 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	 *
 	 * @param	string		the name of the table where the record is in
 	 * @param	integer		the uid of the record
-	 *
 	 * @return	string		the HTML source code to return
-	 *
-	 * @access	public
+	 * @access public
 	 */
 	function getEditIcon($uid) {
 		global $BACK_PATH, $LANG, $BE_USER;
@@ -96,10 +94,8 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	 *
 	 * @param	string		the name of the table where the record is in
 	 * @param	integer		the uid of the record
-	 *
 	 * @return	string		the HTML source code to return
-	 *
-	 * @access	public
+	 * @access public
 	 */
 	function getDeleteIcon($uid) {
 		global $BACK_PATH, $LANG, $BE_USER;
@@ -144,18 +140,14 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	/**
 	 * Returns a "create new record" image tag that is linked to the new record view.
 	 *
-	 * @param	string		the name of the table where the record should be saved to
 	 * @param	integer		the page id where the record should be stored
-	 *
 	 * @return	string		the HTML source code to return
-	 *
-	 * @access	public
+	 * @access public
 	 */
 	function getNewIcon($pid) {
 		global $BACK_PATH, $LANG, $BE_USER;
 
-		$result = '';
-
+		# the name of the table where the record should be saved to is stored in $this->tableName
 		if ($BE_USER->check('tables_modify', $this->tableName)
 			&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)
 			&& $this->page->pageInfo['doktype'] == 254) {
@@ -191,10 +183,8 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	 *
 	 * @param	string		the parameters for tce
 	 * @param	string		the back-path to the /typo3 directory
-	 *
 	 * @return	string		the url to return
-	 *
-	 * @access	protected
+	 * @access protected
 	 */
 	function editNewUrl($params, $backPath = '') {
 		$returnUrl = 'returnUrl='.rawurlencode(t3lib_div::getIndpEnv('REQUEST_URI'));
