@@ -123,6 +123,9 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 					.$LANG->getLL('speakers.name').'</span>'.LF,
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('speakers.firstname').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('language').'</span>'.LF,
 				'',
 			)
@@ -144,7 +147,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0';
 		$additionalTables = '';
 		$groupBy = '';
-		$orderBy = 'name,sys_language_uid';
+		$orderBy = 'name,firstname,sys_language_uid';
 		$limit = '';
 
 		// Get list of all events
@@ -164,6 +167,11 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 				TAB.TAB.TAB.TAB.TAB
 					.t3lib_div::fixed_lgd_cs(
 						$row['name'],
+						$BE_USER->uc['titleLen']
+					).LF,
+				TAB.TAB.TAB.TAB.TAB
+					.t3lib_div::fixed_lgd_cs(
+						$row['firstname'],
 						$BE_USER->uc['titleLen']
 					).LF,
 				TAB.TAB.TAB.TAB.TAB

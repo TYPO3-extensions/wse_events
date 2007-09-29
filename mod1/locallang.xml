@@ -32,6 +32,7 @@
 			<label index="subModuleTitle_rooms">Rooms</label>
 			<label index="subModuleTitle_speakers">Speaker</label>
 			<label index="speakers.name">Name of Speaker</label>
+			<label index="speakers.firstname">Firstname</label>
 			<label index="subModuleTitle_categories">Categories</label>
 			<label index="categories.shortkey">Shortkey</label>
 			<label index="categories.name">Name of Category</label>
@@ -45,7 +46,7 @@
 			<label index="title">WSE Events</label>
 		</languageKey>
 		<languageKey index="de" type="array">
-			<label index="title">WSE Veranstaltungen</label>
+			<label index="title">WSE Veranst.</label>
 		</languageKey>
 	</data>
 </T3locallang>

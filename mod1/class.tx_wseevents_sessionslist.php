@@ -150,7 +150,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of categories --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'deleted=0 AND sys_language_uid='.$userlang;
+		$queryWhere = 'deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey';
@@ -172,7 +172,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0';
+		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
