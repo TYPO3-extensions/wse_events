@@ -1092,7 +1092,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'speaker':
 				foreach(explode(',',$this->internal['currentRow'][$fN]) as $k){
 					$data = $this->pi_getRecord('tx_wseevents_speakers',$k);
-
 					// Get the name and firstname
 					if (!empty($data['firstname'])) {
 						if (((isset($this->conf['lastnameFirst']))) && ($this->conf['lastnameFirst']==1)) {
@@ -1105,7 +1104,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					}
 
 					if (!empty($this->conf['singleSpeaker'])) {
-					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
+#					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 					    $overrulePIvars = array('showSpeakerUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'showSessionUid' => $this->internal['currentRow']['uid']);
 					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 					    $altPageId=$this->conf['singleSpeaker'];      // ID of the target page, if not on the same page

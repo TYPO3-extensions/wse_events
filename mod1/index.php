@@ -34,7 +34,13 @@ require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_timeslotslist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_sessionslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_eventslist.php');
+
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_locationslist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerslist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_categorieslist.php');
 
 $LANG->includeLLFile('EXT:lang/locallang_show_rechis.xml');
 $LANG->includeLLFile('EXT:lang/locallang_mod_web_list.xml');
@@ -162,13 +168,15 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 			$this->moduleContent();
 
 			// For debuging purpose only
-			$this->content .= '<br /><br /><hr />
+			$debugline = '<br /><br /><hr />
 						<br />### DEBUG ###<br />This is the GET/POST vars sent to the script:<br /><br />'.
 						'GET:'.t3lib_div::view_array($_GET).'<br />'.
 						'POST:'.t3lib_div::view_array($_POST).'<br />'.
 #						'pageInfo:'.t3lib_div::view_array($this->pageInfo).'<br />'.
 #						debug($_GET,'GET:').
 						'';
+						
+#			$this->content .= $debugline;
 
 			// ShortCut
 			if ($BE_USER->mayMakeShortcut())	{
@@ -269,15 +277,14 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		// If no sub module is specified, an empty page will be displayed.
 		switch ($this->subModule) {
 			case 1:
-#					$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_timeslots');
-#					$eventsList = new $eventsListClassname($this);
-#					$this->content .= $eventsList->show();
-				$this->content .= 'Edit time slots here<br />';
-				$this->content .= $LANG->getLL('not_implemented');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_timeslotslist');
+				$eventsList = new $eventsListClassname($this);
+				$this->content .= $eventsList->show();
 				break;
 			case 2:
-				$this->content .= 'Edit sessions here<br />';
-				$this->content .= $LANG->getLL('not_implemented');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_sessionslist');
+				$eventsList = new $eventsListClassname($this);
+				$this->content .= $eventsList->show();
 				break;
 			case 3:
 				$this->content .= 'Edit speaker attendance here<br />';
@@ -345,23 +352,23 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		// If no sub module is specified, an empty page will be displayed.
 		switch ($this->subModule) {
 			case 1:
-#					$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_timeslots');
-#					$eventsList = new $eventsListClassname($this);
-#					$this->content .= $eventsList->show();
-				$this->content .= 'Edit locations here<br />';
-				$this->content .= $LANG->getLL('not_implemented');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_locationslist');
+				$eventsList = new $eventsListClassname($this);
+				$this->content .= $eventsList->show();
 				break;
 			case 2:
 				$this->content .= 'Edit rooms here<br />';
 				$this->content .= $LANG->getLL('not_implemented');
 				break;
 			case 3:
-				$this->content .= 'Edit speaker here<br />';
-				$this->content .= $LANG->getLL('not_implemented');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_speakerslist');
+				$eventsList = new $eventsListClassname($this);
+				$this->content .= $eventsList->show();
 				break;
 			case 4:
-				$this->content .= 'Edit categories here<br />';
-				$this->content .= $LANG->getLL('not_implemented');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_categorieslist');
+				$eventsList = new $eventsListClassname($this);
+				$this->content .= $eventsList->show();
 				break;
 			default:
 				$this->content .= '';

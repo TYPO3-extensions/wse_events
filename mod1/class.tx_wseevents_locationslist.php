@@ -29,8 +29,8 @@
 /**
  * Class 'events list' for the 'wse_events' extension.
  *
- * @package	TYPO3
- * @subpackage	tx_seminars
+ * @package		TYPO3
+ * @subpackage	wse_events
  * @author		Michael Oehlhof
  */
 
@@ -40,7 +40,7 @@ require_once($BACK_PATH.'template.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backendlist.php');
 
 
-class tx_wseevents_eventslist extends tx_wseevents_backendlist{
+class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
@@ -49,9 +49,9 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	 * @param	object		the current back-end page object
 	 * @return	[type]		...
 	 */
-	function tx_wseevents_eventslist(&$page) {
+	function tx_wseevents_locationslist(&$page) {
 		parent::tx_wseevents_backendlist($page);
-		$this->tableName = $this->tableEvents;
+		$this->tableName = $this->tableLocations;
 #		$this->page = $page;
 	}
 
@@ -63,6 +63,9 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	 */
 	function show() {
 		global $LANG, $BE_USER;
+
+		// Get selected backend language of user
+		$userlang = $BE_USER->uc[moduleData][web_layout][language];
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -95,7 +98,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 					TAB.TAB.TAB.TAB.'</td>'.LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td class="datecol">'.LF,
+					TAB.TAB.TAB.TAB.'<td>'.LF,
 					TAB.TAB.TAB.TAB.'</td>'.LF
 				),
 				array(
@@ -114,19 +117,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			array(
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.name').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.begin').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.length').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.timebegin').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.timeend').'</span>'.LF,
+					.$LANG->getLL('locations.name').'</span>'.LF,
 				'',
 			)
 		);
@@ -144,7 +135,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		}
 
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -169,14 +160,6 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 						$row['name'],
 						$BE_USER->uc['titleLen']
 					).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.strftime($conf['strftime'], $row['begin']).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['length'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['timebegin'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['timeend'].LF,
 				TAB.TAB.TAB.TAB.TAB
 					.$this->getEditIcon($uid).LF
 					.TAB.TAB.TAB.TAB.TAB
@@ -241,8 +224,8 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_eventslist.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_eventslist.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_locationslist.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_locationslist.php']);
 }
 
 ?>

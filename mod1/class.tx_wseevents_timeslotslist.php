@@ -27,10 +27,10 @@
 *  tx_seminars
 ***************************************************************/
 /**
- * Class 'events list' for the 'wse_events' extension.
+ * Class 'tx_wseevents_timeslotslist' for the 'wse_events' extension.
  *
- * @package	TYPO3
- * @subpackage	tx_seminars
+ * @package		TYPO3
+ * @subpackage	wse_events
  * @author		Michael Oehlhof
  */
 
@@ -40,7 +40,7 @@ require_once($BACK_PATH.'template.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backendlist.php');
 
 
-class tx_wseevents_eventslist extends tx_wseevents_backendlist{
+class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
@@ -49,9 +49,9 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	 * @param	object		the current back-end page object
 	 * @return	[type]		...
 	 */
-	function tx_wseevents_eventslist(&$page) {
+	function tx_wseevents_timeslotslist(&$page) {
 		parent::tx_wseevents_backendlist($page);
-		$this->tableName = $this->tableEvents;
+		$this->tableName = $this->tableTimeslots;
 #		$this->page = $page;
 	}
 
@@ -110,23 +110,23 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		);
 
 		// Fill the first row of the table array with the header.
-		$table = array(
+		$tableheader = array(
 			array(
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.name').'</span>'.LF,
+					.$LANG->getLL('timeslots.name').'</span>'.LF,
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.begin').'</span>'.LF,
+					.$LANG->getLL('timeslots.eventday').'</span>'.LF,
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.length').'</span>'.LF,
+					.$LANG->getLL('timeslots.room').'</span>'.LF,
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.timebegin').'</span>'.LF,
+					.$LANG->getLL('timeslots.begin').'</span>'.LF,
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.timeend').'</span>'.LF,
+					.$LANG->getLL('timeslots.length').'</span>'.LF,
 				'',
 			)
 		);
@@ -143,6 +143,32 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
+		// Add icon for new record
+		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
+
+		// -------------------- Get list of rooms --------------------
+		// Initialize variables for the database query.
+		$queryWhere = 'deleted=0 AND sys_language_uid=0';
+		$additionalTables = '';
+		$groupBy = '';
+		$orderBy = 'uid';
+		$limit = '';
+
+		// Get list of all events
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			$this->tableRooms,
+			$queryWhere,
+			$groupBy,
+			$orderBy,
+			$limit);
+
+		$rooms = array();
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$rooms[$row['uid']] = $row['name'];
+		}
+
+		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
 		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
@@ -153,47 +179,81 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		// Get list of all events
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
-			$this->tableName,
+			$this->tableEvents,
 			$queryWhere,
 			$groupBy,
 			$orderBy,
 			$limit);
 
+		$events = array();
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$uid = $row['uid'];
-			$hidden = $row['hidden'];
-			// Add the result row to the table array.
-			$table[] = array(
-				TAB.TAB.TAB.TAB.TAB
-					.t3lib_div::fixed_lgd_cs(
-						$row['name'],
-						$BE_USER->uc['titleLen']
-					).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.strftime($conf['strftime'], $row['begin']).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['length'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['timebegin'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['timeend'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$this->getEditIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getDeleteIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getHideUnhideIcon(
-						$uid,
-						$hidden
-					).LF,
-			);
+			$event = array();
+			$event['uid'] = $row['uid'];
+			$event['name'] = $row['name'];
+			$event['location'] = $row['location'];
+			$events[] = $event;
 		}
+		
+		// Add box for event selection
+		
+		
+		// Get list of time slots for an event
+		foreach ($events as $event) {
+			// Show name of event
+			$content .= '<b>'.$event['name'].'</b><br />';
 
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
+			// Initialize variables for the database query.
+			$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND event='.$event['uid'].' AND deleted=0 AND sys_language_uid=0';
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'eventday,begin,room';
+			$limit = '';
 
-		// Output the table array using the tableLayout array with the template
-		// class.
-		$content .= $this->page->doc->table($table, $tableLayout);
+			// Get list of all time slots
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'*',
+				$this->tableName,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+
+			// Clear output table
+			$table = $tableheader;
+			
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$uid = $row['uid'];
+				$hidden = $row['hidden'];
+				// Add the result row to the table array.
+				$table[] = array(
+					TAB.TAB.TAB.TAB.TAB
+						.t3lib_div::fixed_lgd_cs(
+							$row['name'],
+							$BE_USER->uc['titleLen']
+						).LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$row['eventday'].LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$rooms[$row['room']].LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$row['begin'].LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$row['length'].LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$this->getEditIcon($uid).LF
+						.TAB.TAB.TAB.TAB.TAB
+						.$this->getDeleteIcon($uid).LF
+						.TAB.TAB.TAB.TAB.TAB
+						.$this->getHideUnhideIcon(
+							$uid,
+							$hidden
+						).LF,
+				);
+			}
+			// Output the table array using the tableLayout array with the template
+			// class.
+			$content .= $this->page->doc->table($table, $tableLayout).'<br /><br />';
+		}
 
 		return $content;
 	}

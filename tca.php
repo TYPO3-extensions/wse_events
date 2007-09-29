@@ -1,6 +1,10 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_rooms.php');
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_speakers.php');
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_categories.php');
+
 $TCA['tx_wseevents_events'] = Array (
 	'ctrl' => $TCA['tx_wseevents_events']['ctrl'],
 	'interface' => Array (
@@ -498,7 +502,8 @@ $TCA['tx_wseevents_timeslots'] = Array (
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.room',		
 			'config' => Array (
-				'type' => 'select',	
+				'type' => 'select',
+				'itemsProcFunc' => 'tx_wseevents_rooms->getTCAroomlist',
 				'foreign_table' => 'tx_wseevents_rooms',
 				'foreign_table_where' => 'ORDER BY tx_wseevents_rooms.name', //AND tx_wseevents_events.uid=###REC_FIELDS_event AND tx_wseevents_events.location=tx_wseevents_rooms.location 
 //				'additional_foreign_table' => 'tx_wseevents_events',
@@ -611,7 +616,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.name',		
 			'config' => Array (
 				'type' => 'input',	
-				'size' => '30',	
+				'size' => '48',	
 				'eval' => 'required',
 			)
 		),
@@ -629,9 +634,10 @@ $TCA['tx_wseevents_sessions'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.speaker',		
 			'config' => Array (
 				'type' => 'select',	
+				'itemsProcFunc' => 'tx_wseevents_speakers->getTCAspeakerlist',
 				'foreign_table' => 'tx_wseevents_speakers',	
-				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.uid',	
-				'size' => 4,	
+#				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.uid',	
+				'size' => 6,	
 				'minitems' => 0,
 				'maxitems' => 4,
 			)
@@ -642,8 +648,8 @@ $TCA['tx_wseevents_sessions'] = Array (
 			'config' => Array (
 				'type' => 'select',	
 				'foreign_table' => 'tx_wseevents_timeslots',	
-				'foreign_table_where' => 'ORDER BY tx_wseevents_timeslots.uid',	
-				'size' => 3,	
+				'foreign_table_where' => 'ORDER BY tx_wseevents_timeslots.name',	
+				'size' => 6,	
 				'minitems' => 0,
 				'maxitems' => 3,
 			)
@@ -653,8 +659,9 @@ $TCA['tx_wseevents_sessions'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.category',		
 			'config' => Array (
 				'type' => 'select',	
+				'itemsProcFunc' => 'tx_wseevents_categories->getTCAcategorylist',
 				'foreign_table' => 'tx_wseevents_categories',	
-				'foreign_table_where' => 'ORDER BY tx_wseevents_categories.name',
+#				'foreign_table_where' => 'ORDER BY tx_wseevents_categories.name',
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,
@@ -681,8 +688,8 @@ $TCA['tx_wseevents_sessions'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.teaser',		
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
-				'rows' => '3',
+				'cols' => '40',	
+				'rows' => '4s',
 			)
 		),
 		'description' => Array (		
@@ -707,7 +714,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, comment, speaker, room, timeslots, category, number, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, category, number, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -941,8 +948,9 @@ $TCA['tx_wseevents_speaker_attendance'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speaker_attendance.speaker',		
 			'config' => Array (
 				'type' => 'select',	
+				'itemsProcFunc' => 'tx_wseevents_speakers->getTCAspeakerlist',
 				'foreign_table' => 'tx_wseevents_speakers',	
-				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.uid',	
+#				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.uid',	
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,
