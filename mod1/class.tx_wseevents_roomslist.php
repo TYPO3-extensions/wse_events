@@ -27,7 +27,7 @@
 *  tx_seminars
 ***************************************************************/
 /**
- * Class 'events list' for the 'wse_events' extension.
+ * Class 'tx_wseevents_roomslist' for the 'wse_events' extension.
  *
  * @package		TYPO3
  * @subpackage	wse_events
@@ -40,7 +40,7 @@ require_once($BACK_PATH.'template.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backendlist.php');
 
 
-class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
+class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
@@ -49,9 +49,9 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 	 * @param	object		the current back-end page object
 	 * @return	[type]		...
 	 */
-	function tx_wseevents_categorieslist(&$page) {
+	function tx_wseevents_roomslist(&$page) {
 		parent::tx_wseevents_backendlist($page);
-		$this->tableName = $this->tableCategories;
+		$this->tableName = $this->tableRooms;
 #		$this->page = $page;
 	}
 
@@ -63,9 +63,6 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 	 */
 	function show() {
 		global $LANG, $BE_USER;
-
-		// Get selected backend language of user
-		$userlang = $BE_USER->uc[moduleData][web_layout][language];
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -113,17 +110,11 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 		);
 
 		// Fill the first row of the table array with the header.
-		$table = array(
+		$tableheader = array(
 			array(
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('categories.shortkey').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('categories.name').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('language').'</span>'.LF,
+					.$LANG->getLL('rooms.name').'</span>'.LF,
 				'',
 			)
 		);
@@ -140,53 +131,86 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
+		// Add icon for new record
+		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
+
+		// -------------------- Get list of locations --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0';
+		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
-		$orderBy = 'shortkey,sys_language_uid';
+		$orderBy = 'name';
 		$limit = '';
 
 		// Get list of all events
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
-			$this->tableName,
+			$this->tableLocations,
 			$queryWhere,
 			$groupBy,
 			$orderBy,
 			$limit);
 
+		$locations = array();
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$uid = $row['uid'];
-			$hidden = $row['hidden'];
-			// Add the result row to the table array.
-			$table[] = array(
-				TAB.TAB.TAB.TAB.TAB
-					.substr($row['shortkey'],0,3).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.t3lib_div::fixed_lgd_cs(
-						$row['name'],
-						$BE_USER->uc['titleLen']
-					).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['sys_language_uid'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$this->getEditIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getDeleteIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getHideUnhideIcon(
-						$uid,
-						$hidden
-					).LF,
-			);
+			$location = array();
+			$location['uid'] = $row['uid'];
+			$location['name'] = $row['name'];
+			$locations[] = $location;
 		}
+		
+		// Add box for location selection
+		
+		
+		// Get list of rooms for an location
+		foreach ($locations as $location) {
+			// Show name of location
+			$content .= '<b>'.$LANG->getLL('rooms.location').' '.$location['name'].'</b><br />';
 
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
+			// Initialize variables for the database query.
+			$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND location='.$location['uid'].' AND deleted=0 AND sys_language_uid=0';
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'name';
+			$limit = '';
 
-		// Output the table array using the tableLayout array with the template
-		// class.
-		$content .= $this->page->doc->table($table, $tableLayout);
+			// Get list of all time slots
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'*',
+				$this->tableName,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+
+			// Clear output table
+			$table = $tableheader;
+			
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$uid = $row['uid'];
+				$hidden = $row['hidden'];
+				// Add the result row to the table array.
+				$table[] = array(
+					TAB.TAB.TAB.TAB.TAB
+						.t3lib_div::fixed_lgd_cs(
+							$row['name'],
+							$BE_USER->uc['titleLen']
+						).LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$this->getEditIcon($uid).LF
+						.TAB.TAB.TAB.TAB.TAB
+						.$this->getDeleteIcon($uid).LF
+						.TAB.TAB.TAB.TAB.TAB
+						.$this->getHideUnhideIcon(
+							$uid,
+							$hidden
+						).LF,
+				);
+			}
+			// Output the table array using the tableLayout array with the template
+			// class.
+			$content .= $this->page->doc->table($table, $tableLayout).'<br /><br />';
+		}
 
 		return $content;
 	}
@@ -234,8 +258,8 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_categorieslist.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_categorieslist.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_roomslist.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_roomslist.php']);
 }
 
 ?>

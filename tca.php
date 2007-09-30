@@ -1,6 +1,7 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_rooms.php');
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_speakers.php');
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_categories.php');
@@ -487,14 +488,17 @@ $TCA['tx_wseevents_timeslots'] = Array (
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.eventday',		
 			'config' => Array (
-				'type' => 'input',
-				'size' => '2',
+				'type' => 'select',
+				'itemsProcFunc' => 'tx_wseevents_events->getTCAeventDays',
+				'size' => '1',
 				'max' => '2',
 				'eval' => 'int',
 				'range' => Array (
 					'upper' => '99',
 					'lower' => '1',
 				),
+				'minitems' => 0,
+				'maxitems' => 1,
 				'default' => 1
 			)
 		),
@@ -516,8 +520,9 @@ $TCA['tx_wseevents_timeslots'] = Array (
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.begin',		
 			'config' => Array (
-				'type' => 'input',
-				'size' => '2',
+				'type' => 'select',
+				'itemsProcFunc' => 'tx_wseevents_events->getTCAslotList',
+				'size' => '1',
 				'max' => '2',
 				'eval' => 'int',
 				'range' => Array (
@@ -531,15 +536,16 @@ $TCA['tx_wseevents_timeslots'] = Array (
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.length',		
 			'config' => Array (
-				'type' => 'input',
-				'size' => '2',
+				'type' => 'select',
+				'itemsProcFunc' => 'tx_wseevents_events->getTCAsessionLength',
+				'size' => '1',
 				'max' => '2',
 				'eval' => 'int',
 				'range' => Array (
 					'upper' => '99',
 					'lower' => '1',
 				),
-				'default' => 1
+				'default' => 'tx_wseevents_events->getTCAsessionDefault'
 			)
 		),
 	),
@@ -1095,7 +1101,7 @@ $TCA['tx_wseevents_categories'] = Array (
 				'type' => 'input',	
 				'size' => '5',	
 				'max' => '3',	
-				'eval' => 'required,upper,nospace,uniqueInPid',
+				'eval' => 'required,upper,nospace',
 			)
 		),
 	),

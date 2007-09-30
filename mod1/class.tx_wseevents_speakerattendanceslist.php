@@ -27,7 +27,7 @@
 *  tx_seminars
 ***************************************************************/
 /**
- * Class 'events list' for the 'wse_events' extension.
+ * Class 'tx_wseevents_speakerattendanceslist' for the 'wse_events' extension.
  *
  * @package		TYPO3
  * @subpackage	wse_events
@@ -38,9 +38,10 @@ require_once('conf.php');
 require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backendlist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
 
 
-class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
+class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
 
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
@@ -49,9 +50,9 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 	 * @param	object		the current back-end page object
 	 * @return	[type]		...
 	 */
-	function tx_wseevents_categorieslist(&$page) {
+	function tx_wseevents_speakerattendanceslist(&$page) {
 		parent::tx_wseevents_backendlist($page);
-		$this->tableName = $this->tableCategories;
+		$this->tableName = $this->tableSpeakerAttendance;
 #		$this->page = $page;
 	}
 
@@ -64,13 +65,18 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 	function show() {
 		global $LANG, $BE_USER;
 
+#debug ($LANG);
+#debug ($BE_USER);
+
 		// Get selected backend language of user
 		$userlang = $BE_USER->uc[moduleData][web_layout][language];
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
 
-		// Set the table layout of the event list.
+		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
+
+		// Set the table layout of the speaker attendances list.
 		$tableLayout = array(
 			'table' => array(
 				TAB.TAB.'<table cellpadding="0" cellspacing="0" class="typo3-dblist">'.LF,
@@ -117,13 +123,16 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 			array(
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('categories.shortkey').'</span>'.LF,
+					.$LANG->getLL('speakers.speaker').'</span>'.LF,
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('categories.name').'</span>'.LF,
+					.$LANG->getLL('speakers.eventday').'</span>'.LF,
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('language').'</span>'.LF,
+					.$LANG->getLL('speakers.begin').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('speakers.end').'</span>'.LF,
 				'',
 			)
 		);
@@ -140,53 +149,117 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
+		// -------------------- Get list of speakers --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0';
+		$queryWhere = 'deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
-		$orderBy = 'shortkey,sys_language_uid';
+		$orderBy = 'uid';
 		$limit = '';
 
 		// Get list of all events
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
-			$this->tableName,
+			$this->tableSpeakers,
 			$queryWhere,
 			$groupBy,
 			$orderBy,
 			$limit);
 
+		$speakers = array();
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$uid = $row['uid'];
-			$hidden = $row['hidden'];
-			// Add the result row to the table array.
-			$table[] = array(
-				TAB.TAB.TAB.TAB.TAB
-					.substr($row['shortkey'],0,3).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.t3lib_div::fixed_lgd_cs(
-						$row['name'],
-						$BE_USER->uc['titleLen']
-					).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['sys_language_uid'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$this->getEditIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getDeleteIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getHideUnhideIcon(
-						$uid,
-						$hidden
-					).LF,
-			);
+			$speakers[$row['uid']] = $row['name'].', '.$row['firstname'];
+		}
+		
+		// -------------------- Get list of events --------------------
+		// Initialize variables for the database query.
+		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
+		$additionalTables = '';
+		$groupBy = '';
+		$orderBy = 'name';
+		$limit = '';
+
+		// Get list of all events
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			$this->tableEvents,
+			$queryWhere,
+			$groupBy,
+			$orderBy,
+			$limit);
+
+		$events = array();
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$event = array();
+			$event['uid'] = $row['uid'];
+			$event['name'] = $row['name'];
+			$events[] = $event;
+		}
+		
+		// Add box for event selection
+		
+		
+		// Get list of sessions for an event
+		foreach ($events as $event) {
+			// Show name of event
+			$content .= '<b>'.$event['name'].'</b><br />';
+
+			// Get list of timeslots for the event
+			$slots = tx_wseevents_events::getEventSlotlist($event['uid']);
+
+			// Initialize variables for the database query.
+			$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND event='.$event['uid'].' AND deleted=0';
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'speaker,eventday';
+			$limit = '';
+
+			// Get list of all speaker attendances
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'*',
+				$this->tableName,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+
+			if ($res) {
+				$found = false;
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$found = true;
+					$uid = $row['uid'];
+					$hidden = $row['hidden'];
+					// Add the result row to the table array.
+					$table[] = array(
+						TAB.TAB.TAB.TAB.TAB
+							.$speakers[$row['speaker']].LF,
+						TAB.TAB.TAB.TAB.TAB
+							.$row['eventday'].LF,
+						TAB.TAB.TAB.TAB.TAB
+							.$slots[$row['begin']].LF,
+						TAB.TAB.TAB.TAB.TAB
+							.$slots[($row['begin']+$row['length'])].LF,
+						TAB.TAB.TAB.TAB.TAB
+							.$this->getEditIcon($uid).LF
+							.TAB.TAB.TAB.TAB.TAB
+							.$this->getDeleteIcon($uid).LF
+							.TAB.TAB.TAB.TAB.TAB
+							.$this->getHideUnhideIcon(
+								$uid,
+								$hidden
+							).LF,
+					);
+				}
+				if ($found) {
+					// Output the table array using the tableLayout array with the template
+					// class.
+					$content .= $this->page->doc->table($table, $tableLayout);
+				} else {
+					$content .= $LANG->getLL('norecords').'<br /><br />'.LF;
+				}
+			}
 		}
 
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
-
-		// Output the table array using the tableLayout array with the template
-		// class.
-		$content .= $this->page->doc->table($table, $tableLayout);
 
 		return $content;
 	}
@@ -234,8 +307,8 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_categorieslist.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_categorieslist.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerattendanceslist.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerattendanceslist.php']);
 }
 
 ?>

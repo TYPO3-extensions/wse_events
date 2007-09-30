@@ -27,10 +27,10 @@
 *  tx_seminars
 ***************************************************************/
 /**
- * Class 'events list' for the 'wse_events' extension.
+ * Class 'tx_wseevents_eventslist' for the 'wse_events' extension.
  *
  * @package	TYPO3
- * @subpackage	tx_seminars
+ * @subpackage	wse_events
  * @author		Michael Oehlhof
  */
 

@@ -118,6 +118,9 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('locations.name').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('language').'</span>'.LF,
 				'',
 			)
 		);
@@ -160,6 +163,8 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 						$row['name'],
 						$BE_USER->uc['titleLen']
 					).LF,
+				TAB.TAB.TAB.TAB.TAB
+					.$row['sys_language_uid'].LF,
 				TAB.TAB.TAB.TAB.TAB
 					.$this->getEditIcon($uid).LF
 					.TAB.TAB.TAB.TAB.TAB

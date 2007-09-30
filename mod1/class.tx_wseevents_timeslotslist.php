@@ -38,6 +38,7 @@ require_once('conf.php');
 require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backendlist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
 
 
 class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
@@ -95,7 +96,7 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 					TAB.TAB.TAB.TAB.'</td>'.LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td class="datecol">'.LF,
+					TAB.TAB.TAB.TAB.'<td>'.LF,
 					TAB.TAB.TAB.TAB.'</td>'.LF
 				),
 				array(
@@ -168,6 +169,10 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 			$rooms[$row['uid']] = $row['name'];
 		}
 
+		if (!isset($this->page->pageInfo['uid'])) {
+			return;
+		}
+		
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
 		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
@@ -201,6 +206,12 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 		foreach ($events as $event) {
 			// Show name of event
 			$content .= '<b>'.$event['name'].'</b><br />';
+
+			// Get list of timeslots for the event
+			$slots = tx_wseevents_events::getEventSlotlist($event['uid']);
+			
+			// Get info about event
+			$eventinfo = tx_wseevents_events::getEventInfo($event['uid']);
 
 			// Initialize variables for the database query.
 			$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND event='.$event['uid'].' AND deleted=0 AND sys_language_uid=0';
@@ -236,9 +247,9 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 					TAB.TAB.TAB.TAB.TAB
 						.$rooms[$row['room']].LF,
 					TAB.TAB.TAB.TAB.TAB
-						.$row['begin'].LF,
+						.$slots[$row['begin']].LF,
 					TAB.TAB.TAB.TAB.TAB
-						.$row['length'].LF,
+						.$eventinfo['slotsize']*$row['length'].LF,
 					TAB.TAB.TAB.TAB.TAB
 						.$this->getEditIcon($uid).LF
 						.TAB.TAB.TAB.TAB.TAB

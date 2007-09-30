@@ -36,9 +36,11 @@ require_once($BACK_PATH.'template.php');
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_timeslotslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_sessionslist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerattendanceslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_eventslist.php');
 
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_locationslist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_roomslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_categorieslist.php');
 
@@ -287,8 +289,9 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				$this->content .= $eventsList->show();
 				break;
 			case 3:
-				$this->content .= 'Edit speaker attendance here<br />';
-				$this->content .= $LANG->getLL('not_implemented');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_speakerattendanceslist');
+				$eventsList = new $eventsListClassname($this);
+				$this->content .= $eventsList->show();
 				break;
 			case 4:
 				$this->content .= '<br />';
@@ -357,8 +360,9 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				$this->content .= $eventsList->show();
 				break;
 			case 2:
-				$this->content .= 'Edit rooms here<br />';
-				$this->content .= $LANG->getLL('not_implemented');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_roomslist');
+				$eventsList = new $eventsListClassname($this);
+				$this->content .= $eventsList->show();
 				break;
 			case 3:
 				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_speakerslist');
