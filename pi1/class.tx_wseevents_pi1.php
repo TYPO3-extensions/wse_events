@@ -306,6 +306,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray['###NUMBER###'] = $this->getFieldContent('number');
 				$markerArray['###TEASERNAME##'] = $this->getFieldHeader('teaser');
 				$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
+				$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
+				$markerArray['###DESCRIPTIONDATA###'] = $this->getFieldContent('description');
 				$markerArray['###NAME###'] = $sessionname;
 				$markerArray['###SPEAKER###'] = $this->getFieldContent('speaker');
 				$markerArray['###ROOM###'] = $this->getFieldContent('room');
@@ -543,6 +545,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		# Check for event day selection
 		$showday = $this->piVars['showDay'];
 
+		# Check for hidden catagory links
+		$hidecat = $conf['listTimeslotView.']['hideCategoryLinks'];
+		if (empty($hidecat)) {
+			$hidecat = 0;
+		}
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -747,7 +754,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							    $overrulePIvars = array('showSessionUid' => $sessiondata['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
 							    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 							    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
-							    $sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+								if (!t3lib_div::inList($hidecat,$sessiondata['catkey'])) {
+									$sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+								} else {
+									$sessionlink = '';
+								}
 							    $label = $sessiondata['name'];  // the link text
 							    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
 								$markerArray = array();
