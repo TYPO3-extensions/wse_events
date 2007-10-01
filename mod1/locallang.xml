@@ -14,6 +14,7 @@
 			<label index="timeslots.name">Name of slot</label>
 			<label index="timeslots.eventday">Event day</label>
 			<label index="timeslots.room">Room</label>
+			<label index="timeslots.allrooms">All rooms</label>
 			<label index="timeslots.begin">Begin</label>
 			<label index="timeslots.length">Length</label>
 			<label index="subModuleTitle_sessions">Sessions</label>

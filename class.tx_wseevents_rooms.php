@@ -144,6 +144,12 @@ class tx_wseevents_rooms {
 				$roomfound = true;
 			}
 		}
+		// Add the name and id of ALL ROOMS to the itemlist
+		$entry = array();
+		$entry[0] = '- All rooms -'; //$LANG->getLL('timeslots.allrooms');
+		$entry[1] = 0;
+		$entry[2] = '';
+		$PA['items'][] = $entry;
 		
 		// Set selected room to first room of location, if given room is from another location
 		if (!$roomfound) {

@@ -100,6 +100,13 @@ class tx_wseevents_events {
 			$PA['items'][] = $entry;
 			$thisday += 1;
 		}
+		
+		// Add the name and id of the ALL DAYS to the itemlist
+		$entry = array();
+		$entry[0] = $LANG->getLL('events.alldays').' All days';
+		$entry[1] = 0;
+		$entry[2] = '';
+		$PA['items'][] = $entry;
 	}
 	
 	/**
@@ -109,12 +116,11 @@ class tx_wseevents_events {
 	 * @access protected
 	 */
 	function getTCAsessionLength($PA) {
-	
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
 		$eventinfo = $this->getEventInfo($PA['row']['event']);
-		
+
 		$thisslot = 1;
 		$maxslot = $eventinfo['maxslot'];
 		$defslot = $eventinfo['defslotcount'];
@@ -129,6 +135,7 @@ class tx_wseevents_events {
 			$PA['items'][] = $entry;
 			$thisslot += 1;
 		}
+		$PA['row']['length'] = $defslot;
 	}
 	
 	/**
@@ -138,11 +145,15 @@ class tx_wseevents_events {
 	 * @access protected
 	 */
 	function getTCAsessionDefault($PA) {
-	
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
-		$eventinfo = $this->getEventInfo($PA['row']['event']);
+		if (isset($PA['row']['event'])) {
+			$event = $PA['row']['event'];
+		} else {
+			$event = 0;
+		}
+		$eventinfo = $this->getEventInfo($event);
 		
 		$thisslot = 1;
 		$defslot = $eventinfo['defslotcount'];
@@ -187,7 +198,11 @@ class tx_wseevents_events {
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
-		$queryWhere = 'uid='.$event;
+		if ($event>0) {
+			$queryWhere = 'uid='.$event;
+		} else {
+			$queryWhere = '';
+		}
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -216,7 +231,11 @@ class tx_wseevents_events {
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
-		$queryWhere = 'uid='.$event;
+		if ($event>0) {
+			$queryWhere = 'uid='.$event;
+		} else {
+			$queryWhere = '';
+		}
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -231,13 +250,15 @@ class tx_wseevents_events {
 			$orderBy,
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		$begin = $row['timebegin'];
-		$end = $row['timeend'];
-		$size = $row['slotsize'];
 		
 		// Clear the item array
 		$slotlist = array();
 		
+		if (!empty($row)) {
+		$begin = $row['timebegin'];
+		$end = $row['timeend'];
+		$size = $row['slotsize'];
+
 		list($this_h, $this_m) = explode(':', $begin);
 		list($end_h, $end_m) = explode(':', $end);
 
@@ -258,7 +279,7 @@ class tx_wseevents_events {
 			}
 			$itemindex += 1;
 		}
-
+		}
 		return $slotlist;
 	}
 

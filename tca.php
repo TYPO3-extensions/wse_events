@@ -545,7 +545,6 @@ $TCA['tx_wseevents_timeslots'] = Array (
 					'upper' => '99',
 					'lower' => '1',
 				),
-				'default' => 'tx_wseevents_events->getTCAsessionDefault'
 			)
 		),
 	),
