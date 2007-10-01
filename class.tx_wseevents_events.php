@@ -100,13 +100,6 @@ class tx_wseevents_events {
 			$PA['items'][] = $entry;
 			$thisday += 1;
 		}
-		
-		// Add the name and id of the ALL DAYS to the itemlist
-		$entry = array();
-		$entry[0] = $LANG->getLL('events.alldays').' All days';
-		$entry[1] = 0;
-		$entry[2] = '';
-		$PA['items'][] = $entry;
 	}
 	
 	/**
