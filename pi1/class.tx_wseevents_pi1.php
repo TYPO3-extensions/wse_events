@@ -505,6 +505,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray1['###SESSIONNUMBER###'] = $datacat['shortkey'].sprintf('%02d', $sessdata['number']);
 					$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];
 					$markerArray1['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
+					// ToDo: insert ###SESSIONSLOT### 
 
 					$sess_content_item .= $this->cObj->substituteMarkerArrayCached($template['sessionrow'], $markerArray1);
 				}
@@ -1089,6 +1090,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$markerArray1['###SESSIONNUMBER###'] = $datacat['shortkey'].sprintf('%02d', $sessdata['number']);
 			$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];
 			$markerArray1['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
+			// ToDo: insert ###SESSIONSLOT### 
 
 			$content_item .= $this->cObj->substituteMarkerArrayCached($template['sessionrow'], $markerArray1);
 		}

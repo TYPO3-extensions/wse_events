@@ -30,8 +30,8 @@
  * @author		Michael Oehlhof
  */
 
- class tx_wseevents_tcemainprocdm {
-    function processDatamap_postProcessFieldArray ($status, $table, $id, &$fieldArray, &$reference) ) {
+class tx_wseevents_tcemainprocdm {
+    function processDatamap_postProcessFieldArray ($status, $table, $id, &$fieldArray, &$reference) {
         if ($table == 'tx_wseevents_speakers') {
 			// Set the fullname with name, firstname
 			$fieldArray['fullname'] = $fieldArray['name'].', '.$fieldArray['firstname'];
@@ -41,5 +41,5 @@
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_tcemainprocdm.php']) {
 	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_tcemainprocdm.php']);
-
+}
 ?>
