@@ -1,3 +1,26 @@
+2007-10-01
+	* Added defining a slot for all rooms, for lunch etc.
+	* Sort session list on category and number.
+	* Sort speaker list on name, firstname.
+	* Added session number, category and shortkey to be used in template 
+	  of speaker list, speaker detail and session details.
+
+2007-09-30
+	* Added some backend editing functions.
+	* Added select boxes for backend record editing.
+	* Possible hide the detail link for categories in the time slot view.
+
+2007-09-23
+	* Added a default framework for a backend module.
+	* Added tab sheets for database tables.
+	* Added display of events table.
+
+2007-09-17
+	* Add table for speaker attendance.
+
+2007-09-16
+	* Added dutch language.
+
 2007-09-09
 	* Added combobox for event selection at session list and time slot list.
 
