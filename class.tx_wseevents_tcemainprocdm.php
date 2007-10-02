@@ -33,8 +33,21 @@
 class tx_wseevents_tcemainprocdm {
     function processDatamap_postProcessFieldArray ($status, $table, $id, &$fieldArray, &$reference) {
         if ($table == 'tx_wseevents_speakers') {
+			$name = $fieldArray['name'];
+			$firstname = $fieldArray['firstname'];
 			// Set the fullname with name, firstname
-			$fieldArray['fullname'] = $fieldArray['name'].', '.$fieldArray['firstname'];
+			if ($status == 'update') {
+				$row = t3lib_BEfunc::getRecord ($table, $id);
+				if (is_array ($row)) {
+					if (empty($name)) {
+						$name = $row['name'];
+					}
+					if (empty($firstname)) {
+						$firstname = $row['firstname'];
+					}
+				}
+			}
+			$fieldArray['fullname'] = $name.', '.$firstname;
 		}
     }
 }

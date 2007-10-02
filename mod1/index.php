@@ -34,14 +34,14 @@ require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_timeslotslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_sessionslist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_timeslotslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerattendanceslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_eventslist.php');
 
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_locationslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_roomslist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_categorieslist.php');
 
 $LANG->includeLLFile('EXT:lang/locallang_show_rechis.xml');
@@ -241,11 +241,11 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		$this->availableSubModules = array();
 
 		// only show the tabs if the back-end user has access to the corresponding tables
-		if ($BE_USER->check('tables_select', 'tx_wseevents_timeslots')) {
-			$this->availableSubModules[1] = $LANG->getLL('subModuleTitle_time_slots');
-		}
 		if ($BE_USER->check('tables_select', 'tx_wseevents_sessions')) {
-			$this->availableSubModules[2] = $LANG->getLL('subModuleTitle_sessions');
+			$this->availableSubModules[1] = $LANG->getLL('subModuleTitle_sessions');
+		}
+		if ($BE_USER->check('tables_select', 'tx_wseevents_timeslots')) {
+			$this->availableSubModules[2] = $LANG->getLL('subModuleTitle_time_slots');
 		}
 		if ($BE_USER->check('tables_select', 'tx_wseevents_speaker_attendance')) {
 			$this->availableSubModules[3] = $LANG->getLL('subModuleTitle_speaker_attendance');
@@ -279,12 +279,12 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		// If no sub module is specified, an empty page will be displayed.
 		switch ($this->subModule) {
 			case 1:
-				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_timeslotslist');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_sessionslist');
 				$eventsList = new $eventsListClassname($this);
 				$this->content .= $eventsList->show();
 				break;
 			case 2:
-				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_sessionslist');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_timeslotslist');
 				$eventsList = new $eventsListClassname($this);
 				$this->content .= $eventsList->show();
 				break;
@@ -317,14 +317,14 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		$this->availableSubModules = array();
 
 		// only show the tabs if the back-end user has access to the corresponding tables
+		if ($BE_USER->check('tables_select', 'tx_wseevents_speakers')) {
+			$this->availableSubModules[1] = $LANG->getLL('subModuleTitle_speakers');
+		}
 		if ($BE_USER->check('tables_select', 'tx_wseevents_locations')) {
-			$this->availableSubModules[1] = $LANG->getLL('subModuleTitle_locations');
+			$this->availableSubModules[2] = $LANG->getLL('subModuleTitle_locations');
 		}
 		if ($BE_USER->check('tables_select', 'tx_wseevents_rooms')) {
-			$this->availableSubModules[2] = $LANG->getLL('subModuleTitle_rooms');
-		}
-		if ($BE_USER->check('tables_select', 'tx_wseevents_speakers')) {
-			$this->availableSubModules[3] = $LANG->getLL('subModuleTitle_speakers');
+			$this->availableSubModules[3] = $LANG->getLL('subModuleTitle_rooms');
 		}
 		if ($BE_USER->check('tables_select', 'tx_wseevents_categories')) {
 			$this->availableSubModules[4] = $LANG->getLL('subModuleTitle_categories');
@@ -355,17 +355,17 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		// If no sub module is specified, an empty page will be displayed.
 		switch ($this->subModule) {
 			case 1:
-				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_locationslist');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_speakerslist');
 				$eventsList = new $eventsListClassname($this);
 				$this->content .= $eventsList->show();
 				break;
 			case 2:
-				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_roomslist');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_locationslist');
 				$eventsList = new $eventsListClassname($this);
 				$this->content .= $eventsList->show();
 				break;
 			case 3:
-				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_speakerslist');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_roomslist');
 				$eventsList = new $eventsListClassname($this);
 				$this->content .= $eventsList->show();
 				break;
