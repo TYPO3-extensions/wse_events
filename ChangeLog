@@ -1,3 +1,10 @@
+2007-10-02
+	* Possible hide the display of "not assigned" text in time slot view.
+	* Possible hide the display of "not defined" text in time slot view.
+	* Possible hide the display of "Time" text in time slot view.
+	* Added session number, category and shortkey to be used in template 
+	  of session list.
+
 2007-10-01
 	* Added defining a slot for all rooms, for lunch etc.
 	* Sort session list on category and number.

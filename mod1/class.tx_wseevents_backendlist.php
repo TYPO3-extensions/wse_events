@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Niels Pardon (mail@niels-pardon.de)
+* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,11 +22,11 @@
 * This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- * Class 'back-end list' for the 'seminars' extension.
+ * Class 'tx_wseevents_backendlist' for the 'wse_events' extension.
  *
  * @package		TYPO3
- * @subpackage	tx_seminars
- * @author		Niels Pardon <mail@niels-pardon.de>
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
 
 require_once('conf.php');
@@ -194,8 +194,8 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wseevents/mod1/class.tx_wseevents_backendlist.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wseevents/mod1/class.tx_wseevents_backendlist.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_backendlist.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_backendlist.php']);
 }
 
 ?>

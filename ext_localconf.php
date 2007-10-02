@@ -29,4 +29,8 @@ t3lib_extMgm::addTypoScript($_EXTKEY,'setup','
 	tt_content.shortcut.20.0.conf.tx_wseevents_events = < plugin.'.t3lib_extMgm::getCN($_EXTKEY).'_pi1
 	tt_content.shortcut.20.0.conf.tx_wseevents_events.CMD = singleView
 ',43);
+
+// Include and register our class for the hook of process_datamap
+$GLOBALS ['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = 'EXT:wse_events/class.tx_wseevents_tcemainprocdm.php:tx_wseevents_tcemainprocdm';
+
 ?>

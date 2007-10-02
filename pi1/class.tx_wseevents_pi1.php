@@ -305,7 +305,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				# Build content from template + array
 				$markerArray = array();
 				$markerArray['###NUMBER###'] = $this->getFieldContent('number');	// ToDo: To be removed from here before release
-				$markerArray['###SESSIONNUMBER###'] = $this->getFieldContent('number');
 				$markerArray['###TEASERNAME##'] = $this->getFieldHeader('teaser');
 				$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
 				$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
@@ -314,6 +313,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray['###SPEAKER###'] = $this->getFieldContent('speaker');
 				$markerArray['###ROOM###'] = $this->getFieldContent('room');
 				$markerArray['###TIMESLOTS###'] = $this->getFieldContent('timeslots');
+
+				$markerArray['###SESSIONNUMBER###'] = $this->getFieldContent('number');
+				$datacat  = $this->pi_getRecord('tx_wseevents_categories',$this->getFieldContent('category'));
+				$markerArray['###SESSIONCATEGORY###'] = $this->getFieldContent('category');
+				$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
 
 				$switch_row = $switch_row ^ 1;
 				if($switch_row) {
@@ -557,6 +561,25 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if (empty($hidecat)) {
 			$hidecat = 0;
 		}
+
+		# Check for hidden display of "not assigned"
+		$hidenotassigned = $conf['listTimeslotView.']['hideNotAssigned'];
+		if (empty($hidenotassigned)) {
+			$hidenotassigned = 0;
+		}
+
+		# Check for hidden display of "not defined"
+		$hidenotdefined = $conf['listTimeslotView.']['hideNotDefined'];
+		if (empty($hidenotdefined)) {
+			$hidenotdefined = 0;
+		}
+
+		# Check for hidden display of "Time"
+		$hidetime = $conf['listTimeslotView.']['hideShowTime'];
+		if (empty($hidetime)) {
+			$hidetime = 0;
+		}
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -784,13 +807,19 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
 							} else {
 								$markerArray = array();
-								$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+								if ($hidenotassigned==0) {
+									$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+									$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+									$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+								} else {
+									$markerArray['###SLOTNAME###'] = '';
+									$markerArray['###SLOTSESSION###'] = '';
+									$markerArray['###SLOTTEASER###'] = '';
+								}
 								$markerArray['###SLOTCATEGORY###'] = 0;
 								$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned_catkey');
 								$markerArray['###SLOTLINK###'] = '';
 								$markerArray['###SLOTLINKNAME###'] = '';
-								$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
-								$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
 							}
 							$markerArray['###SLOTDAY###'] = $d;
 							$markerArray['###SLOTROOM###'] = $r;
@@ -822,12 +851,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
 								$markerArray['###SLOTEND###'] = $slotbegin[$s+1];
 								$markerArray['###SLOTSIZE###'] = 1;
-								$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+								if ($hidenotdefined==0) {
+									$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+									$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+									$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+								} else {
+									$markerArray['###SLOTNAME###'] = '';
+									$markerArray['###SLOTSESSION###'] = '';
+									$markerArray['###SLOTTEASER###'] = '';
+								}
 								$markerArray['###SLOTCATEGORY###'] = 0;
 								$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined_catkey');
 								$markerArray['###SLOTLINK###'] = '';
-								$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
-								$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
 								$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
 							}
 						}
@@ -847,7 +882,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		$subpartArray1['###HEADERCOLUMN###'] = $content_header;
 		$markerArray = array();
-		$markerArray['###HEADERBEGIN###'] = 'Time';
+		if ($hidetime==0) {
+			$markerArray['###HEADERBEGIN###'] = $this->pi_getLL('tx_wseevents_sessions.slot_titlebegin','Time');
+		} else {
+			$markerArray['###HEADERBEGIN###'] = '';
+		}
 		$subpartArray['###HEADERROW###']  = $this->cObj->substituteMarkerArrayCached($template['headerrow'], $markerArray, $subpartArray1);
 
 		$subpartArray1['###TITLECOLUMN###'] = $content_title;

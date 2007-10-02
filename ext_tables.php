@@ -151,14 +151,14 @@ t3lib_extMgm::addToInsertRecords('tx_wseevents_speakers');
 $TCA['tx_wseevents_speakers'] = Array (
 	'ctrl' => Array (
 		'title' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers',		
-		'label' => 'name',	
+		'label' => 'fullname',	
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
 		'languageField' => 'sys_language_uid',	
 		'transOrigPointerField' => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
-		'default_sortby' => 'ORDER BY name',	
+		'default_sortby' => 'ORDER BY name,firstname',	
 		'delete' => 'deleted',	
 		'enablecolumns' => Array (		
 			'disabled' => 'hidden',

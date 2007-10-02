@@ -774,6 +774,15 @@ $TCA['tx_wseevents_speakers'] = Array (
 				'default' => '0'
 			)
 		),
+		'fullname' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.fullname',
+			'config' => Array (
+				'type' => 'input',	
+				'size' => '30',	
+				'eval' => 'required',
+			)
+		),
 		'name' => Array (		
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.name',		

@@ -150,6 +150,7 @@ CREATE TABLE tx_wseevents_speakers (
 	l18n_diffsource mediumblob NOT NULL,
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
+	fullname tinytext NOT NULL,
 	name tinytext NOT NULL,
 	firstname tinytext NOT NULL,
 	comment text NOT NULL,
