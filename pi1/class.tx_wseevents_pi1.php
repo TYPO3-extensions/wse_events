@@ -907,6 +907,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$content_timecolfree = '';
 			if ($roomtime==0) {
 				$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+				$markerArray['###SLOTEND###']   = $slotbegin[$s+1];
+				$markerArray['###SLOTSIZE###']  = 1;
 				$content_timecol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
 			} else {
 				$timeday = ($showday==0)?1:$showday;
