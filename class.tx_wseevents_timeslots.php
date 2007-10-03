@@ -86,6 +86,9 @@ class tx_wseevents_timeslots {
 	 * @access protected
 	 */
 	function formatSlotName($row) {
+		if (empty($row['event'])) {
+			return;
+		}
 		$secofday = 60*60*24;
 		// Get record with event data
 		$eventdata = tx_wseevents_events::getEventInfo($row['event']);
@@ -152,7 +155,7 @@ class tx_wseevents_timeslots {
 		if ($eventid>0) {
 			// Get list of all time slots for the event
 			$tableName = 'tx_wseevents_timeslots';
-			$queryWhere = 'deleted=0 AND hidden=0 AND event='.$eventid;
+			$queryWhere = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND event='.$eventid;
 			$groupBy = '';
 			$orderBy = 'eventday,begin,room';
 			$limit = '';
@@ -172,7 +175,7 @@ class tx_wseevents_timeslots {
 				// Get list of all used time slots from sessions of the event
 				// and subtract them from the slot list
 				$tableName = 'tx_wseevents_sessions';
-				$queryWhere = 'event='.$eventid;
+				$queryWhere = 'sys_language_uid=0 AND event='.$eventid;
 				$groupBy = '';
 				$orderBy = 'uid';
 				$limit = '';

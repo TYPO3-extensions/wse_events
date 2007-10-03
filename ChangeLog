@@ -1,3 +1,7 @@
+2007-10-03
+	* Added slot info for speaker list and speaker view
+	* Only free time slots can be selected when editing sessions
+
 2007-10-02
 	* Possible hide the display of "not assigned" text in time slot view.
 	* Possible hide the display of "not defined" text in time slot view.
