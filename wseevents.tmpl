@@ -219,12 +219,17 @@
 		<!-- ###HEADERROW### end -->
 		<!-- ###SLOTROW### begin -->
 		<tr>
-			<td>###SLOTBEGIN###</td>
+			<!-- ###TIMECOLUMNEMPTY### begin -->
+			<td>&nbsp;</td>
+			<!-- ###TIMECOLUMNEMPTY### end -->
+			<!-- ###TIMECOLUMN### begin -->
+			<td rowspan="###SLOTSIZE###">###SLOTBEGIN###-###SLOTEND###</td>
+			<!-- ###TIMECOLUMN### end -->
 			<!-- ###SLOTCOLUMN### begin -->
 			<td class="tx-wseevents-pi1-category-###SLOTCATEGORY###" rowspan="###SLOTSIZE###" colspan="###SLOTWIDTH###"><p title="###SLOTTEASER###">###SLOTLINK###<br />###SLOTNAME###</p><br>(###SLOTBEGIN### - ###SLOTEND###)</td>
 			<!-- ###SLOTCOLUMN### end -->
 			<!-- ###SLOTCOLUMNEMPTY### begin -->
-			<td class="tx-wseevents-pi1-category-###SLOTCATEGORY###" rowspan="###SLOTSIZE###"><p title="###SLOTTEASER###">###SLOTNAME###<br />(###SLOTBEGIN### - ###SLOTEND###)</p></td>
+			<td class="tx-wseevents-pi1-category-###SLOTCATEGORY###" rowspan="###SLOTSIZE###" colspan="###SLOTWIDTH###"><p title="###SLOTTEASER###">###SLOTNAME###<br />(###SLOTBEGIN### - ###SLOTEND###)</p></td>
 			<!-- ###SLOTCOLUMNEMPTY### end -->
 		</tr>
 		<!-- ###SLOTROW### end -->

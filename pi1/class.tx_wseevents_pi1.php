@@ -601,6 +601,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$hidetime = 0;
 		}
 
+		# Check for compact display of begin and end of sessions
+		$roomtime = $conf['listTimeslotView.']['showRoomTime'];
+		if (empty($roomtime)) {
+			$roomtime = 0;
+		}
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -627,6 +633,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['headerrow']      = $this->cObj->getSubpart($template['total'],     '###HEADERROW###');
 		$template['headercol']      = $this->cObj->getSubpart($template['headerrow'], '###HEADERCOLUMN###');
 		$template['slotrow']        = $this->cObj->getSubpart($template['total'],     '###SLOTROW###');
+		$template['timecol']        = $this->cObj->getSubpart($template['slotrow'],   '###TIMECOLUMN###');
+		$template['timecolfree']    = $this->cObj->getSubpart($template['slotrow'],   '###TIMECOLUMNEMPTY###');
 		$template['slotcol']        = $this->cObj->getSubpart($template['slotrow'],   '###SLOTCOLUMN###');
 		$template['slotcolempty']   = $this->cObj->getSubpart($template['slotrow'],   '###SLOTCOLUMNEMPTY###');
 
@@ -857,10 +865,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							for ( $x = $s; $x < $s+$slot_len; $x++) {
 								if ($allrooms) {
 									for ( $r1 = 1; $r1 <= $roomcount; $r1++ ) {
-										$used[$x][$d][$r1] = 1;
+										$used[$x][$d][$r1] = ($x==$s)?$slot_len:(-$slot_len);
 									}
 								} else {
-									$used[$x][$d][$r] = 1;
+									$used[$x][$d][$r] = ($x==$s)?$slot_len:(-$slot_len);
 								}
 							}
 						} else {
@@ -872,6 +880,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
 								$markerArray['###SLOTEND###'] = $slotbegin[$s+1];
 								$markerArray['###SLOTSIZE###'] = 1;
+								$markerArray['###SLOTWIDTH###'] = 1;
 								if ($hidenotdefined==0) {
 									$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
 									$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
@@ -892,8 +901,33 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			}
 			$subpartArray1['###SLOTCOLUMN###'] = $content_slotrow;
 			$subpartArray1['###SLOTCOLUMNEMPTY###'] = '';
+			// Column with Start an end time
 			$markerArray = array();
-			$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+			$content_timecol = '';
+			$content_timecolfree = '';
+			if ($roomtime==0) {
+				$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+				$content_timecol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
+			} else {
+				$timeday = ($showday==0)?1:$showday;
+				if (!empty($used[$s][$timeday][$roomtime])) {
+					$slot_len = $used[$s][$timeday][$roomtime];
+					if ($slot_len>0) {
+						$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+						$markerArray['###SLOTEND###']   = $slotbegin[$s+$slot_len];
+						$markerArray['###SLOTSIZE###']  = $slot_len;
+						$content_timecol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
+					}
+				} else {
+					$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
+					$markerArray['###SLOTEND###']   = $slotbegin[$s+1];
+					$markerArray['###SLOTSIZE###']  = 1;
+					$content_timecolfree = $this->cObj->substituteMarkerArrayCached($template['timecolfree'], $markerArray);
+				}
+			}
+			$subpartArray1['###TIMECOLUMN###'] = $content_timecol;
+			$subpartArray1['###TIMECOLUMNEMPTY###'] = $content_timecolfree;
+			
 			$content_slot .= $this->cObj->substituteMarkerArrayCached($template['slotrow'], $markerArray, $subpartArray1);
 		}
 
