@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof
+* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -32,7 +32,7 @@
  *
  * @package		TYPO3
  * @subpackage	tx_wseevents
- * @author		Michael Oehlhof
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
 
 
@@ -182,8 +182,8 @@ class tx_wseevents_events {
 	
 	/**
 	 *
-	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @param	integer		Id of an event
+	 * @return	array		Event record
 	 * @access protected
 	 */
 	function getEventInfo($event) {
@@ -196,7 +196,6 @@ class tx_wseevents_events {
 		} else {
 			$queryWhere = '';
 		}
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'uid';
 		$limit = '';
@@ -276,6 +275,64 @@ class tx_wseevents_events {
 		return $slotlist;
 	}
 
+	/**
+	 *
+	 * @param	integer		Id of an event
+	 * @return	array		List of room names
+	 * @access protected
+	 */
+	function getEventRooms($event) {
+
+		// --------------------- Get the list of time slots ---------------------
+		// Initialize variables for the database query.
+		$tableName ='tx_wseevents_events';
+		if ($event>0) {
+			$queryWhere = 'uid='.$event;
+		} else {
+			$queryWhere = '';
+		}
+		$groupBy = '';
+		$orderBy = 'uid';
+		$limit = '';
+
+		// Get info about the event
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			$tableName,
+			$queryWhere,
+			$groupBy,
+			$orderBy,
+			$limit);
+		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		
+		$roomlist = array();
+		$roomlist[0] = '- All rooms -';
+		// Get the room list from the location
+		$location = $row['location'];
+		if ($location>0) {
+			$tableName ='tx_wseevents_rooms';
+			$queryWhere = 'location='.$location;
+			$groupBy = '';
+			$orderBy = 'uid';
+			$limit = '';
+
+			// Get info about the event
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'*',
+				$tableName,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+			$roomindex = 1;
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$roomlist[$roomindex] = $row['name'];
+				$roomindex += 1;
+			}
+		}
+		return $roomlist;
+	}
+	
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_events.php']) {

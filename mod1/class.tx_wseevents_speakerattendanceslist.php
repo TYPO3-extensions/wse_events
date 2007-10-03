@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof
+* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -31,7 +31,7 @@
  *
  * @package		TYPO3
  * @subpackage	wse_events
- * @author		Michael Oehlhof
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
 
 require_once('conf.php');
@@ -167,8 +167,10 @@ class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
 			$limit);
 
 		$speakers = array();
-		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$speakers[$row['uid']] = $row['name'].', '.$row['firstname'];
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$speakers[$row['uid']] = $row['name'].', '.$row['firstname'];
+			}
 		}
 		
 		// -------------------- Get list of events --------------------
@@ -189,11 +191,13 @@ class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
 			$limit);
 
 		$events = array();
-		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$event = array();
-			$event['uid'] = $row['uid'];
-			$event['name'] = $row['name'];
-			$events[] = $event;
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$event = array();
+				$event['uid'] = $row['uid'];
+				$event['name'] = $row['name'];
+				$events[] = $event;
+			}
 		}
 		
 		// Add box for event selection

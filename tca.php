@@ -5,6 +5,7 @@ require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php'
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_rooms.php');
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_speakers.php');
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_categories.php');
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
 
 $TCA['tx_wseevents_events'] = Array (
 	'ctrl' => $TCA['tx_wseevents_events']['ctrl'],
@@ -411,7 +412,7 @@ $TCA['tx_wseevents_rooms'] = Array (
 $TCA['tx_wseevents_timeslots'] = Array (
 	'ctrl' => $TCA['tx_wseevents_timeslots']['ctrl'],
 	'interface' => Array (
-		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,event,name,begin,end,sessions'
+		'showRecordFieldList' => 'hidden,event,name,begin,end,sessions'
 	),
 	'feInterface' => $TCA['tx_wseevents_timeslots']['feInterface'],
 	'columns' => Array (
@@ -460,7 +461,6 @@ $TCA['tx_wseevents_timeslots'] = Array (
 			'config' => Array (
 				'type' => 'input',	
 				'size' => '30',	
-				'eval' => 'required',
 			)
 		),
 		'comment' => Array (		
@@ -549,7 +549,7 @@ $TCA['tx_wseevents_timeslots'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, event, eventday, room, begin, length')
+		'0' => Array('showitem' => 'name, comment, event, eventday, room, begin, length')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -652,6 +652,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.timeslots',		
 			'config' => Array (
 				'type' => 'select',	
+				'itemsProcFunc' => 'tx_wseevents_timeslots->getTCAavailableSlots',
 				'foreign_table' => 'tx_wseevents_timeslots',	
 				'foreign_table_where' => 'ORDER BY tx_wseevents_timeslots.name',	
 				'size' => 6,	

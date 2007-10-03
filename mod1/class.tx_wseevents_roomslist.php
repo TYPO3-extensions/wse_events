@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof
+* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -31,7 +31,7 @@
  *
  * @package		TYPO3
  * @subpackage	wse_events
- * @author		Michael Oehlhof
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
 
 require_once('conf.php');
@@ -152,11 +152,13 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 			$limit);
 
 		$locations = array();
-		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$location = array();
-			$location['uid'] = $row['uid'];
-			$location['name'] = $row['name'];
-			$locations[] = $location;
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$location = array();
+				$location['uid'] = $row['uid'];
+				$location['name'] = $row['name'];
+				$locations[] = $location;
+			}
 		}
 		
 		// Add box for location selection
@@ -186,26 +188,28 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 			// Clear output table
 			$table = $tableheader;
 			
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$uid = $row['uid'];
-				$hidden = $row['hidden'];
-				// Add the result row to the table array.
-				$table[] = array(
-					TAB.TAB.TAB.TAB.TAB
-						.t3lib_div::fixed_lgd_cs(
-							$row['name'],
-							$BE_USER->uc['titleLen']
-						).LF,
-					TAB.TAB.TAB.TAB.TAB
-						.$this->getEditIcon($uid).LF
-						.TAB.TAB.TAB.TAB.TAB
-						.$this->getDeleteIcon($uid).LF
-						.TAB.TAB.TAB.TAB.TAB
-						.$this->getHideUnhideIcon(
-							$uid,
-							$hidden
-						).LF,
-				);
+			if ($res) {
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$uid = $row['uid'];
+					$hidden = $row['hidden'];
+					// Add the result row to the table array.
+					$table[] = array(
+						TAB.TAB.TAB.TAB.TAB
+							.t3lib_div::fixed_lgd_cs(
+								$row['name'],
+								$BE_USER->uc['titleLen']
+							).LF,
+						TAB.TAB.TAB.TAB.TAB
+							.$this->getEditIcon($uid).LF
+							.TAB.TAB.TAB.TAB.TAB
+							.$this->getDeleteIcon($uid).LF
+							.TAB.TAB.TAB.TAB.TAB
+							.$this->getHideUnhideIcon(
+								$uid,
+								$hidden
+							).LF,
+					);
+				}
 			}
 			// Output the table array using the tableLayout array with the template
 			// class.

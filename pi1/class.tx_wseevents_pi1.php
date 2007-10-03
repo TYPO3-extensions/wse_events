@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Michael Oehlhof (michael@oehlhof.de)
+*  (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,7 +25,7 @@
  * Plugin 'WSE Events' for the 'wse_events' extension.
  * Displays session data as list and detail view
  *
- * @author	Michael Oehlhof <michael@oehlhof.de>
+ * @author	Michael Oehlhof <typo3@oehlhof.de>
  */
 
 
@@ -70,7 +70,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$this->internal['delimiter'] = $conf['delimiter'];
 		}
 
-		//		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);
+//		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);
 		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[0]);
 		$conf['pidListEvents'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
 		$conf['pidListCommon'] = $this->pi_getFFvalue($piFlexForm, 'commonpages', 'sDEF');

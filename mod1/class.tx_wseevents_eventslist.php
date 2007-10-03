@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof
+* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,9 +29,9 @@
 /**
  * Class 'tx_wseevents_eventslist' for the 'wse_events' extension.
  *
- * @package	TYPO3
+ * @package		TYPO3
  * @subpackage	wse_events
- * @author		Michael Oehlhof
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
 
 require_once('conf.php');
@@ -66,6 +66,8 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
+
+		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
 
 		// Set the table layout of the event list.
 		$tableLayout = array(
@@ -159,41 +161,40 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			$orderBy,
 			$limit);
 
-		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$uid = $row['uid'];
-			$hidden = $row['hidden'];
-			// Add the result row to the table array.
-			$table[] = array(
-				TAB.TAB.TAB.TAB.TAB
-					.t3lib_div::fixed_lgd_cs(
-						$row['name'],
-						$BE_USER->uc['titleLen']
-					).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.strftime($conf['strftime'], $row['begin']).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['length'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['timebegin'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['timeend'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$this->getEditIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getDeleteIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getHideUnhideIcon(
-						$uid,
-						$hidden
-					).LF,
-			);
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$uid = $row['uid'];
+				$hidden = $row['hidden'];
+				// Add the result row to the table array.
+				$table[] = array(
+					TAB.TAB.TAB.TAB.TAB
+						.t3lib_div::fixed_lgd_cs(
+							$row['name'],
+							$BE_USER->uc['titleLen']
+						).LF,
+					TAB.TAB.TAB.TAB.TAB
+						.strftime($conf['strftime'], $row['begin']).LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$row['length'].LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$row['timebegin'].LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$row['timeend'].LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$this->getEditIcon($uid).LF
+						.TAB.TAB.TAB.TAB.TAB
+						.$this->getDeleteIcon($uid).LF
+						.TAB.TAB.TAB.TAB.TAB
+						.$this->getHideUnhideIcon(
+							$uid,
+							$hidden
+						).LF,
+				);
+			}
+			// Output the table array using the tableLayout array with the template
+			// class.
+			$content .= $this->page->doc->table($table, $tableLayout);
 		}
-
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
-
-		// Output the table array using the tableLayout array with the template
-		// class.
-		$content .= $this->page->doc->table($table, $tableLayout);
 
 		return $content;
 	}

@@ -27,8 +27,10 @@
  *
  * @package		TYPO3
  * @subpackage	wse_events
- * @author		Michael Oehlhof
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
+
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
 
 class tx_wseevents_tcemainprocdm {
     function processDatamap_postProcessFieldArray ($status, $table, $id, &$fieldArray, &$reference) {
@@ -48,6 +50,32 @@ class tx_wseevents_tcemainprocdm {
 				}
 			}
 			$fieldArray['fullname'] = $name.', '.$firstname;
+		}
+        if ($table == 'tx_wseevents_timeslots') {
+			if ($status == 'update') {
+				// If record is edited, than read the data from database
+				$row = t3lib_BEfunc::getRecord ($table, $id);
+			} else {
+				// If record is created, read the data from input fields
+				$row = array();
+				$row['event'] = $fieldArray['event'];
+				$row['eventday'] = $fieldArray['eventday'];
+				$row['begin'] = $fieldArray['begin'];
+				$row['length'] = $fieldArray['length'];
+				$row['room'] = $fieldArray['room'];
+			}
+			$fieldArray['name'] = tx_wseevents_timeslots::formatSlotName($row);
+		}
+    }
+	
+    function processDatamap_preProcessFieldArray ($incomingFieldArray, $table, $id, $this) {
+        if ($table == 'tx_wseevents_timeslots') {
+			// Set the default slot length
+# ToDo: Get the default slot length from event record			
+#			$row = t3lib_BEfunc::getRecord ($table, $id);
+			if (is_array ($row)) {
+				$incomingFieldArray['length'] = 4;
+			}
 		}
     }
 }

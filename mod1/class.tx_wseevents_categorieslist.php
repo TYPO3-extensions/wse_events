@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof
+* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -31,7 +31,7 @@
  *
  * @package		TYPO3
  * @subpackage	wse_events
- * @author		Michael Oehlhof
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
 
 require_once('conf.php');
@@ -156,30 +156,32 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 			$orderBy,
 			$limit);
 
-		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$uid = $row['uid'];
-			$hidden = $row['hidden'];
-			// Add the result row to the table array.
-			$table[] = array(
-				TAB.TAB.TAB.TAB.TAB
-					.substr($row['shortkey'],0,3).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.t3lib_div::fixed_lgd_cs(
-						$row['name'],
-						$BE_USER->uc['titleLen']
-					).LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$row['sys_language_uid'].LF,
-				TAB.TAB.TAB.TAB.TAB
-					.$this->getEditIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getDeleteIcon($uid).LF
-					.TAB.TAB.TAB.TAB.TAB
-					.$this->getHideUnhideIcon(
-						$uid,
-						$hidden
-					).LF,
-			);
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$uid = $row['uid'];
+				$hidden = $row['hidden'];
+				// Add the result row to the table array.
+				$table[] = array(
+					TAB.TAB.TAB.TAB.TAB
+						.substr($row['shortkey'],0,3).LF,
+					TAB.TAB.TAB.TAB.TAB
+						.t3lib_div::fixed_lgd_cs(
+							$row['name'],
+							$BE_USER->uc['titleLen']
+						).LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$row['sys_language_uid'].LF,
+					TAB.TAB.TAB.TAB.TAB
+						.$this->getEditIcon($uid).LF
+						.TAB.TAB.TAB.TAB.TAB
+						.$this->getDeleteIcon($uid).LF
+						.TAB.TAB.TAB.TAB.TAB
+						.$this->getHideUnhideIcon(
+							$uid,
+							$hidden
+						).LF,
+				);
+			}
 		}
 
 		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
