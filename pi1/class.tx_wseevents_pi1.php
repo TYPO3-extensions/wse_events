@@ -66,11 +66,23 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->staticInfo->init();
 
 
-		# Check if delimiter is set, if not use the default value
-		if (!isset($conf['delimiter'])) {
-			$this->internal['delimiter'] = '<br />';
+		# Check if delimiter for speaker is set, if not use the default value
+		if (!isset($conf['speakerdelimiter'])) {
+			$this->internal['speakerdelimiter'] = '<br />';
 		} else {
-			$this->internal['delimiter'] = $conf['delimiter'];
+			$this->internal['speakerdelimiter'] = $conf['speakerdelimiter'];
+		}
+		# Check if delimiter for slots is set, if not use the default value
+		if (!isset($conf['slotdelimiter'])) {
+			$this->internal['slotdelimiter'] = '<br />';
+		} else {
+			$this->internal['slotdelimiter'] = $conf['slotdelimiter'];
+		}
+		# Check if delimiter for slots is set, if not use the default value
+		if (!isset($conf['sessiondelimiter'])) {
+			$this->internal['sessiondelimiter'] = '<br />';
+		} else {
+			$this->internal['sessiondelimiter'] = $conf['sessiondelimiter'];
 		}
 
 //		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);
@@ -519,7 +531,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$tsdata = $this->pi_getRecord('tx_wseevents_timeslots',$ts);
 						    $timeslotname = tx_wseevents_timeslots::formatSlotName($tsdata);
 							if (!empty($tscontent)) {
-								$tscontent .= $this->internal['delimiter'].$timeslotname;
+								$tscontent .= $this->internal['slotdelimiter'].$timeslotname;
 							} else {
 								$tscontent = $timeslotname;
 							}
@@ -1152,7 +1164,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$tsdata = $this->pi_getRecord('tx_wseevents_timeslots',$ts);
 				$timeslotname = tx_wseevents_timeslots::formatSlotName($tsdata);
 				if (!empty($tscontent)) {
-					$tscontent .= $this->internal['delimiter'].$timeslotname;
+					$tscontent .= $this->internal['slotdelimiter'].$timeslotname;
 				} else {
 					$tscontent = $timeslotname;
 				}
@@ -1270,7 +1282,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					    $speakername = $label;
 					}
 					if (isset($content)) {
-						$content .= $this->internal['delimiter'].$speakername;
+						$content .= $this->internal['speakerdelimiter'].$speakername;
 					} else {
 						$content = $speakername;
 					}
@@ -1296,7 +1308,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					    $sessionname = $label;
 					}
 					if (!empty($content)) {
-						$content .= $this->internal['delimiter'].$sessionname;
+						$content .= $this->internal['sessiondelimiter'].$sessionname;
 					} else {
 						$content = $sessionname;
 					}
@@ -1312,7 +1324,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$data = $this->pi_getRecord('tx_wseevents_timeslots',$k);
 				    $timeslotname = tx_wseevents_timeslots::formatSlotName($data);
 					if (isset($content)) {
-						$content .= $this->internal['delimiter'].$timeslotname;
+						$content .= $this->internal['slotdelimiter'].$timeslotname;
 					} else {
 						$content = $timeslotname;
 					}

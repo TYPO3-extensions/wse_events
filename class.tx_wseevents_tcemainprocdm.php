@@ -31,6 +31,7 @@
  */
 
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
 
 class tx_wseevents_tcemainprocdm {
     function processDatamap_postProcessFieldArray ($status, $table, $id, &$fieldArray, &$reference) {
@@ -65,6 +66,28 @@ class tx_wseevents_tcemainprocdm {
 				$row['room'] = $fieldArray['room'];
 			}
 			$fieldArray['name'] = tx_wseevents_timeslots::formatSlotName($row);
+		}
+        if ($table == 'tx_wseevents_speakerrestrictions') {
+			if ($status == 'update') {
+				// If record is edited, than read the data from database
+				$row = t3lib_BEfunc::getRecord ($table, $id);
+				if (isset($fieldArray['begin'])) {
+					$row['begin'] = $fieldArray['begin'];
+				}
+				if (isset($fieldArray['end'])) {
+					$row['end'] = $fieldArray['end'];
+				}
+			} else {
+				// If record is created, read the data from input fields
+				$row = array();
+				$row['begin'] = $fieldArray['begin'];
+				$row['end']   = $fieldArray['length'];
+				$row['event'] = $fieldArray['event'];
+			}
+#			$eventslots = tx_wseevents_events::getEventSlotList($row['event']);
+			if ($row['end']<$row['begin']) {
+				$fieldArray['end'] = $row['begin'];
+			}
 		}
     }
 	

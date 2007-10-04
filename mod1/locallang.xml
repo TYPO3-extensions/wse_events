@@ -21,11 +21,10 @@
 			<label index="sessions.category">Cat.Num</label>
 			<label index="sessions.name">Name of session</label>
 			<label index="sessions.timeslots">Slots</label>
-			<label index="subModuleTitle_speaker_attendance">Speaker attendance</label>
+			<label index="subModuleTitle_speaker_restrictions">Speaker restrictions</label>
 			<label index="speakers.speaker">Speaker</label>
 			<label index="speakers.eventday">Event day</label>
 			<label index="speakers.begin">Begin</label>
-			<label index="speakers.length">Length</label>
 			<label index="speakers.end">End</label>
 			<label index="subModuleTitle_events">Events</label>
 			<label index="events.name">Name of event</label>

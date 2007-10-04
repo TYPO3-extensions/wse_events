@@ -27,7 +27,7 @@
 *  tx_seminars
 ***************************************************************/
 /**
- * Class 'tx_wseevents_speakerattendanceslist' for the 'wse_events' extension.
+ * Class 'tx_wseevents_speakerrestrictionslist' for the 'wse_events' extension.
  *
  * @package		TYPO3
  * @subpackage	wse_events
@@ -41,7 +41,7 @@ require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backen
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
 
 
-class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
+class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
@@ -50,9 +50,9 @@ class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
 	 * @param	object		the current back-end page object
 	 * @return	[type]		...
 	 */
-	function tx_wseevents_speakerattendanceslist(&$page) {
+	function tx_wseevents_speakerrestrictionslist(&$page) {
 		parent::tx_wseevents_backendlist($page);
-		$this->tableName = $this->tableSpeakerAttendance;
+		$this->tableName = $this->tableSpeakerRestrictions;
 #		$this->page = $page;
 	}
 
@@ -76,7 +76,7 @@ class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
 
 		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
 
-		// Set the table layout of the speaker attendances list.
+		// Set the table layout of the speaker restrictions list.
 		$tableLayout = array(
 			'table' => array(
 				TAB.TAB.'<table cellpadding="0" cellspacing="0" class="typo3-dblist">'.LF,
@@ -218,7 +218,7 @@ class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
 			$orderBy = 'speaker,eventday';
 			$limit = '';
 
-			// Get list of all speaker attendances
+			// Get list of all speaker restrictions
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'*',
 				$this->tableName,
@@ -242,7 +242,7 @@ class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
 						TAB.TAB.TAB.TAB.TAB
 							.$slots[$row['begin']].LF,
 						TAB.TAB.TAB.TAB.TAB
-							.$slots[($row['begin']+$row['length'])].LF,
+							.$slots[$row['end']].LF,
 						TAB.TAB.TAB.TAB.TAB
 							.$this->getEditIcon($uid).LF
 							.TAB.TAB.TAB.TAB.TAB
@@ -311,8 +311,8 @@ class tx_wseevents_speakerattendanceslist extends tx_wseevents_backendlist{
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerattendanceslist.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerattendanceslist.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerrestrictionslist.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerrestrictionslist.php']);
 }
 
 ?>

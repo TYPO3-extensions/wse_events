@@ -77,7 +77,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	var $tableSpeakers;
 	var $tableCategories;
 	var $tableEvents;
-	var $tableSpeakerAttendance;
+	var $tableSpeakerRestrictions;
 	var $tableSessions;
 	var $tableTimeslots;
 
@@ -189,7 +189,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		$this->tableSpeakers          = $dbPrefix.'speakers';
 		$this->tableCategories        = $dbPrefix.'categories';
 		$this->tableEvents            = $dbPrefix.'events';
-		$this->tableSpeakerAttendance = $dbPrefix.'speaker_attendance';
+		$this->tableSpeakerRestrictions = $dbPrefix.'speakerrestrictions';
 		$this->tableSessions          = $dbPrefix.'sessions';
 		$this->tableTimeslots         = $dbPrefix.'timeslots';
 

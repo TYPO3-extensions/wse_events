@@ -212,7 +212,7 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 			$content .= '<b>'.$event['name'].'</b><br />';
 
 			// Get list of timeslots for the event
-			$slots = tx_wseevents_events::getEventSlotlist($event['uid']);
+			$slots = tx_wseevents_events::getEventSlotList($event['uid']);
 			
 			// Get info about event
 			$eventinfo = tx_wseevents_events::getEventInfo($event['uid']);

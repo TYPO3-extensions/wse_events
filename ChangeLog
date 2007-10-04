@@ -1,3 +1,9 @@
+2007-10-04
+	* Added different delimiter for list of speaker,sessions and slots.
+	* Change table for speaker attendance to speaker restrictions.
+	* Implement attention of speaker restrictions for time slot list in
+	  session editing.
+
 2007-10-03
 	* Added slot info for speaker list and speaker view.
 	* Only free time slots can be selected when editing sessions.

@@ -172,14 +172,14 @@ $TCA['tx_wseevents_speakers'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_speaker_attendance');
+t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_speakerrestrictions');
 
-t3lib_extMgm::addToInsertRecords('tx_wseevents_speaker_attendance');
+t3lib_extMgm::addToInsertRecords('tx_wseevents_speakerrestrictions');
 
-$TCA['tx_wseevents_speaker_attendance'] = Array (
+$TCA['tx_wseevents_speakerrestrictions'] = Array (
 	'ctrl' => Array (
 		'requestUpdate' => 'event',
-		'title' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speaker_attendance',		
+		'title' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions',		
 		'label' => 'speaker',	
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
@@ -193,10 +193,10 @@ $TCA['tx_wseevents_speaker_attendance'] = Array (
 			'disabled' => 'hidden',
 		),
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY)."tx_wseevents_speaker_attendance.gif",
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY)."tx_wseevents_speakerrestrictions.gif",
 	),
 	'feInterface' => Array (
-		'fe_admin_fieldList' => 'sys_language_uid, l18n_parent, l18n_diffsource, hidden, speaker, event, eventday, begin, end',
+		'fe_admin_fieldList' => 'sys_language_uid, l18n_parent, l18n_diffsource, hidden, speaker, comment, event, eventday, begin, end',
 	),
 );
 

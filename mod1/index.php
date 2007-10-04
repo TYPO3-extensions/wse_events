@@ -36,7 +36,7 @@ require_once($BACK_PATH.'template.php');
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_sessionslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_timeslotslist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerattendanceslist.php');
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerrestrictionslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_eventslist.php');
 
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerslist.php');
@@ -247,8 +247,8 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		if ($BE_USER->check('tables_select', 'tx_wseevents_timeslots')) {
 			$this->availableSubModules[2] = $LANG->getLL('subModuleTitle_time_slots');
 		}
-		if ($BE_USER->check('tables_select', 'tx_wseevents_speaker_attendance')) {
-			$this->availableSubModules[3] = $LANG->getLL('subModuleTitle_speaker_attendance');
+		if ($BE_USER->check('tables_select', 'tx_wseevents_speakerrestrictions')) {
+			$this->availableSubModules[3] = $LANG->getLL('subModuleTitle_speaker_restrictions');
 		}
 		if ($BE_USER->check('tables_select', 'tx_wseevents_events')) {
 			$this->availableSubModules[4] = $LANG->getLL('subModuleTitle_events');
@@ -289,7 +289,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				$this->content .= $eventsList->show();
 				break;
 			case 3:
-				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_speakerattendanceslist');
+				$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_speakerrestrictionslist');
 				$eventsList = new $eventsListClassname($this);
 				$this->content .= $eventsList->show();
 				break;

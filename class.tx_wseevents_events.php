@@ -165,7 +165,7 @@ class tx_wseevents_events {
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
-		$slotlist = $this->getEventSlotlist($PA['row']['event']);
+		$slotlist = $this->getEventSlotList($PA['row']['event']);
 		
 		$thisslot = 1;
 		// Create list of event days
@@ -214,11 +214,11 @@ class tx_wseevents_events {
 	
 	/**
 	 *
-	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @param	string		Id of event
+	 * @return	array		List of slots for the event
 	 * @access protected
 	 */
-	function getEventSlotlist($event) {
+	function getEventSlotList($event) {
 
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
@@ -273,6 +273,85 @@ class tx_wseevents_events {
 		}
 		}
 		return $slotlist;
+	}
+
+	/**
+	 *
+	 * @param	string		Id of event
+	 * @return	array		List of slots for the event
+	 * @access protected
+	 */
+	function getEventSlotArray($event) {
+
+		// --------------------- Get the list of time slots ---------------------
+		// Initialize variables for the database query.
+		$tableName ='tx_wseevents_events';
+		if ($event>0) {
+			$queryWhere = 'uid='.$event;
+		} else {
+			$queryWhere = '';
+		}
+		$additionalTables = '';
+		$groupBy = '';
+		$orderBy = 'uid';
+		$limit = '';
+
+		// Get info about time slots of the event
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			$tableName,
+			$queryWhere,
+			$groupBy,
+			$orderBy,
+			$limit);
+		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		
+		// Clear the item array
+		$slotlist = array();
+		$slotarray = array();
+		
+		if (!empty($row)) {
+			$begin = $row['timebegin'];
+			$end = $row['timeend'];
+			$size = $row['slotsize'];
+			$daycount = $row['length'];
+			$location = $row['location'];
+			// Get info about rooms of the event
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'count(*)',
+				'tx_wseevents_rooms',
+				'location='.$location,
+				$groupBy,
+				$orderBy,
+				$limit);
+			$locationrow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$roomcount = $locationrow['count(*)'];
+
+			list($this_h, $this_m) = explode(':', $begin);
+
+			$itemindex = 1;
+			$finished = false;
+			// Fill item array with time slots of selected event
+			while (!$finished) {
+				$thistime = sprintf('%02d:%02d', $this_h, $this_m);
+				$slotlist[$itemindex] = 1;
+				$this_m += intval($size);
+				if ($this_m>=60) {
+					$this_h += 1;
+					$this_m -= 60;
+				}
+				if ($thistime==$end) {
+					$finished = true;
+				}
+				$itemindex += 1;
+			}
+			for ( $d = 1; $d <= $daycount; $d++ ) {
+				for ( $r = 1; $r <= $roomcount; $r++ ) {
+					$slotarray[$d][$r] = $slotlist;
+				}
+			}
+		}
+		return $slotarray;
 	}
 
 	/**
