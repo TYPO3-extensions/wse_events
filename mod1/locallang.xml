@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
 	<meta type="array">
 		<type>module</type>
@@ -57,6 +57,47 @@
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">WSE Veranst.</label>
+			<label index="language">Sprache</label>
+			<label index="norecords">Keine Datensätze vorhanden</label>
+			<label index="function1">Veranstaltungsdaten</label>
+			<label index="subModuleTitle_time_slots">Vortragszeiten</label>
+			<label index="timeslots.id">Id</label>
+			<label index="timeslots.name">Vortragszeit</label>
+			<label index="timeslots.eventday">Tag</label>
+			<label index="timeslots.room">Raum</label>
+			<label index="timeslots.allrooms">Alle Räume</label>
+			<label index="timeslots.begin">Anfang</label>
+			<label index="timeslots.length">Längee</label>
+			<label index="subModuleTitle_sessions">Vorträge</label>
+			<label index="sessions.info">Notiz: Die Berechnung der möglichen Vortragszeiten erfolgt vor dem Bearbeiten eines Vortragsdatensatzes. Wenn Sie einen Sprecher hinzufügen oder löschen, speichern Sie den Datensatz und Bearbeiten ihn erneut damit die möglichen Vortagszeiten neu berechnet werden.</label>
+			<label index="sessions.category">Kat.Num</label>
+			<label index="sessions.name">Name des Vortrags</label>
+			<label index="sessions.timeslots">Slots</label>
+			<label index="subModuleTitle_speaker_restrictions">Referenten Beschränkungen</label>
+			<label index="speakers.speaker">Referenten</label>
+			<label index="speakers.eventday">Veranst. Tag</label>
+			<label index="speakers.begin">Anfang</label>
+			<label index="speakers.end">Ende</label>
+			<label index="subModuleTitle_events">Veranstaltungen</label>
+			<label index="events.name">Name der Veranstaltung</label>
+			<label index="events.begin">Erster Tag</label>
+			<label index="events.length">Tage</label>
+			<label index="events.timebegin">Anfang</label>
+			<label index="events.timeend">Ende</label>
+			<label index="function2">Gemeinsame Daten</label>
+			<label index="subModuleTitle_locations">Veranstaltungsorte</label>
+			<label index="locations.name">Name des Veranstaltungsortes</label>
+			<label index="subModuleTitle_rooms">Räume</label>
+			<label index="rooms.name">Name des Raums</label>
+			<label index="rooms.location">Veranstaltungsort:</label>
+			<label index="subModuleTitle_speakers">Referenten</label>
+			<label index="speakers.name">Name des Referenten</label>
+			<label index="speakers.firstname">Vorname</label>
+			<label index="subModuleTitle_categories">Kategorien</label>
+			<label index="categories.shortkey">Kurzbezeichnung</label>
+			<label index="categories.name">Name der Kategorie</label>
+			<label index="function3">Veranstaltungsplanung</label>
+			<label index="not_implemented">Die Bearbeitung ist zur Zeit noch nicht implementiert. Benutzen Sie das Web->List Modul stattdessen um die Datensätze zu Bearbeiten.</label>
 		</languageKey>
 	</data>
 </T3locallang>
