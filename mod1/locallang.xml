@@ -11,13 +11,15 @@
 			<label index="norecords">No records defined</label>
 			<label index="function1">Event data</label>
 			<label index="subModuleTitle_time_slots">Time slots</label>
+			<label index="timeslots.id">Id</label>
 			<label index="timeslots.name">Name of slot</label>
-			<label index="timeslots.eventday">Event day</label>
+			<label index="timeslots.eventday">Day</label>
 			<label index="timeslots.room">Room</label>
 			<label index="timeslots.allrooms">All rooms</label>
 			<label index="timeslots.begin">Begin</label>
 			<label index="timeslots.length">Length</label>
 			<label index="subModuleTitle_sessions">Sessions</label>
+			<label index="sessions.info">Note: Calculating of possible time slots is done before editing a session record. If you add or remove a speaker, save the session and edit it again to recalculate the possible time slots with the speaker restrictions. </label>
 			<label index="sessions.category">Cat.Num</label>
 			<label index="sessions.name">Name of session</label>
 			<label index="sessions.timeslots">Slots</label>

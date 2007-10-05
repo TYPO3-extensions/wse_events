@@ -128,6 +128,9 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('timeslots.length').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('timeslots.id').'</span>'.LF,
 				'',
 			)
 		);
@@ -255,6 +258,8 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 							.$slots[$row['begin']].LF,
 						TAB.TAB.TAB.TAB.TAB
 							.$eventinfo['slotsize']*$row['length'].LF,
+						TAB.TAB.TAB.TAB.TAB
+							.$row['uid'].LF,
 						TAB.TAB.TAB.TAB.TAB
 							.$this->getEditIcon($uid).LF
 							.TAB.TAB.TAB.TAB.TAB

@@ -1,3 +1,8 @@
+2007-10-05
+	* Added info text for time slot selection in session records.
+	* Show country flags for all sessions with non default language.
+	* Removed localization from time slots and speaker restrictions.
+
 2007-10-04
 	* Added different delimiter for list of speaker,sessions and slots.
 	* Change table for speaker attendance to speaker restrictions.

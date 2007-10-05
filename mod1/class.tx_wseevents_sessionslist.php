@@ -42,6 +42,12 @@ require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backen
 
 class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 
+	// List of shortkeys of categories
+	var $categories;
+
+	// List of languages
+	var $syslang;
+	
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
@@ -55,6 +61,57 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 #		$this->page = $page;
 	}
 
+	
+	/**
+	 * Generates and prints out an event list.
+	 *
+	 * @param	array		the table where the record data is to be addded
+	 * @param	array		the current record
+	 * @return				
+	 */
+	function addRowToTable(&$table, $row) {
+		global $BE_USER, $BACK_PATH;
+		$uid = $row['uid'];
+		$hidden = $row['hidden'];
+		if ($row['sys_language_uid']==0) {
+			$catnum = $this->categories[$row['category']].sprintf ('%02d', $row['number']);
+			$imglang = '';
+		} else {
+			$catnum = '';
+			$imglang = '<img'.t3lib_iconWorks::skinImg(
+								$BACK_PATH,
+								'gfx/'.$this->syslang[$row['sys_language_uid']][2],
+								'width="20" height="10"')
+							.' alt="'.$this->syslang[$row['sys_language_uid']][0].'">';
+			
+			
+		}
+		// Add the result row to the table array.
+		$table[] = array(
+			TAB.TAB.TAB.TAB.TAB
+				.$catnum.LF,
+			TAB.TAB.TAB.TAB.TAB
+				.t3lib_div::fixed_lgd_cs(
+					$row['name'],
+					50
+				).LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$imglang.LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$row['timeslots'].LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$this->getEditIcon($uid).LF
+				.TAB.TAB.TAB.TAB.TAB
+				.$this->getDeleteIcon($uid).LF
+				.TAB.TAB.TAB.TAB.TAB
+				.$this->getHideUnhideIcon(
+					$uid,
+					$hidden
+				).LF,
+		);
+	}
+	
+	
 	/**
 	 * Generates and prints out an event list.
 	 *
@@ -69,8 +126,8 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		$userlang = $BE_USER->uc[moduleData][web_layout][language];
 #		debug($userlang);
 		
-		// Initialize the variable for the HTML source code.
-		$content = '';
+		// Initialize the variable for the HTML source code with info text
+		$content = $LANG->getLL('sessions.info').'<br />';
 
 		// Set the table layout of the event list.
 		$tableLayout = array(
@@ -165,12 +222,15 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			$orderBy,
 			$limit);
 
-		$categories = array();
+		$this->categories = array();
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$categories[$row['uid']] = $row['shortkey'];
+				$this->categories[$row['uid']] = $row['shortkey'];
 			}
 		}
+		
+		// Get array with system languges
+		$this->syslang = t3lib_BEfunc::getSystemLanguages();
 
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
@@ -212,7 +272,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND event='.$event['uid'].' AND deleted=0 AND sys_language_uid=0';
 			$additionalTables = '';
 			$groupBy = '';
-			$orderBy = 'category,number,name,sys_language_uid';
+			$orderBy = 'category,number,name';
 			$limit = '';
 
 			// Get list of all time slots
@@ -229,31 +289,27 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 
 			if ($res) {
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-					$uid = $row['uid'];
-					$hidden = $row['hidden'];
-					// Add the result row to the table array.
-					$table[] = array(
-						TAB.TAB.TAB.TAB.TAB
-							.$categories[$row['category']].sprintf ('%02d', $row['number']).LF,
-						TAB.TAB.TAB.TAB.TAB
-							.t3lib_div::fixed_lgd_cs(
-								$row['name'],
-								$BE_USER->uc['titleLen']
-							).LF,
-						TAB.TAB.TAB.TAB.TAB
-							.$row['sys_language_uid'].LF,
-						TAB.TAB.TAB.TAB.TAB
-							.$row['timeslots'].LF,
-						TAB.TAB.TAB.TAB.TAB
-							.$this->getEditIcon($uid).LF
-							.TAB.TAB.TAB.TAB.TAB
-							.$this->getDeleteIcon($uid).LF
-							.TAB.TAB.TAB.TAB.TAB
-							.$this->getHideUnhideIcon(
-								$uid,
-								$hidden
-							).LF,
-					);
+					$this->addRowToTable($table, $row);
+					// Check for translations.
+					$queryWhere = 'l18n_parent='.$row['uid'];
+					$additionalTables = '';
+					$groupBy = '';
+					$orderBy = 'sys_language_uid';
+					$limit = '';
+
+					// Get list of all time slots
+					$reslang = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+						'*',
+						$this->tableName,
+						$queryWhere,
+						$groupBy,
+						$orderBy,
+						$limit);
+					if ($reslang) {
+						while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
+							$this->addRowToTable($table, $row);
+						}
+					}
 				}
 			}
 			// Output the table array using the tableLayout array with the template

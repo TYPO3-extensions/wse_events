@@ -412,41 +412,10 @@ $TCA['tx_wseevents_rooms'] = Array (
 $TCA['tx_wseevents_timeslots'] = Array (
 	'ctrl' => $TCA['tx_wseevents_timeslots']['ctrl'],
 	'interface' => Array (
-		'showRecordFieldList' => 'hidden,event,name,begin,end,sessions'
+		'showRecordFieldList' => 'hidden,event,begin,end,sessions'
 	),
 	'feInterface' => $TCA['tx_wseevents_timeslots']['feInterface'],
 	'columns' => Array (
-		'sys_language_uid' => Array (		
-			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
-			'config' => Array (
-				'type' => 'select',
-				'foreign_table' => 'sys_language',
-				'foreign_table_where' => 'ORDER BY sys_language.title',
-				'items' => Array(
-					Array('LLL:EXT:lang/locallang_general.php:LGL.allLanguages',-1),
-					Array('LLL:EXT:lang/locallang_general.php:LGL.default_value',0)
-				)
-			)
-		),
-		'l18n_parent' => Array (		
-			'displayCond' => 'FIELD:sys_language_uid:>:0',
-			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
-			'config' => Array (
-				'type' => 'select',
-				'items' => Array (
-					Array('', 0),
-				),
-				'foreign_table' => 'tx_wseevents_timeslots',
-				'foreign_table_where' => 'AND tx_wseevents_timeslots.pid=###CURRENT_PID### AND tx_wseevents_timeslots.sys_language_uid IN (-1,0)',
-			)
-		),
-		'l18n_diffsource' => Array (		
-			'config' => Array (
-				'type' => 'passthrough'
-			)
-		),
 		'hidden' => Array (		
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
@@ -549,7 +518,7 @@ $TCA['tx_wseevents_timeslots'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'name, comment, event, eventday, room, begin, length')
+		'0' => Array('showitem' => 'comment, event, eventday, room, begin, length')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -919,37 +888,6 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_speakerrestrictions']['feInterface'],
 	'columns' => Array (
-		'sys_language_uid' => Array (		
-			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
-			'config' => Array (
-				'type' => 'select',
-				'foreign_table' => 'sys_language',
-				'foreign_table_where' => 'ORDER BY sys_language.title',
-				'items' => Array(
-					Array('LLL:EXT:lang/locallang_general.php:LGL.allLanguages',-1),
-					Array('LLL:EXT:lang/locallang_general.php:LGL.default_value',0)
-				)
-			)
-		),
-		'l18n_parent' => Array (		
-			'displayCond' => 'FIELD:sys_language_uid:>:0',
-			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
-			'config' => Array (
-				'type' => 'select',
-				'items' => Array (
-					Array('', 0),
-				),
-				'foreign_table' => 'tx_wseevents_timeslots',
-				'foreign_table_where' => 'AND tx_wseevents_speakerrestrictions.pid=###CURRENT_PID### AND tx_wseevents_speakerrestrictions.sys_language_uid IN (-1,0)',
-			)
-		),
-		'l18n_diffsource' => Array (		
-			'config' => Array (
-				'type' => 'passthrough'
-			)
-		),
 		'hidden' => Array (		
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
