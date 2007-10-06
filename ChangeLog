@@ -1,3 +1,8 @@
+2007-10-06
+	* Disabled fields that do not be translated forediting a translated record.
+	* Added room number for room records.
+	* Added color field for category records.
+
 2007-10-05
 	* Added info text for time slot selection in session records.
 	* Show country flags for all sessions with non default language.

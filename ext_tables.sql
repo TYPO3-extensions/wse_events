@@ -69,6 +69,7 @@ CREATE TABLE tx_wseevents_rooms (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
 	comment text NOT NULL,
+	number int(11) DEFAULT '0' NOT NULL,
 	seats int(11) DEFAULT '0' NOT NULL,
 	location int(11) DEFAULT '0' NOT NULL,
 	
@@ -205,6 +206,7 @@ CREATE TABLE tx_wseevents_categories (
 	name tinytext NOT NULL,
 	comment text NOT NULL,
 	shortkey tinytext NOT NULL,
+	color tinytext NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)

@@ -294,7 +294,7 @@ $TCA['tx_wseevents_locations'] = Array (
 $TCA['tx_wseevents_rooms'] = Array (
 	'ctrl' => $TCA['tx_wseevents_rooms']['ctrl'],
 	'interface' => Array (
-		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,name,seats,location'
+		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,name,number,seats,location'
 	),
 	'feInterface' => $TCA['tx_wseevents_rooms']['feInterface'],
 	'columns' => Array (
@@ -355,6 +355,21 @@ $TCA['tx_wseevents_rooms'] = Array (
 				'rows' => '3',
 			)
 		),
+		'number' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.number',		
+			'config' => Array (
+				'type' => 'input',
+				'size' => '4',
+				'max' => '4',
+				'eval' => 'int',
+				'range' => Array (
+					'upper' => '100',
+					'lower' => '1'
+				),
+				'default' => 0
+			)
+		),
 		'seats' => Array (		
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.seats',		
@@ -400,7 +415,8 @@ $TCA['tx_wseevents_rooms'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, seats, location')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, number, seats, location'),
+		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment'),
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -689,7 +705,8 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, category, number, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, category, number, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
+		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -872,7 +889,8 @@ $TCA['tx_wseevents_speakers'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, company, companylink, country, email, image, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, company, companylink, country, email, image, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
+		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -1064,9 +1082,29 @@ $TCA['tx_wseevents_categories'] = Array (
 				'eval' => 'required,upper,nospace',
 			)
 		),
+		'color' => Array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories.color',		
+			'config' => Array (
+				'type' => 'input',	
+				'size' => '10',	
+				'wizards' => array(
+					'colorpick' => array(
+						'type' => 'colorbox',
+						'title' => '',
+						'script' => 'wizard_colorpicker.php',
+						'dim' => '20x20',
+						'tableStyle' => 'border: solid 1px black; margin-left: 20px;',
+						'JSopenParams' => 'height=550,width=365,status=0,menubar=0,scrollbars=1',
+						'exampleImg' => 'gfx/wizard_colorpickerex.jpg',
+					),
+				),
+			)
+		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, shortkey')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, shortkey, color'),
+		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment'),
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')

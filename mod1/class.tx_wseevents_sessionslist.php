@@ -75,7 +75,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		$hidden = $row['hidden'];
 		if ($row['sys_language_uid']==0) {
 			$catnum = $this->categories[$row['category']].sprintf ('%02d', $row['number']);
-			$imglang = '';
+			$imglang = $this->syslang[0][0];
 		} else {
 			$catnum = '';
 			foreach ($this->syslang as $thislang) {
@@ -83,8 +83,8 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 					$imglang = '<img'.t3lib_iconWorks::skinImg(
 										$BACK_PATH,
 										'gfx/'.$thislang[2],
-										'width="20" height="10"')
-									.' alt="'.$thislang[0].'">';
+										'width="20" height="14"')
+									.' alt="'.$thislang[0].'">'.$thislang[0];
 				}
 			}
 			
@@ -234,7 +234,10 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		
 		// Get array with system languges
 		$this->syslang = t3lib_BEfunc::getSystemLanguages();
-#$content .= debug($this->syslang,'t3lib_BEfunc::getSystemLanguages');
+		foreach ($this->syslang as &$thislang) {
+			$langname = explode(' ', $thislang[0]);
+			$thislang[0] = $langname[0];
+		}
 
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.

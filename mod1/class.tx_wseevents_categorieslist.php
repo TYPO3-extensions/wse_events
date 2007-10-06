@@ -42,6 +42,9 @@ require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backen
 
 class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 
+	// List of languages
+	var $syslang;
+	
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
@@ -62,7 +65,7 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $LANG, $BE_USER;
+		global $LANG, $BE_USER, $BACK_PATH;
 
 		// Get selected backend language of user
 		$userlang = $BE_USER->uc[moduleData][web_layout][language];
@@ -140,6 +143,13 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
+		// Get array with system languges
+		$this->syslang = t3lib_BEfunc::getSystemLanguages();
+		foreach ($this->syslang as &$thislang) {
+			$langname = explode(' ', $thislang[0]);
+			$thislang[0] = $langname[0];
+		}
+
 		// Initialize variables for the database query.
 		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0';
 		$additionalTables = '';
@@ -160,6 +170,20 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$uid = $row['uid'];
 				$hidden = $row['hidden'];
+				if ($row['sys_language_uid']==0) {
+					$imglang = $this->syslang[0][0];
+				} else {
+					foreach ($this->syslang as $thislang) {
+						if ($row['sys_language_uid'] == $thislang[1]) {
+							$imglang = '<img'.t3lib_iconWorks::skinImg(
+												$BACK_PATH,
+												'gfx/'.$thislang[2],
+												'width="20" height="14"')
+											.' alt="'.$thislang[0].'">'.$thislang[0];
+						}
+					}
+					
+				}
 				// Add the result row to the table array.
 				$table[] = array(
 					TAB.TAB.TAB.TAB.TAB
@@ -170,7 +194,7 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 							$BE_USER->uc['titleLen']
 						).LF,
 					TAB.TAB.TAB.TAB.TAB
-						.$row['sys_language_uid'].LF,
+						.$imglang.LF,
 					TAB.TAB.TAB.TAB.TAB
 						.$this->getEditIcon($uid).LF
 						.TAB.TAB.TAB.TAB.TAB

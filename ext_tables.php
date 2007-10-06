@@ -75,6 +75,7 @@ $TCA['tx_wseevents_rooms'] = Array (
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
 		'default_sortby' => 'ORDER BY crdate',	
 		'delete' => 'deleted',	
+		'type' => 'sys_language_uid',
 		'enablecolumns' => Array (		
 			'disabled' => 'hidden',
 		),
@@ -129,6 +130,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
 		'default_sortby' => 'ORDER BY crdate',	
 		'delete' => 'deleted',	
+		'type' => 'sys_language_uid',
 		'enablecolumns' => Array (		
 			'disabled' => 'hidden',
 		),
@@ -157,6 +159,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
 		'default_sortby' => 'ORDER BY name,firstname',	
 		'delete' => 'deleted',	
+		'type' => 'sys_language_uid',
 		'enablecolumns' => Array (		
 			'disabled' => 'hidden',
 		),
@@ -211,6 +214,7 @@ $TCA['tx_wseevents_categories'] = Array (
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
 		'default_sortby' => 'ORDER BY crdate',	
 		'delete' => 'deleted',	
+		'type' => 'sys_language_uid',
 		'enablecolumns' => Array (		
 			'disabled' => 'hidden',
 		),

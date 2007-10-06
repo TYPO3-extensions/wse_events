@@ -21,6 +21,7 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
 /**
  * Plugin 'WSE Events' for the 'wse_events' extension.
  * Displays session data as list and detail view
@@ -36,8 +37,11 @@ require_once(PATH_tslib.'class.tslib_pibase.php');
  */
 require_once(t3lib_extMgm::extPath('static_info_tables').'pi1/class.tx_staticinfotables_pi1.php');
 
-
+/*
+ * Include timeslot class for function to format time slot name
+ */
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
+
 
 
 class tx_wseevents_pi1 extends tslib_pibase {
@@ -58,6 +62,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$piFlexForm = $this->cObj->data['pi_flexform'];
 		$index = $GLOBALS['TSFE']->sys_language_uid;
 
+		# Get FlexForm data
 		$sDef = current($piFlexForm['data']);
 		$lDef = array_keys($sDef);
 
@@ -66,6 +71,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->staticInfo->init();
 
 
+		# Read TypoScript settings
+		
 		# Check if delimiter for speaker is set, if not use the default value
 		if (!isset($conf['speakerdelimiter'])) {
 			$this->internal['speakerdelimiter'] = '<br />';
@@ -85,7 +92,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$this->internal['sessiondelimiter'] = $conf['sessiondelimiter'];
 		}
 
-//		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[$index]);
 		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[0]);
 		$conf['pidListEvents'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
 		$conf['pidListCommon'] = $this->pi_getFFvalue($piFlexForm, 'commonpages', 'sDEF');
@@ -94,6 +100,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$conf['singleSpeaker'] = $this->pi_getFFvalue($piFlexForm, 'singleSpeaker', 'display');
 		$conf['lastnameFirst'] = $this->pi_getFFvalue($piFlexForm, 'lastnameFirst', 'display');
 //			return t3lib_div::view_array($conf);
+
+		# Show input page depend on selected tab
 		switch((string)$flexFormValuesArray['dynListType'])	{
 			case 'sessionlist':
 				$conf['pidList'] = $conf['pidListEvents'];
@@ -336,6 +344,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$datacat  = $this->pi_getRecord('tx_wseevents_categories',$this->getFieldContent('category'));
 					$markerArray['###SESSIONCATEGORY###'] = $this->getFieldContent('category');
 					$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
+					$markerArray['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
 
 					$switch_row = $switch_row ^ 1;
 					if($switch_row) {
@@ -525,6 +534,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$markerArray1['###SESSIONNUMBER###'] = $datacat['shortkey'].sprintf('%02d', $sessdata['number']);
 						$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];
 						$markerArray1['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
+						$markerArray1['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
 						// Get time slot info
 						$tscontent = '';
 						foreach(explode(',',$sessdata['timeslots']) as $ts){
@@ -617,6 +627,17 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$roomtime = $conf['listTimeslotView.']['showRoomTime'];
 		if (empty($roomtime)) {
 			$roomtime = 0;
+		}
+
+		# Check for not assigned time slot color
+		$catcolor_notassigned = $conf['listTimeslotView.']['categoryColorNotAssigned'];
+		if (empty($catcolor_notassigned)) {
+			$catcolor_notassigned = '#FFFFFF';
+		}
+		# Check for not defined time slot color
+		$catcolor_notdefined = $conf['listTimeslotView.']['categoryColorNotDefined'];
+		if (empty($catcolor_notdefined)) {
+			$catcolor_notdefined = '#FFFFFF';
 		}
 
 		# Check if template file is set, if not use the default template
@@ -842,6 +863,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTNAME###'] = $sessiondata['name'];
 								$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
 								$markerArray['###SLOTCATEGORYKEY###'] = $sessiondata['catkey'];
+								$markerArray['###SLOTCATEGORYCOLOR###'] = $sessiondata['catcolor'];
 								$markerArray['###SLOTLINK###'] = $sessionlink;
 								$markerArray['###SLOTLINKNAME###'] = $sessionlinkname;
 								$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
@@ -859,6 +881,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								}
 								$markerArray['###SLOTCATEGORY###'] = 0;
 								$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned_catkey');
+								$markerArray['###SLOTCATEGORYCOLOR###'] = $catcolor_notassigned;
 								$markerArray['###SLOTLINK###'] = '';
 								$markerArray['###SLOTLINKNAME###'] = '';
 							}
@@ -904,6 +927,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								}
 								$markerArray['###SLOTCATEGORY###'] = 0;
 								$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined_catkey');
+								$markerArray['###SLOTCATEGORYCOLOR###'] = $catcolor_notdefined;
 								$markerArray['###SLOTLINK###'] = '';
 								$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
 							}
@@ -1028,6 +1052,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$datacat  = $this->pi_getRecord('tx_wseevents_categories',$this->internal['currentRow']['category']);
 		$markerArray['###SESSIONCATEGORY###'] = $this->internal['currentRow']['category'];
 		$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
+		$markerArray['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
 		
 		$markerArray['###TEASERNAME###'] = $this->getFieldHeader('teaser');
 		$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
@@ -1158,6 +1183,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$markerArray1['###SESSIONNUMBER###'] = $datacat['shortkey'].sprintf('%02d', $sessdata['number']);
 			$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];
 			$markerArray1['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
+			$markerArray1['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
 			// Get time slot info
 			$tscontent = '';
 			foreach(explode(',',$sessdata['timeslots']) as $ts){
@@ -1598,6 +1624,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$datacat = $this->pi_getRecord('tx_wseevents_categories',$row['category']);
 					$session['catnum'] = $datacat['shortkey'].sprintf ('%02d', $row['number']);
 					$session['catkey'] = $datacat['shortkey'];
+					$session['catcolor'] = $datacat['color'];
 					$session['name'] = $this->getTranslatedField('tx_wseevents_sessions', 'name', $row['uid']);
 					$session['teaser'] = $this->getTranslatedField('tx_wseevents_sessions', 'teaser', $row['uid']);
 //				}
