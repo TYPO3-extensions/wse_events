@@ -45,10 +45,13 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
 
-	/**
-	 * [Describe function...]
-	 *
-	 */
+/**
+ * Class 'tx_wseevents_rooms' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
 class tx_wseevents_rooms {
 	/** The extension key. */
 	var $extKey = 'wseevents';
@@ -58,15 +61,16 @@ class tx_wseevents_rooms {
 	 *
 	 * The base classe's constructor is called in $this->init().
 	 *
-	 * @return	[type]		...
+	 * @return	void		...
 	 */
 	function tx_wseevents_rooms() {
 	}
 
 	/**
+	 * This is the main function
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function main($items) {
@@ -74,9 +78,11 @@ class tx_wseevents_rooms {
 	}
 
 	/**
+	 * Get list of available rooms
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @param	object		$fobj: ToDo: insert description
+	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAroomlist($PA,$fobj) {
@@ -92,7 +98,7 @@ class tx_wseevents_rooms {
 		$orderBy = 'name';
 		$limit = '';
 
-		// Check if event is selected, if not get first event 
+		// Check if event is selected, if not get first event
 		if ($PA['row']['event'] == 0) {
 			$queryWhere = 'pid='.$PA['row']['pid'].' AND deleted=0 AND sys_language_uid=0';
 		}
@@ -105,10 +111,10 @@ class tx_wseevents_rooms {
 			$groupBy,
 			$orderBy,
 			$limit);
-		
+
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)		;
 		$location = $row['location'];
-		
+
 		// --------------------- Get the rooms of the location of the selected event ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_rooms';
@@ -129,7 +135,7 @@ class tx_wseevents_rooms {
 
 		// check if selected room is in location
 		$roomfound = false;
-		
+
 		// Clear the item array
 		$PA['items'] = array();
 		// Fill item array with rooms of location of selected event
@@ -150,12 +156,12 @@ class tx_wseevents_rooms {
 		$entry[1] = 0;
 		$entry[2] = '';
 		$PA['items'][] = $entry;
-		
+
 		// Set selected room to first room of location, if given room is from another location
 		if (!$roomfound) {
 			$PA['row']['room'] = $PA['items']['0']['1'];
 		}
-		
+
 #		debug ($PA);
 
 		return;

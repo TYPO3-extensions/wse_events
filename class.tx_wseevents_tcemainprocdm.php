@@ -22,6 +22,10 @@
 * This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
+
 /**
  * Class 'tx_wseevents_tcemainprocdm' for the 'wse_events' extension.
  *
@@ -29,11 +33,18 @@
  * @subpackage	wse_events
  * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
-
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
-
 class tx_wseevents_tcemainprocdm {
+
+	/**
+	 * Post processiong of field array
+	 *
+	 * @param	string		$status: edit status 
+	 * @param	string		$table: table name
+	 * @param	integer		$id: record id
+	 * @param	array		$incomingFieldArray: record data
+	 * @param	array		$reference: ToDo: insert description
+	 * @return	void		...
+	 */
     function processDatamap_postProcessFieldArray ($status, $table, $id, &$fieldArray, &$reference) {
         if ($table == 'tx_wseevents_speakers') {
 			$name = $fieldArray['name'];
@@ -90,11 +101,20 @@ class tx_wseevents_tcemainprocdm {
 			}
 		}
     }
-	
+
+	/**
+	 * Pre processiong of field array
+	 *
+	 * @param	array		$incomingFieldArray: record data
+	 * @param	string		$table: table name
+	 * @param	integer		$id: record id
+	 * @param	array		$this: ToDo: insert description
+	 * @return	void		...
+	 */
     function processDatamap_preProcessFieldArray ($incomingFieldArray, $table, $id, $this) {
         if ($table == 'tx_wseevents_timeslots') {
 			// Set the default slot length
-# ToDo: Get the default slot length from event record			
+# ToDo: Get the default slot length from event record
 #			$row = t3lib_BEfunc::getRecord ($table, $id);
 			if (is_array ($row)) {
 				$incomingFieldArray['length'] = 4;

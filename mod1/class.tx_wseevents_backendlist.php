@@ -21,13 +21,6 @@
 *
 * This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-/**
- * Class 'tx_wseevents_backendlist' for the 'wse_events' extension.
- *
- * @package		TYPO3
- * @subpackage	wse_events
- * @author		Michael Oehlhof <typo3@oehlhof.de>
- */
 
 require_once('conf.php');
 require_once($BACK_PATH.'init.php');
@@ -37,6 +30,13 @@ require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_dbplugin.ph
 define('TAB', chr(9));
 define('LF', chr(10));
 
+/**
+ * Class 'tx_wseevents_backendlist' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
 class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	/** the table we're working on */
 	var $tableName;
@@ -48,7 +48,7 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	 * The constructor. Sets the table name and the back-end page object.
 	 *
 	 * @param	object		the current back-end page object
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access public
 	 */
 	function tx_wseevents_backendlist(&$page) {

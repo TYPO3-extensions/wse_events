@@ -52,6 +52,13 @@ require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.p
 define('TAB', chr(9));
 define('LF', chr(10));
 
+/**
+ * Class 'tx_wseevents_pi1' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
 class tx_wseevents_pi1 extends tslib_pibase {
 	var $prefixId = 'tx_wseevents_pi1';		// Same as class name
 	var $scriptRelPath = 'pi1/class.tx_wseevents_pi1.php';	// Path to this script relative to the extension dir.
@@ -61,9 +68,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Main function, decides in which form the data is displayed
 	 *
-	 * @param	[type]		$content: ...
-	 * @param	[type]		$conf: ...
-	 * @return	[type]		...
+	 * @param	string		$content: default content string, ignore
+	 * @param	array		$conf: TypoScript configuration for the plugin
+	 * @return	string		Content for output on the web site
 	 */
 	function main($content,$conf)	{
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
@@ -147,9 +154,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Display a list of sessions for the event that is set in the flex form settings
 	 *
-	 * @param	[type]		$content: ...
-	 * @param	[type]		$conf: ...
-	 * @return	[type]		...
+	 * @param	string		$content: default content string, ignore
+	 * @param	array		$conf: TypoScript configuration for the plugin
+	 * @return	string		Content for output on the web site
 	 */
 	function listSessionView($content,$conf)	{
 		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
@@ -381,9 +388,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Display a list of speakers for the event that is set in the flex form settings
 	 *
-	 * @param	[type]		$content: ...
-	 * @param	[type]		$conf: ...
-	 * @return	[type]		...
+	 * @param	string		$content: default content string, ignore
+	 * @param	array		$conf: TypoScript configuration for the plugin
+	 * @return	string		Content for output on the web site
 	 */
 	function listSpeakerView($content,$conf)	{
 		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
@@ -586,9 +593,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Display a list of time slots for the event that is set in the flex form settings
 	 *
-	 * @param	[type]		$content: ...
-	 * @param	[type]		$conf: ...
-	 * @return	[type]		...
+	 * @param	string		$content: default content string, ignore
+	 * @param	array		$conf: TypoScript configuration for the plugin
+	 * @return	string		Content for output on the web site
 	 */
 	function listTimeslotView($content,$conf)	{
 		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
@@ -1091,9 +1098,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Display the details of a single session
 	 *
-	 * @param	[type]		$content: ...
-	 * @param	[type]		$conf: ...
-	 * @return	[type]		...
+	 * @param	string		$content: default content string, ignore
+	 * @param	array		$conf: TypoScript configuration for the plugin
+	 * @return	string		Content for output on the web site
 	 */
 	function singleSessionView($content,$conf)	{
 		$this->conf=$conf;
@@ -1162,9 +1169,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Display the details of a single speaker
 	 *
-	 * @param	[type]		$content: ...
-	 * @param	[type]		$conf: ...
-	 * @return	[type]		...
+	 * @param	string		$content: default content string, ignore
+	 * @param	array		$conf: TypoScript configuration for the plugin
+	 * @return	string		Content for output on the web site
 	 */
 	function singleSpeakerView($content,$conf)	{
 		$this->conf=$conf;
@@ -1298,8 +1305,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get content of one field
 	 *
-	 * @param	[type]		$fN: ...
-	 * @return	[type]		...
+	 * @param	string		$fN: field name
+	 * @return	string		field content
 	 */
 	function getFieldContent($fN)	{
 		switch($fN) {
@@ -1478,10 +1485,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * Get the translated content of a field
 	 * Returns english content if no translation is found
 	 *
-	 * @param	[type]		$dbname: ...
-	 * @param	[type]		$fN: ...
-	 * @param	[type]		$fUid: ...
-	 * @return	[type]		...
+	 * @param	string		$dbname: table name
+	 * @param	string		$fN: field name
+	 * @param	integer		$fUid: record id
+	 * @return	string		translated field content
 	 */
 	function getTranslatedField($dbname, $fN, $fUid=-1) {
 		$index = $GLOBALS['TSFE']->sys_language_uid;
@@ -1526,10 +1533,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * Get the translated name of a category
 	 * Returns english name if no translation is found
 	 *
-	 * @param	[type]		$dbname: ...
-	 * @param	[type]		$rowuid: ...
-	 * @param	[type]		$fN: ...
-	 * @return	[type]		...
+	 * @param	string		$dbname: table name
+	 * @param	integer		$rowuid: record id
+	 * @param	string		$fN: field name
+	 * @return	string		translated category name
 	 */
 	function getTranslatedCategory($dbname, $rowuid, $fN) {
 		$index = $GLOBALS['TSFE']->sys_language_uid;
@@ -1559,9 +1566,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get list of session UIDs for the speaker
 	 *
-	 * @param	[type]		$speakerid: ...
-	 * @param	[type]		$eventPid: ...
-	 * @return	[type]		...
+	 * @param	integer		$speakerid: speaker id
+	 * @param	integer		$eventPid: id of system folder with event data
+	 * @return	string		comma seperated list of sessions for the speaker
 	 */
 	function getSpeakerSessionList($speakerid,$eventPid) {
 		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0';
@@ -1590,8 +1597,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get label of one field
 	 *
-	 * @param	[type]		$fN: ...
-	 * @return	[type]		...
+	 * @param	string		$fN: field name
+	 * @return	string		header for the field
 	 */
 	function getFieldHeader($fN)	{
 		switch($fN) {
@@ -1608,8 +1615,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get info about an event
 	 *
-	 * @param	[type]		$event: ...
-	 * @return	[type]		...
+	 * @param	integer		$event: id of event
+	 * @return	array		record data of event
 	 */
 	function getEventInfo($event) {
 		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$event;
@@ -1623,8 +1630,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get info about a location
 	 *
-	 * @param	[type]		$loc_id: ...
-	 * @return	[type]		...
+	 * @param	integer		$loc_id: id of location
+	 * @return	array		record data of location
 	 */
 	function getLocationInfo($loc_id) {
 		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$loc_id;
@@ -1638,8 +1645,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get info about rooms of an location
 	 *
-	 * @param	[type]		$loc_id: ...
-	 * @return	[type]		...
+	 * @param	integer		$loc_id: id of location
+	 * @return	array		array with record data of all rooms of a location
 	 */
 	function getRoomInfo($loc_id) {
 		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND location='.$loc_id;
@@ -1657,11 +1664,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get id of record from time slot for given event, day, room and slot
 	 *
-	 * @param	[type]		$event: ...
-	 * @param	[type]		$day: ...
-	 * @param	[type]		$room: ...
-	 * @param	[type]		$slot: ...
-	 * @return	[type]		...
+	 * @param	integer		$event: id of event
+	 * @param	integer		$day: number of the event day
+	 * @param	integer		$room: number of the event location room
+	 * @param	integer		$slot: number of time slot
+	 * @return	integer		id of slot if a slot is found
 	 */
 	function getSlot($event, $day, $room, $slot) {
 		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND event='.$event.' AND eventday='.$day.' AND room='.$room.' AND begin='.$slot;
@@ -1675,8 +1682,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get length of time slot for given uid
 	 *
-	 * @param	[type]		$slot_id: ...
-	 * @return	[type]		...
+	 * @param	integer		$slot_id: id of a tme slot
+	 * @return	integer		length of a time slot
 	 */
 	function getSlotLength($slot_id) {
 		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$slot_id;
@@ -1691,8 +1698,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get session data for given slot
 	 *
-	 * @param	[type]		$slot_id: ...
-	 * @return	[type]		...
+	 * @param	integer		$slot_id: id of a time slot
+	 * @return	array		array with record of session data
 	 */
 	function getSlotSession($slot_id) {
 		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0';

@@ -58,7 +58,7 @@ $BE_USER->modAccess($MCONF,1);
  * Module 'WSE Events' for the 'wse_events' extension.
  *
  * @author	 	Michael Oehlhof
- * @package	TYPO3
+ * @package		TYPO3
  * @subpackage	wse_events
  */
 class  tx_wseevents_module1 extends t3lib_SCbase {
@@ -124,7 +124,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * Main function of the module. Write the content to $this->content
 	 * If you chose "web" as main module, you will need to consider the $this->id parameter which will contain the uid-number of the page clicked in the page tree
 	 *
-	 * @return	[type]		...
+	 * @return	void		...
 	 */
 	function main()	{
 		global $BE_USER,$LANG,$BACK_PATH; //,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;

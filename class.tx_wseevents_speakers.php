@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof
+* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -45,10 +45,13 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
 
-	/**
-	 * [Describe function...]
-	 *
-	 */
+/**
+ * Class 'tx_wseevents_speakers' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
 class tx_wseevents_speakers {
 	/** The extension key. */
 	var $extKey = 'wseevents';
@@ -58,15 +61,16 @@ class tx_wseevents_speakers {
 	 *
 	 * The base classe's constructor is called in $this->init().
 	 *
-	 * @return	[type]		...
+	 * @return	void		...
 	 */
 	function tx_wseevents_speakers() {
 	}
 
 	/**
+	 * This is the main function
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function main($items) {
@@ -74,9 +78,11 @@ class tx_wseevents_speakers {
 	}
 
 	/**
+	 * Get list of available speaker
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @param	object		$fobj: ToDo: insert description
+	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAspeakerlist($PA,$fobj) {
@@ -100,7 +106,7 @@ class tx_wseevents_speakers {
 			$groupBy,
 			$orderBy,
 			$limit);
-		
+
 		// Clear the item array
 		$PA['items'] = array();
 		// Fill item array with rooms of location of selected event
@@ -112,7 +118,7 @@ class tx_wseevents_speakers {
 			$entry[2] = '';
 			$PA['items'][] = $entry;
 		}
-		
+
 #		debug ($PA);
 
 		return;

@@ -45,11 +45,14 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
 
-	/**
-	 * [Describe function...]
-	 *
-	 */
-class tx_wseevents_categories {
+/**
+ * Class 'tx_wseevents_categories' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
+cclass tx_wseevents_categories {
 	/** The extension key. */
 	var $extKey = 'wseevents';
 
@@ -58,15 +61,16 @@ class tx_wseevents_categories {
 	 *
 	 * The base classe's constructor is called in $this->init().
 	 *
-	 * @return	[type]		...
+	 * @return	void		...
 	 */
 	function tx_wseevents_categories() {
 	}
 
 	/**
+	 * This is the main function
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function main($items) {
@@ -74,9 +78,11 @@ class tx_wseevents_categories {
 	}
 
 	/**
+	 * Get list of categories
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @param	object		$fobj: ToDo: insert description
+	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAcategorylist($PA,$fobj) {
@@ -100,7 +106,7 @@ class tx_wseevents_categories {
 			$groupBy,
 			$orderBy,
 			$limit);
-		
+
 		// Clear the item array
 		$PA['items'] = array();
 		// Fill item array with rooms of location of selected event
@@ -112,7 +118,7 @@ class tx_wseevents_categories {
 			$entry[2] = '';
 			$PA['items'][] = $entry;
 		}
-		
+
 #		debug ($PA);
 
 		return;

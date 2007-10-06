@@ -46,10 +46,13 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
 
-	/**
-	 * [Describe function...]
-	 *
-	 */
+/**
+ * Class 'tx_wseevents_events' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
 class tx_wseevents_events {
 	/** The extension key. */
 	var $extKey = 'wseevents';
@@ -59,15 +62,16 @@ class tx_wseevents_events {
 	 *
 	 * The base classe's constructor is called in $this->init().
 	 *
-	 * @return	[type]		...
+	 * @return	void		...
 	 */
 	function tx_wseevents_events() {
 	}
 
 	/**
+	 * This is the main function
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function main($items) {
@@ -75,19 +79,20 @@ class tx_wseevents_events {
 	}
 
 	/**
+	 * Get list of event days
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAeventDays($PA) {
 		global $LANG;
-	
+
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
 		$eventinfo = $this->getEventInfo($PA['row']['event']);
-		
+
 		$thisday = 1;
 		$maxday = $eventinfo['length'];
 		// Create list of event days
@@ -101,11 +106,12 @@ class tx_wseevents_events {
 			$thisday += 1;
 		}
 	}
-	
+
 	/**
+	 * Get length of seesion
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAsessionLength($PA) {
@@ -130,11 +136,12 @@ class tx_wseevents_events {
 		}
 		$PA['row']['length'] = $defslot;
 	}
-	
+
 	/**
+	 * Get default session length
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAsessionDefault($PA) {
@@ -147,26 +154,27 @@ class tx_wseevents_events {
 			$event = 0;
 		}
 		$eventinfo = $this->getEventInfo($event);
-		
+
 		$thisslot = 1;
 		$defslot = $eventinfo['defslotcount'];
 
 		return $defslot;
 	}
-	
+
 	/**
+	 * Get list of slots for the event
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAslotList($PA) {
-	
+
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
 		$slotlist = $this->getEventSlotList($PA['row']['event']);
-		
+
 		$thisslot = 1;
 		// Create list of event days
 		foreach ($slotlist as $slot) {
@@ -179,8 +187,9 @@ class tx_wseevents_events {
 			$thisslot += 1;
 		}
 	}
-	
+
 	/**
+	 * Get info about an event
 	 *
 	 * @param	integer		Id of an event
 	 * @return	array		Event record
@@ -211,8 +220,9 @@ class tx_wseevents_events {
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		return $row;
 	}
-	
+
 	/**
+	 * Get list of slots for an event
 	 *
 	 * @param	string		Id of event
 	 * @return	array		List of slots for the event
@@ -242,10 +252,10 @@ class tx_wseevents_events {
 			$orderBy,
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		
+
 		// Clear the item array
 		$slotlist = array();
-		
+
 		if (!empty($row)) {
 		$begin = $row['timebegin'];
 		$end = $row['timeend'];
@@ -258,7 +268,7 @@ class tx_wseevents_events {
 		$finished = false;
 		// Fill item array with time slots of selected event
 		while (!$finished) {
-		
+
 			$thistime = sprintf('%02d:%02d', $this_h, $this_m);
 			$slotlist[$itemindex] =$thistime;
 			$this_m += intval($size);
@@ -276,6 +286,7 @@ class tx_wseevents_events {
 	}
 
 	/**
+	 * Getlist of slots for an event
 	 *
 	 * @param	string		Id of event
 	 * @return	array		List of slots for the event
@@ -305,11 +316,11 @@ class tx_wseevents_events {
 			$orderBy,
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		
+
 		// Clear the item array
 		$slotlist = array();
 		$slotarray = array();
-		
+
 		if (!empty($row)) {
 			$begin = $row['timebegin'];
 			$end = $row['timeend'];
@@ -355,6 +366,7 @@ class tx_wseevents_events {
 	}
 
 	/**
+	 * Get list of room names of an event
 	 *
 	 * @param	integer		Id of an event
 	 * @return	array		List of room names
@@ -383,7 +395,7 @@ class tx_wseevents_events {
 			$orderBy,
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		
+
 		$roomlist = array();
 		$roomlist[0] = '- All rooms -';
 		// Get the room list from the location
@@ -411,7 +423,7 @@ class tx_wseevents_events {
 		}
 		return $roomlist;
 	}
-	
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_events.php']) {

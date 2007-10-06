@@ -49,10 +49,13 @@ require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php'
 
 
 
-	/**
-	 * [Describe function...]
-	 *
-	 */
+/**
+ * Class 'tx_wseevents_timeslots' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
 class tx_wseevents_timeslots {
 	/** The extension key. */
 	var $extKey = 'wseevents';
@@ -62,15 +65,16 @@ class tx_wseevents_timeslots {
 	 *
 	 * The base classe's constructor is called in $this->init().
 	 *
-	 * @return	[type]		...
+	 * @return	void		...
 	 */
 	function tx_wseevents_timeslots() {
 	}
 
 	/**
+	 * This is the main function
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function main($items) {
@@ -122,16 +126,17 @@ class tx_wseevents_timeslots {
 	}
 
 	/**
+	 * Get list of available time slots
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAavailableSlots($PA) {
 #debug($PA);
 		// Clear the item array
 		$PA['items'] = array();
-		
+
 		$eventid = $PA['row']['event'];
 		// Get event record
 		if ($eventid==0) {
@@ -190,7 +195,7 @@ class tx_wseevents_timeslots {
 
 				// Get list of all used time slots from sessions of the event
 				// and subtract them from the slot list
-				// Get list of time slots from speakers of the event 
+				// Get list of time slots from speakers of the event
 				$tableName = 'tx_wseevents_sessions';
 				$queryWhere = 'sys_language_uid=0 AND event='.$eventid;
 				$groupBy = '';
@@ -235,8 +240,8 @@ class tx_wseevents_timeslots {
 				}
 				$speakerslotlist = t3lib_div::uniqueList($speakerslotlist);
 #debug($speakerslotlist,'$speakerslotlist');
-	
-				// Subtract time slots of speakers of the event 
+
+				// Subtract time slots of speakers of the event
 				// from the slot list if slot has same time
 				// if speaker held a session at the same time in an other room
 
@@ -309,7 +314,7 @@ class tx_wseevents_timeslots {
 						$thisslot += 1;
 					}
 				}
-				
+
 			}
 		}
 	}

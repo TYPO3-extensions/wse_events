@@ -26,13 +26,6 @@
 *  and code snippets are taken from the seminar manager extension
 *  tx_seminars
 ***************************************************************/
-/**
- * Class 'tx_wseevents_speakerrestrictionslist' for the 'wse_events' extension.
- *
- * @package		TYPO3
- * @subpackage	wse_events
- * @author		Michael Oehlhof <typo3@oehlhof.de>
- */
 
 require_once('conf.php');
 require_once($BACK_PATH.'init.php');
@@ -41,6 +34,13 @@ require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backen
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
 
 
+/**
+ * Class 'tx_wseevents_speakerrestrictionslist' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
 class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 
 	/**
@@ -48,7 +48,7 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 	 * $this->tableName.
 	 *
 	 * @param	object		the current back-end page object
-	 * @return	[type]		...
+	 * @return	void		...
 	 */
 	function tx_wseevents_speakerrestrictionslist(&$page) {
 		parent::tx_wseevents_backendlist($page);

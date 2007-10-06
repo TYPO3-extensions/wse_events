@@ -60,10 +60,13 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
 
-	/**
-	 * [Describe function...]
-	 *
-	 */
+/**
+ * Class 'tx_wseevents_dbplugin' for the 'wse_events' extension.
+ *
+ * @package		TYPO3
+ * @subpackage	wse_events
+ * @author		Michael Oehlhof <typo3@oehlhof.de>
+ */
 class tx_wseevents_dbplugin extends tslib_pibase {
 	/** The extension key. */
 	var $extKey = 'wseevents';
@@ -94,7 +97,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 *
 	 * The base classe's constructor is called in $this->init().
 	 *
-	 * @return	[type]		...
+	 * @return	void		...
 	 */
 	function tx_wseevents_dbplugin() {
 	}
@@ -111,7 +114,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * If the parameter is omited, the configuration for plugin.tx_seminar is used instead.
 	 *
 	 * @param	array		TypoScript configuration for the plugin
-	 * @return	[type]		...
+	 * @return	void		...
 	 * @access protected
 	 */
 	function init($conf = null) {
@@ -178,8 +181,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/**
 	 * Sets the table names.
 	 *
-	 * @return	[type]		...
-	 * @access protected
+	 * @return	void		...
+	 * @access	protected
 	 */
 	function setTableNames() {
 		$dbPrefix = 'tx_'.$this->extKey.'_';
@@ -199,8 +202,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/**
 	 * Sets the record types.
 	 *
-	 * @return	[type]		...
-	 * @access private
+	 * @return	void		...
+	 * @access	private
 	 */
 	function setRecordTypes() {
 		$this->recordTypeComplete	= 0;
@@ -374,8 +377,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 *
 	 * If no user is logged in, $this->feuser will be null.
 	 *
-	 * @return	[type]		...
-	 * @access private
+	 * @return	void		...
+	 * @access	private
 	 */
 	function retrieveFEUser() {
 		$this->feuser = $this->isLoggedIn() ? $GLOBALS['TSFE']->fe_user->user : null;
