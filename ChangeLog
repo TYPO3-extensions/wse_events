@@ -1,7 +1,8 @@
 2007-10-06
-	* Disabled fields that do not be translated forediting a translated record.
+	* Disabled fields that do not be translated when editing a translated record.
 	* Added room number for room records.
 	* Added color field for category records.
+	* Fixed non display of begin and end time when no slot was on the first day.
 
 2007-10-05
 	* Added info text for time slot selection in session records.

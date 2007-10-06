@@ -412,7 +412,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		list($this->internal['res_count']) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
 
 		// Make listing query, pass query to SQL database:
-		$res = $this->pi_exec_query($this->internal['currentTable'],0,$where,'','','name,firstname');
+		$res = $this->pi_exec_query($this->internal['currentTable'],0,$where);
 
 		# Check if upload directory is set, if not use the default directory
 		if (!isset($conf['uploadDirectory'])) {
@@ -947,7 +947,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray['###SLOTSIZE###']  = 1;
 				$content_timecol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
 			} else {
-				$timeday = ($showday==0)?1:$showday;
+				if ($showday>0) {
+					$timeday = $showday;
+				} else {
+					for ( $i=1; $i<=$daycount; $i++ ) {
+						if (!empty($used[$s][$i][$roomtime])) {
+							$timeday = $i;
+						}
+					}
+				}
 				if (!empty($used[$s][$timeday][$roomtime])) {
 					$slot_len = $used[$s][$timeday][$roomtime];
 					if ($slot_len>0) {
