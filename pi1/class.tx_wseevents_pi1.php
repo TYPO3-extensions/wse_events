@@ -29,6 +29,12 @@
  * @author	Michael Oehlhof <typo3@oehlhof.de>
  */
 
+/**
+ * To temporary show some debug output on live web site
+ * it can be easyly switched on via a TypoScript setting.
+ * plugin.tx_wseevents_pi1.listTimeslotView.debug = 1
+ */
+
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
 
@@ -43,6 +49,8 @@ require_once(t3lib_extMgm::extPath('static_info_tables').'pi1/class.tx_staticinf
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
 
 
+define('TAB', chr(9));
+define('LF', chr(10));
 
 class tx_wseevents_pi1 extends tslib_pibase {
 	var $prefixId = 'tx_wseevents_pi1';		// Same as class name
@@ -640,6 +648,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$catcolor_notdefined = '#FFFFFF';
 		}
 
+		# For debugging output used in development
+		$showdebug = $conf['listTimeslotView.']['debug'];
+		if (empty($showdebug)) {
+			$showdebug = 0;
+		}
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -837,6 +851,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					# Loop over all rooms
 					$allrooms = false;
 					for ( $r = 1; $r <= $roomcount; $r++ ) {
+						if ($showdebug>0) {
+							$content_slotrow .= LF.'<!-- s='.$s.' d='.$d.' r='.$r.' -->';
+						}
 						$slot_id = $this->getSlot($showevent, $d, $rooms[$r]['uid'], $s);
 						if (empty($slot_id) && !$allrooms) {
 							// Check if a slot is assigned for all rooms
@@ -970,6 +987,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###SLOTSIZE###']  = 1;
 					$content_timecolfree = $this->cObj->substituteMarkerArrayCached($template['timecolfree'], $markerArray);
 				}
+			}
+			if ($showdebug>0) {
+				$content_timecol = LF.'<!-- s='.$s.' d='.$d.' timecol -->'.$content_timecol;
+				$content_timecolfree = LF.'<!-- s='.$s.' d='.$d.' timecolfree -->'.$content_timecolfree;
 			}
 			$subpartArray1['###TIMECOLUMN###'] = $content_timecol;
 			$subpartArray1['###TIMECOLUMNEMPTY###'] = $content_timecolfree;
