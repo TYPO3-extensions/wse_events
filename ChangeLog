@@ -1,3 +1,6 @@
+2007-10-08
+	* Show event data from sub pages, if available.
+
 2007-10-06
 	* Disabled fields that do not be translated when editing a translated record.
 	* Added room number for room records.

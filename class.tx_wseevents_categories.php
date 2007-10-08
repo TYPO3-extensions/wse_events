@@ -52,7 +52,7 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
  * @subpackage	wse_events
  * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
-cclass tx_wseevents_categories {
+class tx_wseevents_categories {
 	/** The extension key. */
 	var $extKey = 'wseevents';
 

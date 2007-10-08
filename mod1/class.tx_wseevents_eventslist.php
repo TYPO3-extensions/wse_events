@@ -58,6 +58,64 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	/**
 	 * Generates and prints out an event list.
 	 *
+	 * @param	array		the table where the record data is to be addded
+	 * @param	array		the current record
+	 * @return	void
+	 */
+	function addRowToTable(&$table, $row) {
+		global $BE_USER, $BACK_PATH;
+		$uid = $row['uid'];
+		$hidden = $row['hidden'];
+		if ($row['sys_language_uid']==0) {
+			$catnum = $this->categories[$row['category']].sprintf ('%02d', $row['number']);
+			$imglang = $this->syslang[0][0];
+		} else {
+			$catnum = '';
+			$imglang = '';
+			foreach ($this->syslang as $thislang) {
+				if ($row['sys_language_uid'] == $thislang[1]) {
+					$imglang = '<img'.t3lib_iconWorks::skinImg(
+										$BACK_PATH,
+										'gfx/'.$thislang[2],
+										'width="20" height="14"')
+									.' alt="'.$thislang[0].'">'.$thislang[0];
+				}
+			}
+			
+		}
+		// Add the result row to the table array.
+		$table[] = array(
+			TAB.TAB.TAB.TAB.TAB
+				.t3lib_div::fixed_lgd_cs(
+					$row['name'],
+					$BE_USER->uc['titleLen']
+				).LF,
+			TAB.TAB.TAB.TAB.TAB
+				.strftime($conf['strftime'], $row['begin']).LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$row['length'].LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$row['timebegin'].LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$row['timeend'].LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$imglang.LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$this->getEditIcon($uid).LF
+				.TAB.TAB.TAB.TAB.TAB
+				.$this->getDeleteIcon($uid).LF
+				.TAB.TAB.TAB.TAB.TAB
+				.$this->getHideUnhideIcon(
+					$uid,
+					$hidden
+				).LF,
+		);
+	}
+	
+	
+	/**
+	 * Generates and prints out an event list.
+	 *
 	 * @return	string		the HTML source code of the event list
 	 * @access public
 	 */
@@ -66,8 +124,6 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
-
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
 
 		// Set the table layout of the event list.
 		$tableLayout = array(
@@ -97,7 +153,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 					TAB.TAB.TAB.TAB.'</td>'.LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td class="datecol">'.LF,
+					TAB.TAB.TAB.TAB.'<td>'.LF,
 					TAB.TAB.TAB.TAB.'</td>'.LF
 				),
 				array(
@@ -112,7 +168,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		);
 
 		// Fill the first row of the table array with the header.
-		$table = array(
+		$tableHdr = array(
 			array(
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
@@ -129,6 +185,9 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('events.timeend').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('language').'</span>'.LF,
 				'',
 			)
 		);
@@ -145,55 +204,69 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
-		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
-		$additionalTables = '';
-		$groupBy = '';
-		$orderBy = 'name';
-		$limit = '';
+		// Get array with system languges
+		$this->syslang = t3lib_BEfunc::getSystemLanguages();
+		foreach ($this->syslang as &$thislang) {
+			$langname = explode(' ', $thislang[0]);
+			$thislang[0] = $langname[0];
+		}
 
-		// Get list of all events
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'*',
-			$this->tableName,
-			$queryWhere,
-			$groupBy,
-			$orderBy,
-			$limit);
+		// Get list of pid 
+		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
+		// Check if sub pages available and remove main page from list
+		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
+			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
+		}
+		// Remove pages with common data
+		$eventPids = $this->removeCommonPages($this->selectedPids);
+		// Get page titles
+		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
+		// Get the where clause
+		$wherePid = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids).')';
 
-		if ($res) {
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$uid = $row['uid'];
-				$hidden = $row['hidden'];
-				// Add the result row to the table array.
-				$table[] = array(
-					TAB.TAB.TAB.TAB.TAB
-						.t3lib_div::fixed_lgd_cs(
-							$row['name'],
-							$BE_USER->uc['titleLen']
-						).LF,
-					TAB.TAB.TAB.TAB.TAB
-						.strftime($conf['strftime'], $row['begin']).LF,
-					TAB.TAB.TAB.TAB.TAB
-						.$row['length'].LF,
-					TAB.TAB.TAB.TAB.TAB
-						.$row['timebegin'].LF,
-					TAB.TAB.TAB.TAB.TAB
-						.$row['timeend'].LF,
-					TAB.TAB.TAB.TAB.TAB
-						.$this->getEditIcon($uid).LF
-						.TAB.TAB.TAB.TAB.TAB
-						.$this->getDeleteIcon($uid).LF
-						.TAB.TAB.TAB.TAB.TAB
-						.$this->getHideUnhideIcon(
-							$uid,
-							$hidden
-						).LF,
-				);
+		// Add icon for new record
+		if (!empty($eventPids)) {
+			$content .= $this->getNewIconList($eventPids,$this->selectedPidsTitle);
+		}
+
+		foreach (explode(',',$eventPids) as $eventPid) {
+			// Show name of page
+			$content .= '<span style="font-size:1.2em"><b>'.$this->selectedPidsTitle[$eventPid].'</b></span>';
+//			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
+
+			// Initialize variables for the database query.
+			$queryWhere = 'pid='.$eventPid.' AND deleted=0 AND sys_language_uid=0';
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'name';
+			$limit = '';
+
+			// Get list of all events
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'*',
+				$this->tableName,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+
+			if ($res) {
+				$found = false;
+				$table = $tableHdr;
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$found = true;
+					$uid = $row['uid'];
+					$hidden = $row['hidden'];
+					$this->addRowToTable($table, $row);
+				}
+				if ($found) {
+					// Output the table array using the tableLayout array with the template
+					// class.
+					$content .= $this->page->doc->table($table, $tableLayout).'<br />'.LF;
+				} else {
+					$content .= '<br />'.$LANG->getLL('norecords').'<br /><br />'.LF;
+				}
 			}
-			// Output the table array using the tableLayout array with the template
-			// class.
-			$content .= $this->page->doc->table($table, $tableLayout);
 		}
 
 		return $content;

@@ -74,8 +74,6 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		// Initialize the variable for the HTML source code.
 		$content = '';
 
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
-
 		// Set the table layout of the speaker restrictions list.
 		$tableLayout = array(
 			'table' => array(
@@ -149,9 +147,27 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
+		// Get list of pid 
+		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
+		// Check if sub pages available and remove main page from list
+		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
+			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
+		}
+		// Remove pages with common data
+		$eventPids = $this->removeCommonPages($this->selectedPids);
+		// Get page titles
+		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
+		// Get the where clause
+		$wherePid = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids).')';
+
+		// Add icon for new record
+		if (!empty($eventPids)) {
+			$content .= $this->getNewIconList($eventPids,$this->selectedPidsTitle);
+		}
+
 		// -------------------- Get list of speakers --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -175,7 +191,7 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -206,13 +222,14 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		// Get list of sessions for an event
 		foreach ($events as $event) {
 			// Show name of event
-			$content .= '<b>'.$event['name'].'</b><br />';
+			$content .= '<span style="font-size:1.2em"><b>'.$LANG->getLL('event').' '.$event['name'].'</b></span>';
+//			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
 
 			// Get list of timeslots for the event
 			$slots = tx_wseevents_events::getEventSlotlist($event['uid']);
 
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND event='.$event['uid'].' AND deleted=0';
+			$queryWhere = $wherePid.' AND event='.$event['uid'].' AND deleted=0';
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'speaker,eventday';
@@ -257,9 +274,9 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 				if ($found) {
 					// Output the table array using the tableLayout array with the template
 					// class.
-					$content .= $this->page->doc->table($table, $tableLayout);
+					$content .= $this->page->doc->table($table, $tableLayout).'<br />'.LF;
 				} else {
-					$content .= $LANG->getLL('norecords').'<br /><br />'.LF;
+					$content .= '<br />'.$LANG->getLL('norecords').'<br /><br />'.LF;
 				}
 			}
 		}

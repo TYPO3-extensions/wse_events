@@ -173,6 +173,7 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 				if ($row['sys_language_uid']==0) {
 					$imglang = $this->syslang[0][0];
 				} else {
+					$imglang = '';
 					foreach ($this->syslang as $thislang) {
 						if ($row['sys_language_uid'] == $thislang[1]) {
 							$imglang = '<img'.t3lib_iconWorks::skinImg(

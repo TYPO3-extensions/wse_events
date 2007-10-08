@@ -252,35 +252,36 @@ class tx_wseevents_events {
 			$orderBy,
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-
 		// Clear the item array
 		$slotlist = array();
 
 		if (!empty($row)) {
-		$begin = $row['timebegin'];
-		$end = $row['timeend'];
-		$size = $row['slotsize'];
+			$begin = $row['timebegin'];
+			$end = $row['timeend'];
+			$size = $row['slotsize'];
 
-		list($this_h, $this_m) = explode(':', $begin);
-		list($end_h, $end_m) = explode(':', $end);
+			if ((!empty($begin)) && (!empty($begin))) {
+				list($this_h, $this_m) = explode(':', $begin);
+				list($end_h, $end_m) = explode(':', $end);
 
-		$itemindex = 1;
-		$finished = false;
-		// Fill item array with time slots of selected event
-		while (!$finished) {
+				$itemindex = 1;
+				$finished = false;
+				// Fill item array with time slots of selected event
+				while (!$finished) {
 
-			$thistime = sprintf('%02d:%02d', $this_h, $this_m);
-			$slotlist[$itemindex] =$thistime;
-			$this_m += intval($size);
-			if ($this_m>=60) {
-				$this_h += 1;
-				$this_m -= 60;
+					$thistime = sprintf('%02d:%02d', $this_h, $this_m);
+					$slotlist[$itemindex] =$thistime;
+					$this_m += intval($size);
+					if ($this_m>=60) {
+						$this_h += 1;
+						$this_m -= 60;
+					}
+					if ($slotlist[$itemindex]==$end) {
+						$finished = true;
+					}
+					$itemindex += 1;
+				}
 			}
-			if ($slotlist[$itemindex]==$end) {
-				$finished = true;
-			}
-			$itemindex += 1;
-		}
 		}
 		return $slotlist;
 	}

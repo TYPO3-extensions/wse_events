@@ -44,6 +44,10 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	/** Holds a reference to the back-end page object. */
 	var $page;
 
+	/** Holds a list of pids of the sub pages of the selected page. */
+	var $selectedPids;
+	var $selectedPidsTitle;
+	
 	/**
 	 * The constructor. Sets the table name and the back-end page object.
 	 *
@@ -56,6 +60,120 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 		$this->page =& $page;
 	}
 
+	
+	/**
+	 * Generates a list of titles of all pages for the given pid list.
+	 *
+	 * @param	string		the list of pids
+	 * @return	array		the list of page titles
+	 * @access public
+	 */
+	function getPidTitleList($pidList) {
+		$titles = array();
+		foreach (explode(',',$pidList) as $thisPid) {
+			$row = t3lib_BEfunc::getRecord ('pages', $thisPid);
+			$titles[$thisPid] = $row['title'];
+		}
+		return $titles;
+	}
+
+	/**
+	 * Generates a list of pids of all sub pages for the given depth.
+	 *
+	 * @param	integer		the pid of the page
+	 * @param	integer		the depth for the search
+	 * @return	string		the list of pids
+	 * @access public
+	 */
+	function getRecursiveUidList($parentUid,$depth){
+		if($depth != -1) {
+			$depth = $depth-1; //decreasing depth
+		}
+		# Get ressource records:
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
+			'uid',
+			'pages',
+			'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($parentUid).') AND deleted=0 '
+			);
+		if($depth > 0){
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$parentUid .= ','.$this->getRecursiveUidList($row['uid'],$depth);
+			}
+		}
+		return $parentUid;
+	}
+
+	
+	/**
+	 * Removes all pages which have common content from pid list.
+	 *
+	 * @param	string		list with page pids
+	 * @return	string		the list of pids, without pages with common data
+	 * @access public
+	 */
+	function removeCommonPages($pageList){
+		$resultList = $pageList;
+		foreach (explode(',',$pageList) as $thisPage) {
+			// Initialize variables for the database query.
+			$queryWhere = 'pid='.$thisPage.' AND deleted=0';
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'uid';
+			$limit = '';
+			// Get list of all events
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'count(*)',
+				$this->tableLocations,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+			if ($res) {
+				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				if ($row['count(*)']>0) {
+					$resultList = t3lib_div::rmFromList($thisPage,$resultList);
+				}
+			}
+		}
+		return $resultList;
+	}
+	
+	
+	/**
+	 * Removes all pages which have event content from pid list.
+	 *
+	 * @param	string		list with page pids
+	 * @return	string		the list of pids, without pages with event data
+	 * @access public
+	 */
+	function removeEventPages($pageList){
+		$resultList = $pageList;
+		foreach (explode(',',$pageList) as $thisPage) {
+			// Initialize variables for the database query.
+			$queryWhere = 'pid='.$thisPage.' AND deleted=0';
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'uid';
+			$limit = '';
+			// Get list of all events
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'count(*)',
+				$this->tableEvents,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+			if ($res) {
+				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				if ($row['count(*)']>0) {
+					$resultList = t3lib_div::rmFromList($thisPage,$resultList);
+				}
+			}
+		}
+		return $resultList;
+	}
+	
+	
 	/**
 	 * Generates an edit record icon which is linked to the edit view of
 	 * a record.
@@ -144,7 +262,7 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	 * @return	string		the HTML source code to return
 	 * @access public
 	 */
-	function getNewIcon($pid) {
+	function getNewIcon($pid,$usediv=1) {
 		global $BACK_PATH, $LANG, $BE_USER;
 
 		# the name of the table where the record should be saved to is stored in $this->tableName
@@ -154,8 +272,13 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 			$params = '&edit['.$this->tableName.']['.$pid.']=new';
 			$editOnClick = $this->editNewUrl($params, $BACK_PATH);
 			$langNew = $LANG->getLL('newRecordGeneral');
+			if ($usediv==1) {
+				$div = 'div';
+			} else {
+				$div = 'span';
+			}
 			$result = TAB.TAB
-				.'<div id="typo3-newRecordLink">'.LF
+				.'<'.$div.' id="typo3-newRecordLink">'.LF
 				.TAB.TAB.TAB
 				.'<a href="'.htmlspecialchars($editOnClick).'">'.LF
 				.TAB.TAB.TAB.TAB
@@ -172,12 +295,50 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 				.TAB.TAB.TAB
 				.'</a>'.LF
 				.TAB.TAB
-				.'</div>'.LF;
+				.'</'.$div.'>'.LF;
 		}
+		return $result;
+	}
+
+	
+	/**
+	 * Returns a list of "create new record" image tags that are linked to the new record view.
+	 *
+	 * @param	string		the list with page ids where the record should be stored
+	 * @return	string		the HTML source code to return
+	 * @access public
+	 */
+	function getNewIconList($pidList,$pidTitles) {
+		global $BACK_PATH, $LANG, $BE_USER;
+
+		$result = '<br /><b>'.$LANG->getLL('newRecordGeneral').'</b>&nbsp;';
+		$result .= TAB.TAB.'<div id="typo3-newRecordLink">'.LF;
+		foreach (explode(',',$pidList) as $thisPid) {
+			# the name of the table where the record should be saved to is stored in $this->tableName
+			if ($BE_USER->check('tables_modify', $this->tableName)
+				&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)
+				&& $this->page->pageInfo['doktype'] == 254) {
+				$params = '&edit['.$this->tableName.']['.$thisPid.']=new';
+				$editOnClick = $this->editNewUrl($params, $BACK_PATH);
+				$result .= TAB.TAB.TAB.'<a href="'.htmlspecialchars($editOnClick).'">'.LF
+					.TAB.TAB.TAB.TAB.'<img'.t3lib_iconWorks::skinImg(
+						$BACK_PATH,
+						'gfx/new_record.gif',
+						'width="7" height="4"')
+					// We use an empty alt attribute as we already have a textual
+					// representation directly next to the icon.
+					.' title="'.$pidTitles[$thisPid].'" alt="" />'.LF
+					.TAB.TAB.TAB.TAB.$pidTitles[$thisPid].LF
+					.TAB.TAB.TAB.'</a>'.LF
+					.TAB.TAB.'<br />'.LF;
+			}
+		}
+		$result .= TAB.TAB.'</div><br />'.LF;
 
 		return $result;
 	}
 
+	
 	/**
 	 * Returns the url for the "create new record" link and the "edit record" link.
 	 *

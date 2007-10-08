@@ -78,6 +78,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			$imglang = $this->syslang[0][0];
 		} else {
 			$catnum = '';
+			$imglang = '';
 			foreach ($this->syslang as $thislang) {
 				if ($row['sys_language_uid'] == $thislang[1]) {
 					$imglang = '<img'.t3lib_iconWorks::skinImg(
@@ -130,7 +131,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 #		debug($userlang);
 		
 		// Initialize the variable for the HTML source code with info text
-		$content = $LANG->getLL('sessions.info').'<br />';
+		$content = '<span style="color:red">'.$LANG->getLL('sessions.info').'</span><br />';
 
 		// Set the table layout of the event list.
 		$tableLayout = array(
@@ -205,12 +206,27 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
+		// Get list of pid 
+		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
+		// Check if sub pages available and remove main page from list
+		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
+			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
+		}
+		// Remove pages with common data
+		$eventPids = $this->removeCommonPages($this->selectedPids);
+		// Get page titles
+		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
+		// Get the where clause
+		$wherePid = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids).')';
+
 		// Add icon for new record
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
+		if (!empty($eventPids)) {
+			$content .= $this->getNewIconList($eventPids,$this->selectedPidsTitle);
+		}
 
 		// -------------------- Get list of categories --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey';
@@ -241,7 +257,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -261,6 +277,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$event = array();
 				$event['uid'] = $row['uid'];
+				$event['pid'] = $row['pid'];
 				$event['name'] = $row['name'];
 				$event['location'] = $row['location'];
 				$events[] = $event;
@@ -273,10 +290,11 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		// Get list of sessions for an event
 		foreach ($events as $event) {
 			// Show name of event
-			$content .= '<b>'.$event['name'].'</b><br />';
+			$content .= '<span style="font-size:1.2em"><b>'.$LANG->getLL('event').' '.$event['name'].'</b></span>';
+//			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
 
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND event='.$event['uid'].' AND deleted=0 AND sys_language_uid=0';
+			$queryWhere = $wherePid.' AND event='.$event['uid'].' AND deleted=0 AND sys_language_uid=0';
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'category,number,name';
@@ -295,10 +313,12 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			$table = $tableheader;
 
 			if ($res) {
+				$found = false;
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$found = true;
 					$this->addRowToTable($table, $row);
 					// Check for translations.
-					$queryWhere = 'l18n_parent='.$row['uid'];
+					$queryWhere = $wherePid.' AND l18n_parent='.$row['uid'];
 					$additionalTables = '';
 					$groupBy = '';
 					$orderBy = 'sys_language_uid';
@@ -318,10 +338,14 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 						}
 					}
 				}
+				if ($found) {
+					// Output the table array using the tableLayout array with the template
+					// class.
+					$content .= $this->page->doc->table($table, $tableLayout).'<br />'.LF;
+				} else {
+					$content .= '<br />'.$LANG->getLL('norecords').'<br /><br />'.LF;
+				}
 			}
-			// Output the table array using the tableLayout array with the template
-			// class.
-			$content .= $this->page->doc->table($table, $tableLayout).'<br /><br />';
 		}
 
 		return $content;

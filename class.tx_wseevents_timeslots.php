@@ -251,7 +251,7 @@ class tx_wseevents_timeslots {
 				// Loop over all speaker slots
 				$roomcount = count($eventslotarray['1']);
 #debug($roomcount,'$roomcount');
-				foreach (explode(',',$speakerslotlist) as $speakerslot){
+				foreach (explode(',',$speakerslotlist) as $speakerslot) {
 					// Get slot record
 					$slotrow = t3lib_BEfunc::getRecord ('tx_wseevents_timeslots', $speakerslot);
 					for ( $s = 0; $s < $slotrow['length']; $s++ ) {

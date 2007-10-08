@@ -634,7 +634,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 		'timeslots' => Array (		
 			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.timeslots',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.timeslots',
 			'config' => Array (
 				'type' => 'select',	
 				'itemsProcFunc' => 'tx_wseevents_timeslots->getTCAavailableSlots',
