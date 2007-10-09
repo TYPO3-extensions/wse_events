@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+    <meta type="array">
+        <description>Language labels for plugin &amp;quot;txwseevents&amp;quot;</description>
+        <type></type>
+        <csh_table></csh_table>
+        <labelContext type="array">
+        </labelContext>
+    </meta>
+    <data type="array">
+        <languageKey index="default" type="array">
+            <label index="tx_wseevents_sessions.listFieldHeader_number">Session number</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_name">Session name</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_speaker">Speaker</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_room">Room</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_teaser">Teaser</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_timeslots">Time slots</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_description">Description</label>
+            <label index="tx_wseevents_sessions.notimeslots">not yet scheduled</label>
+            <label index="tx_wseevents_sessions.nospeakers">no speaker assigned</label>
+            <label index="tx_wseevents_sessions.choosecategory">Choose category</label>
+            <label index="tx_wseevents_sessions.chooseeventday">Choose event day</label>
+            <label index="tx_wseevents_sessions.chooseall">- All Categories -</label>
+            <label index="tx_wseevents_sessions.choosealldays">- All Days -</label>
+            <label index="tx_wseevents_sessions.showselection">Show selected category</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_name">Speaker name</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_email">E-Mail</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_country">Country of origin</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_company">Company</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_companylink">Link to company</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_info">Information</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_image">Image</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessions</label>
+            <label index="tx_wseevents_sessions.slot_titlebegin"></label>
+            <label index="tx_wseevents_sessions.slot_titletime">Time</label>
+            <label index="tx_wseevents_sessions.slot_headerbegin">Begin</label>
+            <label index="tx_wseevents_sessions.slot_notassigned">not assigned</label>
+            <label index="tx_wseevents_sessions.slot_notdefined">free</label>
+            <label index="tx_wseevents_sessions.slot_notassigned_catkey">UNUSED</label>
+            <label index="tx_wseevents_sessions.slot_notdefined_catkey">NONE</label>
+            <label index="back">Back</label>
+        </languageKey>
+        <languageKey index="de" type="array">
+            <label index="tx_wseevents_sessions.listFieldHeader_number">Vortragsnummer</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_name">Vortragsname</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_speaker">Referent</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_room">Raum</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_teaser">Kurzinfo</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_timeslots">Zeitblock</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_description">Beschreibung</label>
+            <label index="tx_wseevents_sessions.notimeslots">noch nicht geplant</label>
+            <label index="tx_wseevents_sessions.nospeakers">noch kein Referent</label>
+            <label index="tx_wseevents_sessions.choosecategory">Kategorie wählen</label>
+            <label index="tx_wseevents_sessions.chooseeventday">Veranstaltungstag wählen</label>
+            <label index="tx_wseevents_sessions.chooseall">- Alle Kategorien -</label>
+            <label index="tx_wseevents_sessions.choosealldays">- Alle Tage -</label>
+            <label index="tx_wseevents_sessions.showselection">Ausgewählte Kategorie anzeigen</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_name">Referentenname</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_email">E-Mail</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_country">Herkunftsland</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_company">Firma</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_companylink">Link zur Firma</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_info">Information</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_image">Bild</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Vorträge</label>
+            <label index="tx_wseevents_sessions.slot_titlebegin"></label>
+            <label index="tx_wseevents_sessions.slot_titletime">Time</label>
+            <label index="tx_wseevents_sessions.slot_headerbegin">Beginn</label>
+            <label index="tx_wseevents_sessions.slot_notassigned">nicht zugewiesen</label>
+            <label index="tx_wseevents_sessions.slot_notdefined">Frei</label>
+            <label index="back">Zurück</label>
+        </languageKey>
+        <languageKey index="nl" type="array">
+            <label index="tx_wseevents_sessions.listFieldHeader_number">Sessie nummer</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_name">Sessie naam</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_speaker">Speaker</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_room">Kamer</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_teaser">Voorproefje</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_timeslots">Tijd periode</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_description">Omschrijving</label>
+            <label index="tx_wseevents_sessions.notimeslots">Nog niet ingedeeld</label>
+            <label index="tx_wseevents_sessions.nospeakers">Spreker nog niet bekend</label>
+            <label index="tx_wseevents_sessions.choosecategory">Kees Categorie</label>
+            <label index="tx_wseevents_sessions.chooseeventday">Kees dag</label>
+            <label index="tx_wseevents_sessions.chooseall">- Alle Categorien -</label>
+            <label index="tx_wseevents_sessions.choosealldays">- Alle Dagen -</label>
+            <label index="tx_wseevents_sessions.showselection">Laat geselecteerd categorie zien</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_name">Spreker naam</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_email">E-Mail</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_country">Land van herkomst</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_company">Bedrijf</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_companylink">Link naar Bedrijf</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_info">Informatie</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_image">Beeld</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessies</label>
+            <label index="tx_wseevents_sessions.slot_titlebegin"></label>
+            <label index="tx_wseevents_sessions.slot_titletime">Time</label>
+            <label index="tx_wseevents_sessions.slot_headerbegin">Aanvang</label>
+            <label index="tx_wseevents_sessions.slot_notassigned">niet in gebruik</label>
+            <label index="tx_wseevents_sessions.slot_notdefined">vrije</label>
+            <label index="back">Back</label>
+        </languageKey>
+        <languageKey index="fr" type="array">
+            <label index="tx_wseevents_sessions.listFieldHeader_number">Numéro de session</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_name">Nom de session</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_speaker">Intervenant</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_room">Salle</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_teaser">Introduction</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_timeslots">Créneaux horaires</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_description">Description</label>
+            <label index="tx_wseevents_sessions.notimeslots">pas encore planifiée</label>
+            <label index="tx_wseevents_sessions.nospeakers">pas d'intervenant assigné</label>
+            <label index="tx_wseevents_sessions.choosecategory">Choisir la catégorie</label>
+            <label index="tx_wseevents_sessions.chooseall">- Toutes les catégories -</label>
+            <label index="tx_wseevents_sessions.showselection">Afficher la catégorie sélectionnée</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_name">Nom de l'intervenant</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_email">Courriel</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_country">Pays d'origine</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_company">Compagnie</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_companylink">Lien vers la compagnie</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_info">Informations</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_image">Photographie</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessions</label>
+        </languageKey>
+    </data>
+    <orig_hash type="array">
+        <languageKey index="default" type="array">
+            <label index="tx_wseevents_sessions.listFieldHeader_number" type="integer">61571242</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_name" type="integer">249079710</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_speaker" type="integer">36488799</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_room" type="integer">214150095</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_teaser" type="integer">124178563</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_timeslots" type="integer">147000660</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_description" type="integer">190479069</label>
+            <label index="tx_wseevents_sessions.notimeslots" type="integer">49170351</label>
+            <label index="tx_wseevents_sessions.nospeakers" type="integer">101836520</label>
+            <label index="tx_wseevents_sessions.choosecategory" type="integer">251244267</label>
+            <label index="tx_wseevents_sessions.chooseeventday" type="integer">63893531</label>
+            <label index="tx_wseevents_sessions.chooseall" type="integer">30387189</label>
+            <label index="tx_wseevents_sessions.choosealldays" type="integer">239545202</label>
+            <label index="tx_wseevents_sessions.showselection" type="integer">161473078</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_name" type="integer">189662650</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_email" type="integer">8578394</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_country" type="integer">200055865</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_company" type="integer">29846719</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_companylink" type="integer">112055326</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_info" type="integer">176340495</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_image" type="integer">199571973</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_speakersessions" type="integer">178015084</label>
+            <label index="tx_wseevents_sessions.slot_titlebegin" type="integer">222419149</label>
+            <label index="tx_wseevents_sessions.slot_titletime" type="integer">175559919</label>
+            <label index="tx_wseevents_sessions.slot_headerbegin" type="integer">27289385</label>
+            <label index="tx_wseevents_sessions.slot_notassigned" type="integer">158137343</label>
+            <label index="tx_wseevents_sessions.slot_notdefined" type="integer">178444004</label>
+            <label index="tx_wseevents_sessions.slot_notassigned_catkey" type="integer">62658571</label>
+            <label index="tx_wseevents_sessions.slot_notdefined_catkey" type="integer">189805466</label>
+            <label index="back" type="integer">5603241</label>
+        </languageKey>
+        <languageKey index="de" type="array">
+            <label index="tx_wseevents_sessions.listFieldHeader_number" type="integer">61571242</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_name" type="integer">249079710</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_speaker" type="integer">36488799</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_room" type="integer">214150095</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_teaser" type="integer">124178563</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_timeslots" type="integer">147000660</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_description" type="integer">190479069</label>
+            <label index="tx_wseevents_sessions.notimeslots" type="integer">49170351</label>
+            <label index="tx_wseevents_sessions.nospeakers" type="integer">101836520</label>
+            <label index="tx_wseevents_sessions.choosecategory" type="integer">251244267</label>
+            <label index="tx_wseevents_sessions.chooseeventday" type="integer">63893531</label>
+            <label index="tx_wseevents_sessions.chooseall" type="integer">30387189</label>
+            <label index="tx_wseevents_sessions.choosealldays" type="integer">239545202</label>
+            <label index="tx_wseevents_sessions.showselection" type="integer">161473078</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_name" type="integer">189662650</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_email" type="integer">8578394</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_country" type="integer">200055865</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_company" type="integer">29846719</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_companylink" type="integer">112055326</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_info" type="integer">176340495</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_image" type="integer">199571973</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_speakersessions" type="integer">178015084</label>
+            <label index="tx_wseevents_sessions.slot_titlebegin" type="integer">222419149</label>
+            <label index="tx_wseevents_sessions.slot_titletime" type="integer">175559919</label>
+            <label index="tx_wseevents_sessions.slot_headerbegin" type="integer">27289385</label>
+            <label index="tx_wseevents_sessions.slot_notassigned" type="integer">158137343</label>
+            <label index="tx_wseevents_sessions.slot_notdefined" type="integer">178444004</label>
+            <label index="back" type="integer">5603241</label>
+        </languageKey>
+        <languageKey index="nl" type="array">
+            <label index="tx_wseevents_sessions.listFieldHeader_number" type="integer">61571242</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_name" type="integer">249079710</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_speaker" type="integer">36488799</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_room" type="integer">214150095</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_teaser" type="integer">124178563</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_timeslots" type="integer">147000660</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_description" type="integer">190479069</label>
+            <label index="tx_wseevents_sessions.notimeslots" type="integer">49170351</label>
+            <label index="tx_wseevents_sessions.nospeakers" type="integer">101836520</label>
+            <label index="tx_wseevents_sessions.choosecategory" type="integer">251244267</label>
+            <label index="tx_wseevents_sessions.chooseeventday" type="integer">63893531</label>
+            <label index="tx_wseevents_sessions.chooseall" type="integer">30387189</label>
+            <label index="tx_wseevents_sessions.choosealldays" type="integer">239545202</label>
+            <label index="tx_wseevents_sessions.showselection" type="integer">161473078</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_name" type="integer">189662650</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_email" type="integer">8578394</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_country" type="integer">200055865</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_company" type="integer">29846719</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_companylink" type="integer">112055326</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_info" type="integer">176340495</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_image" type="integer">199571973</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_speakersessions" type="integer">178015084</label>
+            <label index="tx_wseevents_sessions.slot_titlebegin" type="integer">222419149</label>
+            <label index="tx_wseevents_sessions.slot_titletime" type="integer">175559919</label>
+            <label index="tx_wseevents_sessions.slot_headerbegin" type="integer">27289385</label>
+            <label index="tx_wseevents_sessions.slot_notassigned" type="integer">158137343</label>
+            <label index="tx_wseevents_sessions.slot_notdefined" type="integer">178444004</label>
+            <label index="back" type="integer">5603241</label>
+        </languageKey>
+        <languageKey index="fr" type="array">
+            <label index="tx_wseevents_sessions.listFieldHeader_number" type="integer">61571242</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_name" type="integer">249079710</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_speaker" type="integer">36488799</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_room" type="integer">214150095</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_teaser" type="integer">124178563</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_timeslots" type="integer">147000660</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_description" type="integer">190479069</label>
+            <label index="tx_wseevents_sessions.notimeslots" type="integer">49170351</label>
+            <label index="tx_wseevents_sessions.nospeakers" type="integer">101836520</label>
+            <label index="tx_wseevents_sessions.choosecategory" type="integer">251244267</label>
+            <label index="tx_wseevents_sessions.chooseall" type="integer">30387189</label>
+            <label index="tx_wseevents_sessions.showselection" type="integer">161473078</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_name" type="integer">189662650</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_email" type="integer">8578394</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_country" type="integer">200055865</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_company" type="integer">29846719</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_companylink" type="integer">112055326</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_info" type="integer">176340495</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_image" type="integer">199571973</label>
+            <label index="tx_wseevents_speakers.listFieldHeader_speakersessions" type="integer">178015084</label>
+        </languageKey>
+    </orig_hash>
+    <orig_text type="array">
+        <languageKey index="default" type="array">
+        </languageKey>
+        <languageKey index="de" type="array">
+        </languageKey>
+        <languageKey index="nl" type="array">
+        </languageKey>
+        <languageKey index="fr" type="array">
+        </languageKey>
+    </orig_text>
+</T3locallang>
