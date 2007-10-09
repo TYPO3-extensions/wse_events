@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<description>Language labels for &amp;quot;txwseevents&amp;quot; database records</description>
+		<type></type>
+		<csh_table></csh_table>
+		<labelContext type="array">
+		</labelContext>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_wseevents_events">WSE Events</label>
+			<label index="tx_wseevents_events.name">Event name</label>
+			<label index="tx_wseevents_events.location">Location</label>
+			<label index="tx_wseevents_events.comment">Comment</label>
+			<label index="tx_wseevents_events.begin">First day of event</label>
+			<label index="tx_wseevents_events.length">Length of event (days)</label>
+			<label index="tx_wseevents_events.timebegin">Start time (hh:mm)</label>
+			<label index="tx_wseevents_events.timeend">End time (hh:mm)</label>
+			<label index="tx_wseevents_events.slotsize">Size of slots (mm)</label>
+			<label index="tx_wseevents_events.maxslot">Max slots per session</label>
+			<label index="tx_wseevents_events.defslotcount">Default slot count</label>
+			<label index="tx_wseevents_locations">WSE Locations</label>
+			<label index="tx_wseevents_locations.name">Name of location</label>
+			<label index="tx_wseevents_locations.website">Web site</label>
+			<label index="tx_wseevents_rooms">WSE Rooms</label>
+			<label index="tx_wseevents_rooms.name">Room name</label>
+			<label index="tx_wseevents_rooms.number">Room number</label>
+			<label index="tx_wseevents_rooms.seats">Number of seats</label>
+			<label index="tx_wseevents_rooms.location">Location</label>
+			<label index="tx_wseevents_timeslots">WSE Timeslots</label>
+			<label index="tx_wseevents_timeslots.event">Name of event</label>
+			<label index="tx_wseevents_timeslots.eventday">Day of event</label>
+			<label index="tx_wseevents_timeslots.name">Name of time slot</label>
+			<label index="tx_wseevents_timeslots.begin">Begin of session</label>
+			<label index="tx_wseevents_timeslots.length">Length of session</label>
+			<label index="tx_wseevents_timeslots.sessions">Name of session</label>
+			<label index="tx_wseevents_timeslots.nosessions">- no session planned -</label>
+			<label index="tx_wseevents_sessions">WSE Sessions</label>
+			<label index="tx_wseevents_sessions.event">Event</label>
+			<label index="tx_wseevents_sessions.name">Session name</label>
+			<label index="tx_wseevents_sessions.speaker">Speaker</label>
+			<label index="tx_wseevents_sessions.room">Room</label>
+			<label index="tx_wseevents_sessions.timeslots">Time slots</label>
+			<label index="tx_wseevents_sessions.category">Category</label>
+			<label index="tx_wseevents_sessions.number">Session number</label>
+			<label index="tx_wseevents_sessions.teaser">Teaser text</label>
+			<label index="tx_wseevents_sessions.description">Session description</label>
+			<label index="tx_wseevents_speakers">WSE Speakers</label>
+			<label index="tx_wseevents_speakers.name">Name</label>
+			<label index="tx_wseevents_speakers.firstname">First name</label>
+			<label index="tx_wseevents_speakers.email">E-Mail address</label>
+			<label index="tx_wseevents_speakers.emailwizard">Choose E-Mail address</label>
+			<label index="tx_wseevents_speakers.country">Country of origin</label>
+			<label index="tx_wseevents_speakers.company">Company</label>
+			<label index="tx_wseevents_speakers.companylink">Link to company</label>
+			<label index="tx_wseevents_speakers.companylinkwizard">Choose link</label>
+			<label index="tx_wseevents_speakers.info">Speaker information</label>
+			<label index="tx_wseevents_speakers.info_rte">Full screen Rich Text Editing</label>
+			<label index="tx_wseevents_speakers.image">Image</label>
+			<label index="tx_wseevents_speakerrestrictions">WSE Speaker Restrictions</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker">Speaker</label>
+			<label index="tx_wseevents_speakerrestrictions.comment">Comment</label>
+			<label index="tx_wseevents_speakerrestrictions.event">Name of event</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday">Day of event</label>
+			<label index="tx_wseevents_speakerrestrictions.begin">Begin of absence</label>
+			<label index="tx_wseevents_speakerrestrictions.end">End of absence</label>
+			<label index="tx_wseevents_categories">WSE Categories</label>
+			<label index="tx_wseevents_categories.name">Name of category</label>
+			<label index="tx_wseevents_categories.shortkey">Short key</label>
+			<label index="tx_wseevents_categories.color">Color of category</label>
+			<label index="tt_content.list_type_pi1">WSE Eventmanagement</label>
+			<label index="tt_content.pi_flexform.sheet_general">General settings</label>
+			<label index="tt_content.pi_flexform.sheet_display">Display settings</label>
+			<label index="tt_content.pi_flexform.disable_rte">Disable the Rich Text Editor</label>
+			<label index="tx_wseevents.pi_flexform.dynListType">Viewmode</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0">Session list</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1">Session detail</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2">Speaker list</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3">Speaker detail</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4">Time slots</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage">Event storage</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage">Common storage</label>
+			<label index="tx_wseevents.pi_flexform.singleSession">Session single view page</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker">Speaker single view page</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst">Lastname, Firstname</label>
+			<label index="tx_wseevents.pi_flexform.sorting">Field to be sorted</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="tx_wseevents_events">WSE-Veranstaltungen</label>
+			<label index="tx_wseevents_events.name">Veranstaltungsname</label>
+			<label index="tx_wseevents_events.location">Veranstaltungsort</label>
+			<label index="tx_wseevents_events.comment">Kommentar</label>
+			<label index="tx_wseevents_events.begin">Erster Veranstaltungstag</label>
+			<label index="tx_wseevents_events.length">Länge der Veranstaltung (Tage)</label>
+			<label index="tx_wseevents_events.timebegin">Veranstaltungsbeginn (hh:mm)</label>
+			<label index="tx_wseevents_events.timeend">Veranstaltungsende (hh:mm)</label>
+			<label index="tx_wseevents_events.slotsize">Dauer einer Zeiteinheit (mm)</label>
+			<label index="tx_wseevents_events.maxslot">Maximale Anzahl Zeiteinheiten je Vortrag</label>
+			<label index="tx_wseevents_events.defslotcount">Vorgabewert für Anzahl Zeiteinheiten</label>
+			<label index="tx_wseevents_locations">WSE-Veranstaltungsorte</label>
+			<label index="tx_wseevents_locations.name">Name des Veranstaltungsortes</label>
+			<label index="tx_wseevents_locations.website">Webseite</label>
+			<label index="tx_wseevents_rooms">WSE-Räume</label>
+			<label index="tx_wseevents_rooms.name">Raumname</label>
+			<label index="tx_wseevents_rooms.number">Raumnummer</label>
+			<label index="tx_wseevents_rooms.seats">Anzahl Plätze</label>
+			<label index="tx_wseevents_rooms.location">Veranstaltungsort</label>
+			<label index="tx_wseevents_timeslots">WSE-Vortragszeiten</label>
+			<label index="tx_wseevents_timeslots.event">Veranstaltung</label>
+			<label index="tx_wseevents_timeslots.eventday">Tag der Veranstaltung</label>
+			<label index="tx_wseevents_timeslots.name">Name der Vortragszeit</label>
+			<label index="tx_wseevents_timeslots.begin">Beginn des Vortrags</label>
+			<label index="tx_wseevents_timeslots.length">Länge des Vortrags</label>
+			<label index="tx_wseevents_timeslots.sessions">Name des Vortrags</label>
+			<label index="tx_wseevents_timeslots.nosessions">- kein Vortrag geplant -</label>
+			<label index="tx_wseevents_sessions">WSE-Vorträge</label>
+			<label index="tx_wseevents_sessions.event">Veranstaltung</label>
+			<label index="tx_wseevents_sessions.name">Vortragsname</label>
+			<label index="tx_wseevents_sessions.speaker">Referent</label>
+			<label index="tx_wseevents_sessions.room">Raum</label>
+			<label index="tx_wseevents_sessions.timeslots">Vortragszeiten</label>
+			<label index="tx_wseevents_sessions.category">Kategorie</label>
+			<label index="tx_wseevents_sessions.number">Vortragsnummer</label>
+			<label index="tx_wseevents_sessions.teaser">Kurztext</label>
+			<label index="tx_wseevents_sessions.description">Vortragsbeschreibung</label>
+			<label index="tx_wseevents_speakers">WSE-Referenten</label>
+			<label index="tx_wseevents_speakers.name">Name</label>
+			<label index="tx_wseevents_speakers.firstname">Vorname</label>
+			<label index="tx_wseevents_speakers.email">E-Mail-Adresse</label>
+			<label index="tx_wseevents_speakers.emailwizard">E-Mail-Adresse wählen</label>
+			<label index="tx_wseevents_speakers.country">Herkunftsland</label>
+			<label index="tx_wseevents_speakers.company">Firma</label>
+			<label index="tx_wseevents_speakers.companylink">Link zur Firma</label>
+			<label index="tx_wseevents_speakers.companylinkwizard">Link wählen</label>
+			<label index="tx_wseevents_speakers.info">Referenteninformationen</label>
+			<label index="tx_wseevents_speakers.info_rte">Vollbild Rich Text Bearbeitung</label>
+			<label index="tx_wseevents_speakers.image">Bild</label>
+			<label index="tx_wseevents_speakerrestrictions">WSE Sprecher Restriktionen</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker">Sprecher</label>
+			<label index="tx_wseevents_speakerrestrictions.comment">Kommentar</label>
+			<label index="tx_wseevents_speakerrestrictions.event">Veranstaltung</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday">Tag der Veranstaltung</label>
+			<label index="tx_wseevents_speakerrestrictions.begin">Beginn der Abwesenheit</label>
+			<label index="tx_wseevents_speakerrestrictions.end">Ende der Abwesenheit</label>
+			<label index="tx_wseevents_categories">WSE-Kategorien</label>
+			<label index="tx_wseevents_categories.name">Name der Kategorie</label>
+			<label index="tx_wseevents_categories.shortkey">Kurzbezeichnung</label>
+			<label index="tx_wseevents_categories.color">Farbe der Kategorie</label>
+			<label index="tt_content.list_type_pi1">WSE-Veranstaltungen</label>
+			<label index="tt_content.pi_flexform.sheet_general">Allgemeine Einstellungen</label>
+			<label index="tt_content.pi_flexform.sheet_display">Anzeigeneinstellungen</label>
+			<label index="tt_content.pi_flexform.disable_rte">Rich-Text-Editor abschalten</label>
+			<label index="tx_wseevents.pi_flexform.dynListType">Darstellungsart</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0">Votragsliste</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1">Vortragseinzelheiten</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2">Referentenliste</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3">Referenteneinzelheiten</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4">Zeitblock</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage">Veranstaltungsablage</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage">Ablage für gemeinsame Daten</label>
+			<label index="tx_wseevents.pi_flexform.singleSession">Seite mit Vortragseinzelheiten</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker">Seite mit Referenteneinzelheiten</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst">Nachname, Vorname</label>
+			<label index="tx_wseevents.pi_flexform.sorting">Feld, nach dem sotiert wird</label>
+		</languageKey>
+		<languageKey index="nl" type="array">
+			<label index="tx_wseevents_events">WSE Evenementen</label>
+			<label index="tx_wseevents_events.name">Evenement naam</label>
+			<label index="tx_wseevents_events.location">Locatie</label>
+			<label index="tx_wseevents_events.comment">Commentaar</label>
+			<label index="tx_wseevents_events.begin">Eerste dag van het evenement</label>
+			<label index="tx_wseevents_events.length">Evenement lengte (dagen)</label>
+			<label index="tx_wseevents_events.timebegin">Sessie aanvang (uu:mm)</label>
+			<label index="tx_wseevents_events.timeend">Einde sessie (uu:mm)</label>
+			<label index="tx_wseevents_events.slotsize">Grootte van periode (mm)</label>
+			<label index="tx_wseevents_events.maxslot">Maximum aantal periodes per sessie</label>
+			<label index="tx_wseevents_events.defslotcount">Standaardwarde periode teller</label>
+			<label index="tx_wseevents_locations">WSE Locaties</label>
+			<label index="tx_wseevents_locations.name">Naam van locatie</label>
+			<label index="tx_wseevents_locations.website">Web site</label>
+			<label index="tx_wseevents_rooms">WSE Kamers</label>
+			<label index="tx_wseevents_rooms.name">Kamer naam</label>
+			<label index="tx_wseevents_rooms.number">Kamer nummer</label>
+			<label index="tx_wseevents_rooms.seats">Aantal stoelen</label>
+			<label index="tx_wseevents_rooms.location">Locatie</label>
+			<label index="tx_wseevents_timeslots">WSE tijd perioden</label>
+			<label index="tx_wseevents_timeslots.event">Evenement naam</label>
+			<label index="tx_wseevents_timeslots.eventday">dag van het evenement</label>
+			<label index="tx_wseevents_timeslots.name">Naam van de tijd periode</label>
+			<label index="tx_wseevents_timeslots.begin">Aanvang van de sessie</label>
+			<label index="tx_wseevents_timeslots.length">Sessie lengte</label>
+			<label index="tx_wseevents_timeslots.sessions">Sessie naam</label>
+			<label index="tx_wseevents_timeslots.nosessions">- geen sessie gepland -</label>
+			<label index="tx_wseevents_sessions">WSE Sessies</label>
+			<label index="tx_wseevents_sessions.event">Evenement</label>
+			<label index="tx_wseevents_sessions.name">Sessie naam</label>
+			<label index="tx_wseevents_sessions.speaker">Spreker</label>
+			<label index="tx_wseevents_sessions.room">Kamer</label>
+			<label index="tx_wseevents_sessions.timeslots">Tijd perioden</label>
+			<label index="tx_wseevents_sessions.category">Categorie</label>
+			<label index="tx_wseevents_sessions.number">Sessie nummer</label>
+			<label index="tx_wseevents_sessions.teaser">Voorproefje tekst</label>
+			<label index="tx_wseevents_sessions.description">Sessie omschrijving</label>
+			<label index="tx_wseevents_speakers">WSE Sprekers</label>
+			<label index="tx_wseevents_speakers.name">Naam</label>
+			<label index="tx_wseevents_speakers.firstname">Voornaam</label>
+			<label index="tx_wseevents_speakers.email">E-mail adres</label>
+			<label index="tx_wseevents_speakers.emailwizard">Kees e-mail adres</label>
+			<label index="tx_wseevents_speakers.country">Land van herkomst</label>
+			<label index="tx_wseevents_speakers.company">Bedrijf</label>
+			<label index="tx_wseevents_speakers.companylink">Link naar Bedrijf</label>
+			<label index="tx_wseevents_speakers.companylinkwizard">Kees link</label>
+			<label index="tx_wseevents_speakers.info">Spreker informatie</label>
+			<label index="tx_wseevents_speakers.info_rte">Volle scherm RTF bewerking</label>
+			<label index="tx_wseevents_speakers.image">Beeld</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker">Spreker</label>
+			<label index="tx_wseevents_speakerrestrictions.comment">Commentaar</label>
+			<label index="tx_wseevents_speakerrestrictions.event">Evenement naam</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday">dag van het evenement</label>
+			<label index="tx_wseevents_categories">WSE Categorieën</label>
+			<label index="tx_wseevents_categories.name">Naam categorie</label>
+			<label index="tx_wseevents_categories.shortkey">Snelkoppeling</label>
+			<label index="tt_content.list_type_pi1">WSE Evenement management</label>
+			<label index="tt_content.pi_flexform.sheet_general">Algemene instellingen</label>
+			<label index="tt_content.pi_flexform.sheet_display">Beeld instellingen</label>
+			<label index="tt_content.pi_flexform.disable_rte">Uitzetten RTF tekst bewerking</label>
+			<label index="tx_wseevents.pi_flexform.dynListType">Kijk mode</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0">Sessie lijst</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1">Sessie details</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2">Spreker lijst</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3">Spreker details</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4">Tijd perioden</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage">Evenement opslaag</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage">Algemeen opslaag</label>
+			<label index="tx_wseevents.pi_flexform.singleSession">Sessie, toon of enkel pagina</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker">Spreker, toon of enkel pagina</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst">Achternaam, Voornaam</label>
+			<label index="tx_wseevents.pi_flexform.sorting">Sorteer veld</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="tx_wseevents_events">Conférence WSE</label>
+			<label index="tx_wseevents_events.name">Nom de la conférence</label>
+			<label index="tx_wseevents_events.location">Lieu</label>
+			<label index="tx_wseevents_events.comment">Remarque</label>
+			<label index="tx_wseevents_events.begin">Premier jour de l'événement</label>
+			<label index="tx_wseevents_events.length">durée de l'événement (jours)</label>
+			<label index="tx_wseevents_events.timebegin">Heure de début (hh:mm)</label>
+			<label index="tx_wseevents_events.timeend">Heure de fin (hh:mm)</label>
+			<label index="tx_wseevents_events.slotsize">Durée des créneaux (mm)</label>
+			<label index="tx_wseevents_events.maxslot">Créneaux/session max</label>
+			<label index="tx_wseevents_events.defslotcount">Default slot count</label>
+			<label index="tx_wseevents_locations">Lieux des WSE</label>
+			<label index="tx_wseevents_locations.name">Nom du lieu</label>
+			<label index="tx_wseevents_locations.website">Site Web</label>
+			<label index="tx_wseevents_rooms">Salles WSE</label>
+			<label index="tx_wseevents_rooms.name">Nom de la salle</label>
+			<label index="tx_wseevents_rooms.number">Nombre de la salle</label>
+			<label index="tx_wseevents_rooms.seats">Nombre de places</label>
+			<label index="tx_wseevents_rooms.location">Lieu</label>
+			<label index="tx_wseevents_timeslots">Créneaux horaires WSE</label>
+			<label index="tx_wseevents_timeslots.event">Nom de l'événement</label>
+			<label index="tx_wseevents_timeslots.eventday">Jour de l'événement</label>
+			<label index="tx_wseevents_timeslots.name">Nom du créneau horaire</label>
+			<label index="tx_wseevents_timeslots.begin">Début de la session</label>
+			<label index="tx_wseevents_timeslots.length">Durée de la session</label>
+			<label index="tx_wseevents_timeslots.sessions">Nom de la session</label>
+			<label index="tx_wseevents_timeslots.nosessions">- pas de session prévue -</label>
+			<label index="tx_wseevents_sessions">Sessions WSE</label>
+			<label index="tx_wseevents_sessions.event">Événement</label>
+			<label index="tx_wseevents_sessions.name">Nom de la session</label>
+			<label index="tx_wseevents_sessions.speaker">Intervenant</label>
+			<label index="tx_wseevents_sessions.room">Salle</label>
+			<label index="tx_wseevents_sessions.timeslots">Créneaux horaires</label>
+			<label index="tx_wseevents_sessions.category">Catégorie</label>
+			<label index="tx_wseevents_sessions.number">Numéro de session</label>
+			<label index="tx_wseevents_sessions.teaser">Texte d'introduction</label>
+			<label index="tx_wseevents_sessions.description">Description de la session</label>
+			<label index="tx_wseevents_speakers">Intervenants WSE</label>
+			<label index="tx_wseevents_speakers.name">Nom</label>
+			<label index="tx_wseevents_speakers.firstname">Prénom</label>
+			<label index="tx_wseevents_speakers.email">Adresse de courriel</label>
+			<label index="tx_wseevents_speakers.emailwizard">Choisir l'adresse de courriel</label>
+			<label index="tx_wseevents_speakers.country">Pays d'origine</label>
+			<label index="tx_wseevents_speakers.company">Compagnie</label>
+			<label index="tx_wseevents_speakers.companylink">Lien vers la compagnie</label>
+			<label index="tx_wseevents_speakers.companylinkwizard">Choisir le lien</label>
+			<label index="tx_wseevents_speakers.info">Informations sur l'intervenant</label>
+			<label index="tx_wseevents_speakers.image">Photographie</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker">Intervenant</label>
+			<label index="tx_wseevents_speakerrestrictions.comment">Remarque</label>
+			<label index="tx_wseevents_speakerrestrictions.event">Nom de l'événement</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday">Jour de l'événement</label>
+			<label index="tx_wseevents_categories">WSE Categories</label>
+			<label index="tx_wseevents_categories.name">Nom de la catégorie</label>
+			<label index="tx_wseevents_categories.shortkey">Clé courte</label>
+			<label index="tt_content.list_type_pi1">Gestion de l'événement WSE</label>
+			<label index="tt_content.pi_flexform.sheet_general">Paramètres généraux</label>
+			<label index="tt_content.pi_flexform.sheet_display">Paramètres d'affichage</label>
+			<label index="tt_content.pi_flexform.disable_rte">Désactiver l'editeur de texte enrichi</label>
+			<label index="tx_wseevents.pi_flexform.dynListType">Mode d'affichage</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0">Liste des sessions</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1">Détails de la session</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2">Liste des intervenants</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3">Détails de l'intervenant</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4">Créneaux horaires</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage">Stockage pour l'événement</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage">Stockage commun</label>
+			<label index="tx_wseevents.pi_flexform.singleSession">Page de vue simple sessions</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker">Page de vue simple intervenants</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst">Nom, prénom</label>
+			<label index="tx_wseevents.pi_flexform.sorting">Champ à trier</label>
+		</languageKey>
+	</data>
+	<orig_hash type="array">
+		<languageKey index="de" type="array">
+			<label index="tx_wseevents_events" type="integer">135883494</label>
+			<label index="tx_wseevents_events.name" type="integer">178941537</label>
+			<label index="tx_wseevents_events.location" type="integer">216383317</label>
+			<label index="tx_wseevents_events.comment" type="integer">12485638</label>
+			<label index="tx_wseevents_events.begin" type="integer">50803468</label>
+			<label index="tx_wseevents_events.length" type="integer">48514519</label>
+			<label index="tx_wseevents_events.timebegin" type="integer">237727152</label>
+			<label index="tx_wseevents_events.timeend" type="integer">17471763</label>
+			<label index="tx_wseevents_events.slotsize" type="integer">172649478</label>
+			<label index="tx_wseevents_events.maxslot" type="integer">9294994</label>
+			<label index="tx_wseevents_events.defslotcount" type="integer">76602505</label>
+			<label index="tx_wseevents_locations" type="integer">208866747</label>
+			<label index="tx_wseevents_locations.name" type="integer">51589340</label>
+			<label index="tx_wseevents_locations.website" type="integer">135530793</label>
+			<label index="tx_wseevents_rooms" type="integer">185855429</label>
+			<label index="tx_wseevents_rooms.name" type="integer">122842316</label>
+			<label index="tx_wseevents_rooms.number" type="integer">228919250</label>
+			<label index="tx_wseevents_rooms.seats" type="integer">173217012</label>
+			<label index="tx_wseevents_rooms.location" type="integer">216383317</label>
+			<label index="tx_wseevents_timeslots" type="integer">241754703</label>
+			<label index="tx_wseevents_timeslots.event" type="integer">76589815</label>
+			<label index="tx_wseevents_timeslots.eventday" type="integer">233325191</label>
+			<label index="tx_wseevents_timeslots.name" type="integer">165867725</label>
+			<label index="tx_wseevents_timeslots.begin" type="integer">112062445</label>
+			<label index="tx_wseevents_timeslots.length" type="integer">17755897</label>
+			<label index="tx_wseevents_timeslots.sessions" type="integer">9596280</label>
+			<label index="tx_wseevents_timeslots.nosessions" type="integer">175756196</label>
+			<label index="tx_wseevents_sessions" type="integer">178160288</label>
+			<label index="tx_wseevents_sessions.event" type="integer">172937159</label>
+			<label index="tx_wseevents_sessions.name" type="integer">249079710</label>
+			<label index="tx_wseevents_sessions.speaker" type="integer">36488799</label>
+			<label index="tx_wseevents_sessions.room" type="integer">214150095</label>
+			<label index="tx_wseevents_sessions.timeslots" type="integer">147000660</label>
+			<label index="tx_wseevents_sessions.category" type="integer">61717939</label>
+			<label index="tx_wseevents_sessions.number" type="integer">61571242</label>
+			<label index="tx_wseevents_sessions.teaser" type="integer">168806295</label>
+			<label index="tx_wseevents_sessions.description" type="integer">210663034</label>
+			<label index="tx_wseevents_speakers" type="integer">216323339</label>
+			<label index="tx_wseevents_speakers.name" type="integer">77521672</label>
+			<label index="tx_wseevents_speakers.firstname" type="integer">34451647</label>
+			<label index="tx_wseevents_speakers.email" type="integer">110584439</label>
+			<label index="tx_wseevents_speakers.emailwizard" type="integer">63630867</label>
+			<label index="tx_wseevents_speakers.country" type="integer">200055865</label>
+			<label index="tx_wseevents_speakers.company" type="integer">29846719</label>
+			<label index="tx_wseevents_speakers.companylink" type="integer">112055326</label>
+			<label index="tx_wseevents_speakers.companylinkwizard" type="integer">174245053</label>
+			<label index="tx_wseevents_speakers.info" type="integer">203212924</label>
+			<label index="tx_wseevents_speakers.info_rte" type="integer">223346550</label>
+			<label index="tx_wseevents_speakers.image" type="integer">199571973</label>
+			<label index="tx_wseevents_speakerrestrictions" type="integer">139978450</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker" type="integer">36488799</label>
+			<label index="tx_wseevents_speakerrestrictions.comment" type="integer">12485638</label>
+			<label index="tx_wseevents_speakerrestrictions.event" type="integer">76589815</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday" type="integer">233325191</label>
+			<label index="tx_wseevents_speakerrestrictions.begin" type="integer">52338947</label>
+			<label index="tx_wseevents_speakerrestrictions.end" type="integer">194165235</label>
+			<label index="tx_wseevents_categories" type="integer">248467217</label>
+			<label index="tx_wseevents_categories.name" type="integer">266599404</label>
+			<label index="tx_wseevents_categories.shortkey" type="integer">250230416</label>
+			<label index="tx_wseevents_categories.color" type="integer">112651918</label>
+			<label index="tt_content.list_type_pi1" type="integer">46219956</label>
+			<label index="tt_content.pi_flexform.sheet_general" type="integer">233187189</label>
+			<label index="tt_content.pi_flexform.sheet_display" type="integer">165415803</label>
+			<label index="tt_content.pi_flexform.disable_rte" type="integer">108259280</label>
+			<label index="tx_wseevents.pi_flexform.dynListType" type="integer">78580144</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0" type="integer">20637778</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1" type="integer">178499434</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2" type="integer">255989888</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3" type="integer">248668284</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4" type="integer">147000660</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage" type="integer">205293540</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage" type="integer">237419537</label>
+			<label index="tx_wseevents.pi_flexform.singleSession" type="integer">254001217</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker" type="integer">285018</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst" type="integer">203017082</label>
+			<label index="tx_wseevents.pi_flexform.sorting" type="integer">250567544</label>
+		</languageKey>
+		<languageKey index="nl" type="array">
+			<label index="tx_wseevents_events" type="integer">135883494</label>
+			<label index="tx_wseevents_events.name" type="integer">178941537</label>
+			<label index="tx_wseevents_events.location" type="integer">216383317</label>
+			<label index="tx_wseevents_events.comment" type="integer">12485638</label>
+			<label index="tx_wseevents_events.begin" type="integer">50803468</label>
+			<label index="tx_wseevents_events.length" type="integer">48514519</label>
+			<label index="tx_wseevents_events.timebegin" type="integer">237727152</label>
+			<label index="tx_wseevents_events.timeend" type="integer">17471763</label>
+			<label index="tx_wseevents_events.slotsize" type="integer">172649478</label>
+			<label index="tx_wseevents_events.maxslot" type="integer">9294994</label>
+			<label index="tx_wseevents_events.defslotcount" type="integer">76602505</label>
+			<label index="tx_wseevents_locations" type="integer">208866747</label>
+			<label index="tx_wseevents_locations.name" type="integer">51589340</label>
+			<label index="tx_wseevents_locations.website" type="integer">135530793</label>
+			<label index="tx_wseevents_rooms" type="integer">185855429</label>
+			<label index="tx_wseevents_rooms.name" type="integer">122842316</label>
+			<label index="tx_wseevents_rooms.seats" type="integer">173217012</label>
+			<label index="tx_wseevents_rooms.location" type="integer">216383317</label>
+			<label index="tx_wseevents_timeslots" type="integer">241754703</label>
+			<label index="tx_wseevents_timeslots.event" type="integer">76589815</label>
+			<label index="tx_wseevents_timeslots.eventday" type="integer">233325191</label>
+			<label index="tx_wseevents_timeslots.name" type="integer">165867725</label>
+			<label index="tx_wseevents_timeslots.begin" type="integer">112062445</label>
+			<label index="tx_wseevents_timeslots.length" type="integer">17755897</label>
+			<label index="tx_wseevents_timeslots.sessions" type="integer">9596280</label>
+			<label index="tx_wseevents_timeslots.nosessions" type="integer">175756196</label>
+			<label index="tx_wseevents_sessions" type="integer">178160288</label>
+			<label index="tx_wseevents_sessions.event" type="integer">172937159</label>
+			<label index="tx_wseevents_sessions.name" type="integer">249079710</label>
+			<label index="tx_wseevents_sessions.speaker" type="integer">36488799</label>
+			<label index="tx_wseevents_sessions.room" type="integer">214150095</label>
+			<label index="tx_wseevents_sessions.timeslots" type="integer">147000660</label>
+			<label index="tx_wseevents_sessions.category" type="integer">61717939</label>
+			<label index="tx_wseevents_sessions.number" type="integer">61571242</label>
+			<label index="tx_wseevents_sessions.teaser" type="integer">168806295</label>
+			<label index="tx_wseevents_sessions.description" type="integer">210663034</label>
+			<label index="tx_wseevents_speakers" type="integer">216323339</label>
+			<label index="tx_wseevents_speakers.name" type="integer">77521672</label>
+			<label index="tx_wseevents_speakers.firstname" type="integer">34451647</label>
+			<label index="tx_wseevents_speakers.email" type="integer">110584439</label>
+			<label index="tx_wseevents_speakers.emailwizard" type="integer">63630867</label>
+			<label index="tx_wseevents_speakers.country" type="integer">200055865</label>
+			<label index="tx_wseevents_speakers.company" type="integer">29846719</label>
+			<label index="tx_wseevents_speakers.companylink" type="integer">112055326</label>
+			<label index="tx_wseevents_speakers.companylinkwizard" type="integer">174245053</label>
+			<label index="tx_wseevents_speakers.info" type="integer">203212924</label>
+			<label index="tx_wseevents_speakers.info_rte" type="integer">223346550</label>
+			<label index="tx_wseevents_speakers.image" type="integer">199571973</label>
+			<label index="tx_wseevents_categories" type="integer">248467217</label>
+			<label index="tx_wseevents_categories.name" type="integer">266599404</label>
+			<label index="tx_wseevents_categories.shortkey" type="integer">250230416</label>
+			<label index="tt_content.list_type_pi1" type="integer">46219956</label>
+			<label index="tt_content.pi_flexform.sheet_general" type="integer">233187189</label>
+			<label index="tt_content.pi_flexform.sheet_display" type="integer">165415803</label>
+			<label index="tt_content.pi_flexform.disable_rte" type="integer">108259280</label>
+			<label index="tx_wseevents.pi_flexform.dynListType" type="integer">78580144</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0" type="integer">20637778</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1" type="integer">178499434</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2" type="integer">255989888</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3" type="integer">248668284</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4" type="integer">147000660</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage" type="integer">205293540</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage" type="integer">237419537</label>
+			<label index="tx_wseevents.pi_flexform.singleSession" type="integer">254001217</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker" type="integer">285018</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst" type="integer">203017082</label>
+			<label index="tx_wseevents.pi_flexform.sorting" type="integer">250567544</label>
+			<label index="tx_wseevents_rooms.number" type="integer">228919250</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker" type="integer">36488799</label>
+			<label index="tx_wseevents_speakerrestrictions.comment" type="integer">12485638</label>
+			<label index="tx_wseevents_speakerrestrictions.event" type="integer">76589815</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday" type="integer">233325191</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="tx_wseevents_events" type="integer">135883494</label>
+			<label index="tx_wseevents_events.name" type="integer">178941537</label>
+			<label index="tx_wseevents_events.location" type="integer">216383317</label>
+			<label index="tx_wseevents_events.comment" type="integer">12485638</label>
+			<label index="tx_wseevents_events.begin" type="integer">50803468</label>
+			<label index="tx_wseevents_events.length" type="integer">48514519</label>
+			<label index="tx_wseevents_events.timebegin" type="integer">237727152</label>
+			<label index="tx_wseevents_events.timeend" type="integer">17471763</label>
+			<label index="tx_wseevents_events.slotsize" type="integer">172649478</label>
+			<label index="tx_wseevents_events.maxslot" type="integer">9294994</label>
+			<label index="tx_wseevents_events.defslotcount" type="integer">76602505</label>
+			<label index="tx_wseevents_locations" type="integer">208866747</label>
+			<label index="tx_wseevents_locations.name" type="integer">51589340</label>
+			<label index="tx_wseevents_locations.website" type="integer">135530793</label>
+			<label index="tx_wseevents_rooms" type="integer">185855429</label>
+			<label index="tx_wseevents_rooms.name" type="integer">122842316</label>
+			<label index="tx_wseevents_rooms.seats" type="integer">173217012</label>
+			<label index="tx_wseevents_rooms.location" type="integer">216383317</label>
+			<label index="tx_wseevents_timeslots" type="integer">241754703</label>
+			<label index="tx_wseevents_timeslots.event" type="integer">76589815</label>
+			<label index="tx_wseevents_timeslots.eventday" type="integer">233325191</label>
+			<label index="tx_wseevents_timeslots.name" type="integer">165867725</label>
+			<label index="tx_wseevents_timeslots.begin" type="integer">112062445</label>
+			<label index="tx_wseevents_timeslots.length" type="integer">17755897</label>
+			<label index="tx_wseevents_timeslots.sessions" type="integer">9596280</label>
+			<label index="tx_wseevents_timeslots.nosessions" type="integer">175756196</label>
+			<label index="tx_wseevents_sessions" type="integer">178160288</label>
+			<label index="tx_wseevents_sessions.event" type="integer">172937159</label>
+			<label index="tx_wseevents_sessions.name" type="integer">249079710</label>
+			<label index="tx_wseevents_sessions.speaker" type="integer">36488799</label>
+			<label index="tx_wseevents_sessions.room" type="integer">214150095</label>
+			<label index="tx_wseevents_sessions.timeslots" type="integer">147000660</label>
+			<label index="tx_wseevents_sessions.category" type="integer">61717939</label>
+			<label index="tx_wseevents_sessions.number" type="integer">61571242</label>
+			<label index="tx_wseevents_sessions.teaser" type="integer">168806295</label>
+			<label index="tx_wseevents_sessions.description" type="integer">210663034</label>
+			<label index="tx_wseevents_speakers" type="integer">216323339</label>
+			<label index="tx_wseevents_speakers.name" type="integer">77521672</label>
+			<label index="tx_wseevents_speakers.firstname" type="integer">34451647</label>
+			<label index="tx_wseevents_speakers.email" type="integer">110584439</label>
+			<label index="tx_wseevents_speakers.emailwizard" type="integer">63630867</label>
+			<label index="tx_wseevents_speakers.country" type="integer">200055865</label>
+			<label index="tx_wseevents_speakers.company" type="integer">29846719</label>
+			<label index="tx_wseevents_speakers.companylink" type="integer">112055326</label>
+			<label index="tx_wseevents_speakers.companylinkwizard" type="integer">174245053</label>
+			<label index="tx_wseevents_speakers.info" type="integer">203212924</label>
+			<label index="tx_wseevents_speakers.image" type="integer">199571973</label>
+			<label index="tx_wseevents_categories" type="integer">248467217</label>
+			<label index="tx_wseevents_categories.name" type="integer">266599404</label>
+			<label index="tx_wseevents_categories.shortkey" type="integer">250230416</label>
+			<label index="tt_content.list_type_pi1" type="integer">46219956</label>
+			<label index="tt_content.pi_flexform.sheet_general" type="integer">233187189</label>
+			<label index="tt_content.pi_flexform.sheet_display" type="integer">165415803</label>
+			<label index="tt_content.pi_flexform.disable_rte" type="integer">108259280</label>
+			<label index="tx_wseevents.pi_flexform.dynListType" type="integer">78580144</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0" type="integer">20637778</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1" type="integer">178499434</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2" type="integer">255989888</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3" type="integer">248668284</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4" type="integer">147000660</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage" type="integer">205293540</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage" type="integer">237419537</label>
+			<label index="tx_wseevents.pi_flexform.singleSession" type="integer">254001217</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker" type="integer">285018</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst" type="integer">203017082</label>
+			<label index="tx_wseevents.pi_flexform.sorting" type="integer">250567544</label>
+			<label index="tx_wseevents_rooms.number" type="integer">228919250</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker" type="integer">36488799</label>
+			<label index="tx_wseevents_speakerrestrictions.comment" type="integer">12485638</label>
+			<label index="tx_wseevents_speakerrestrictions.event" type="integer">76589815</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday" type="integer">233325191</label>
+		</languageKey>
+	</orig_hash>
+	<orig_text type="array">
+		<languageKey index="de" type="array">
+		</languageKey>
+		<languageKey index="nl" type="array">
+			<label index="tx_wseevents_events">WSE Events</label>
+			<label index="tx_wseevents_events.name">Event name</label>
+			<label index="tx_wseevents_events.location">Location</label>
+			<label index="tx_wseevents_events.comment">Comment</label>
+			<label index="tx_wseevents_events.begin">First day of event</label>
+			<label index="tx_wseevents_events.length">Length of event (days)</label>
+			<label index="tx_wseevents_events.timebegin">Start time (hh:mm)</label>
+			<label index="tx_wseevents_events.timeend">End time (hh:mm)</label>
+			<label index="tx_wseevents_events.slotsize">Size of slots (mm)</label>
+			<label index="tx_wseevents_events.maxslot">Max slots per session</label>
+			<label index="tx_wseevents_events.defslotcount">Default slot count</label>
+			<label index="tx_wseevents_locations">WSE Locations</label>
+			<label index="tx_wseevents_locations.name">Name of location</label>
+			<label index="tx_wseevents_locations.website">Web site</label>
+			<label index="tx_wseevents_rooms">WSE Rooms</label>
+			<label index="tx_wseevents_rooms.name">Room name</label>
+			<label index="tx_wseevents_rooms.number">Room number</label>
+			<label index="tx_wseevents_rooms.seats">Number of seats</label>
+			<label index="tx_wseevents_rooms.location">Location</label>
+			<label index="tx_wseevents_timeslots">WSE Timeslots</label>
+			<label index="tx_wseevents_timeslots.event">Name of event</label>
+			<label index="tx_wseevents_timeslots.eventday">Day of event</label>
+			<label index="tx_wseevents_timeslots.name">Name of time slot</label>
+			<label index="tx_wseevents_timeslots.begin">Begin of session</label>
+			<label index="tx_wseevents_timeslots.length">Length of session</label>
+			<label index="tx_wseevents_timeslots.sessions">Name of session</label>
+			<label index="tx_wseevents_timeslots.nosessions">- no session planned -</label>
+			<label index="tx_wseevents_sessions">WSE Sessions</label>
+			<label index="tx_wseevents_sessions.event">Event</label>
+			<label index="tx_wseevents_sessions.name">Session name</label>
+			<label index="tx_wseevents_sessions.speaker">Speaker</label>
+			<label index="tx_wseevents_sessions.room">Room</label>
+			<label index="tx_wseevents_sessions.timeslots">Time slots</label>
+			<label index="tx_wseevents_sessions.category">Category</label>
+			<label index="tx_wseevents_sessions.number">Session number</label>
+			<label index="tx_wseevents_sessions.teaser">Teaser text</label>
+			<label index="tx_wseevents_sessions.description">Session description</label>
+			<label index="tx_wseevents_speakers">WSE Speakers</label>
+			<label index="tx_wseevents_speakers.name">Name</label>
+			<label index="tx_wseevents_speakers.firstname">First name</label>
+			<label index="tx_wseevents_speakers.email">E-Mail address</label>
+			<label index="tx_wseevents_speakers.emailwizard">Choose E-Mail address</label>
+			<label index="tx_wseevents_speakers.country">Country of origin</label>
+			<label index="tx_wseevents_speakers.company">Company</label>
+			<label index="tx_wseevents_speakers.companylink">Link to company</label>
+			<label index="tx_wseevents_speakers.companylinkwizard">Choose link</label>
+			<label index="tx_wseevents_speakers.info">Speaker information</label>
+			<label index="tx_wseevents_speakers.info_rte">Full screen Rich Text Editing</label>
+			<label index="tx_wseevents_speakers.image">Image</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker">Speaker</label>
+			<label index="tx_wseevents_speakerrestrictions.comment">Comment</label>
+			<label index="tx_wseevents_speakerrestrictions.event">Name of event</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday">Day of event</label>
+			<label index="tx_wseevents_categories">WSE Categories</label>
+			<label index="tx_wseevents_categories.name">Name of category</label>
+			<label index="tx_wseevents_categories.shortkey">Short key</label>
+			<label index="tt_content.list_type_pi1">WSE Eventmanagement</label>
+			<label index="tt_content.pi_flexform.sheet_general">General settings</label>
+			<label index="tt_content.pi_flexform.sheet_display">Display settings</label>
+			<label index="tt_content.pi_flexform.disable_rte">Disable the Rich Text Editor</label>
+			<label index="tx_wseevents.pi_flexform.dynListType">Viewmode</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0">Session list</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1">Session detail</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2">Speaker list</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3">Speaker detail</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4">Time slots</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage">Event storage</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage">Common storage</label>
+			<label index="tx_wseevents.pi_flexform.singleSession">Session single view page</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker">Speaker single view page</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst">Lastname, Firstname</label>
+			<label index="tx_wseevents.pi_flexform.sorting">Field to be sorted</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="tx_wseevents_events">WSE Events</label>
+			<label index="tx_wseevents_events.name">Event name</label>
+			<label index="tx_wseevents_events.location">Location</label>
+			<label index="tx_wseevents_events.comment">Comment</label>
+			<label index="tx_wseevents_events.begin">First day of event</label>
+			<label index="tx_wseevents_events.length">Length of event (days)</label>
+			<label index="tx_wseevents_events.timebegin">Start time (hh:mm)</label>
+			<label index="tx_wseevents_events.timeend">End time (hh:mm)</label>
+			<label index="tx_wseevents_events.slotsize">Size of slots (mm)</label>
+			<label index="tx_wseevents_events.maxslot">Max slots per session</label>
+			<label index="tx_wseevents_events.defslotcount">Default slot count</label>
+			<label index="tx_wseevents_locations">WSE Locations</label>
+			<label index="tx_wseevents_locations.name">Name of location</label>
+			<label index="tx_wseevents_locations.website">Web site</label>
+			<label index="tx_wseevents_rooms">WSE Rooms</label>
+			<label index="tx_wseevents_rooms.name">Room name</label>
+			<label index="tx_wseevents_rooms.number">Room number</label>
+			<label index="tx_wseevents_rooms.seats">Number of seats</label>
+			<label index="tx_wseevents_rooms.location">Location</label>
+			<label index="tx_wseevents_timeslots">WSE Timeslots</label>
+			<label index="tx_wseevents_timeslots.event">Name of event</label>
+			<label index="tx_wseevents_timeslots.eventday">Day of event</label>
+			<label index="tx_wseevents_timeslots.name">Name of time slot</label>
+			<label index="tx_wseevents_timeslots.begin">Begin of session</label>
+			<label index="tx_wseevents_timeslots.length">Length of session</label>
+			<label index="tx_wseevents_timeslots.sessions">Name of session</label>
+			<label index="tx_wseevents_timeslots.nosessions">- no session planned -</label>
+			<label index="tx_wseevents_sessions">WSE Sessions</label>
+			<label index="tx_wseevents_sessions.event">Event</label>
+			<label index="tx_wseevents_sessions.name">Session name</label>
+			<label index="tx_wseevents_sessions.speaker">Speaker</label>
+			<label index="tx_wseevents_sessions.room">Room</label>
+			<label index="tx_wseevents_sessions.timeslots">Time slots</label>
+			<label index="tx_wseevents_sessions.category">Category</label>
+			<label index="tx_wseevents_sessions.number">Session number</label>
+			<label index="tx_wseevents_sessions.teaser">Teaser text</label>
+			<label index="tx_wseevents_sessions.description">Session description</label>
+			<label index="tx_wseevents_speakers">WSE Speakers</label>
+			<label index="tx_wseevents_speakers.name">Name</label>
+			<label index="tx_wseevents_speakers.firstname">First name</label>
+			<label index="tx_wseevents_speakers.email">E-Mail address</label>
+			<label index="tx_wseevents_speakers.emailwizard">Choose E-Mail address</label>
+			<label index="tx_wseevents_speakers.country">Country of origin</label>
+			<label index="tx_wseevents_speakers.company">Company</label>
+			<label index="tx_wseevents_speakers.companylink">Link to company</label>
+			<label index="tx_wseevents_speakers.companylinkwizard">Choose link</label>
+			<label index="tx_wseevents_speakers.info">Speaker information</label>
+			<label index="tx_wseevents_speakers.image">Image</label>
+			<label index="tx_wseevents_speakerrestrictions.speaker">Speaker</label>
+			<label index="tx_wseevents_speakerrestrictions.comment">Comment</label>
+			<label index="tx_wseevents_speakerrestrictions.event">Name of event</label>
+			<label index="tx_wseevents_speakerrestrictions.eventday">Day of event</label>
+			<label index="tx_wseevents_categories">WSE Categories</label>
+			<label index="tx_wseevents_categories.name">Name of category</label>
+			<label index="tx_wseevents_categories.shortkey">Short key</label>
+			<label index="tt_content.list_type_pi1">WSE Eventmanagement</label>
+			<label index="tt_content.pi_flexform.sheet_general">General settings</label>
+			<label index="tt_content.pi_flexform.sheet_display">Display settings</label>
+			<label index="tt_content.pi_flexform.disable_rte">Disable the Rich Text Editor</label>
+			<label index="tx_wseevents.pi_flexform.dynListType">Viewmode</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.0">Session list</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.1">Session detail</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.2">Speaker list</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.3">Speaker detail</label>
+			<label index="tx_wseevents.pi_flexform.dynListType.I.4">Time slots</label>
+			<label index="tx_wseevents.pi_flexform.eventStorage">Event storage</label>
+			<label index="tx_wseevents.pi_flexform.commonStorage">Common storage</label>
+			<label index="tx_wseevents.pi_flexform.singleSession">Session single view page</label>
+			<label index="tx_wseevents.pi_flexform.singleSpeaker">Speaker single view page</label>
+			<label index="tx_wseevents.pi_flexform.lastnameFirst">Lastname, Firstname</label>
+			<label index="tx_wseevents.pi_flexform.sorting">Field to be sorted</label>
+		</languageKey>
+	</orig_text>
+</T3locallang>
