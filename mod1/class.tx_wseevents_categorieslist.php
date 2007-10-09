@@ -143,15 +143,26 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
-		// Get array with system languges
-		$this->syslang = t3lib_BEfunc::getSystemLanguages();
-		foreach ($this->syslang as &$thislang) {
-			$langname = explode(' ', $thislang[0]);
-			$thislang[0] = $langname[0];
+		// Get list of pid 
+		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
+		// Check if sub pages available and remove main page from list
+		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
+			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
+		}
+		// Remove pages with eveent data
+		$commonPids = $this->removeEventPages($this->selectedPids);
+		// Get page titles
+		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
+		// Get the where clause
+		$wherePid = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids).')';
+
+		// Add icon for new record
+		if (!empty($commonPids)) {
+			$content .= $this->getNewIconList($commonPids,$this->selectedPidsTitle);
 		}
 
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0';
+		$queryWhere = $wherePid.' AND deleted=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey,sys_language_uid';
@@ -167,12 +178,16 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 			$limit);
 
 		if ($res) {
+			$found = false;
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$found = true;
 				$uid = $row['uid'];
 				$hidden = $row['hidden'];
 				if ($row['sys_language_uid']==0) {
+					$shortkey = substr($row['shortkey'],0,3);
 					$imglang = $this->syslang[0][0];
 				} else {
+					$shortkey = '';
 					$imglang = '';
 					foreach ($this->syslang as $thislang) {
 						if ($row['sys_language_uid'] == $thislang[1]) {
@@ -188,7 +203,7 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 				// Add the result row to the table array.
 				$table[] = array(
 					TAB.TAB.TAB.TAB.TAB
-						.substr($row['shortkey'],0,3).LF,
+						.$shortkey.LF,
 					TAB.TAB.TAB.TAB.TAB
 						.t3lib_div::fixed_lgd_cs(
 							$row['name'],
@@ -207,14 +222,14 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 						).LF,
 				);
 			}
+			if ($found) {
+				// Output the table array using the tableLayout array with the template
+				// class.
+				$content .= $this->page->doc->table($table, $tableLayout).'<br />'.LF;
+			} else {
+				$content .= '<br />'.$LANG->getLL('norecords').'<br /><br />'.LF;
+			}
 		}
-
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
-
-		// Output the table array using the tableLayout array with the template
-		// class.
-		$content .= $this->page->doc->table($table, $tableLayout);
-
 		return $content;
 	}
 

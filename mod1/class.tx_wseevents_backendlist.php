@@ -48,6 +48,9 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	var $selectedPids;
 	var $selectedPidsTitle;
 	
+	// List of languages
+	var $syslang;
+	
 	/**
 	 * The constructor. Sets the table name and the back-end page object.
 	 *
@@ -58,6 +61,13 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	function tx_wseevents_backendlist(&$page) {
 		$this->setTableNames();
 		$this->page =& $page;
+
+		// Get array with system languges
+		$this->syslang = t3lib_BEfunc::getSystemLanguages();
+		foreach ($this->syslang as &$thislang) {
+			$langname = explode(' ', $thislang[0]);
+			$thislang[0] = $langname[0];
+		}
 	}
 
 	
@@ -311,7 +321,7 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	function getNewIconList($pidList,$pidTitles) {
 		global $BACK_PATH, $LANG, $BE_USER;
 
-		$result = '<br /><b>'.$LANG->getLL('newRecordGeneral').'</b>&nbsp;';
+		$result = '<br /><b>'.$LANG->getLL('newrecord').'</b>&nbsp;';
 		$result .= TAB.TAB.'<div id="typo3-newRecordLink">'.LF;
 		foreach (explode(',',$pidList) as $thisPid) {
 			# the name of the table where the record should be saved to is stored in $this->tableName

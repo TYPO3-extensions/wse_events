@@ -42,9 +42,6 @@ require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backen
  */
 class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 
-	// List of languages
-	var $syslang;
-	
 	/**
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
@@ -72,13 +69,6 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 
 		// Get selected backend language of user
 		$userlang = $BE_USER->uc[moduleData][web_layout][language];
-
-		// Get array with system languges
-		$this->syslang = t3lib_BEfunc::getSystemLanguages();
-		foreach ($this->syslang as &$thislang) {
-			$langname = explode(' ', $thislang[0]);
-			$thislang[0] = $langname[0];
-		}
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -159,7 +149,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
 			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
 		}
-		// Remove pages with common data
+		// Remove pages with eveent data
 		$commonPids = $this->removeEventPages($this->selectedPids);
 		// Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
@@ -233,14 +223,14 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 						).LF,
 				);
 			}
-			// Output the table array using the tableLayout array with the template
-			// class.
 			if ($found) {
-				$content .= $this->page->doc->table($table, $tableLayout);
+				// Output the table array using the tableLayout array with the template
+				// class.
+				$content .= $this->page->doc->table($table, $tableLayout).'<br />'.LF;
+			} else {
+				$content .= '<br />'.$LANG->getLL('norecords').'<br /><br />'.LF;
 			}
 		}
-
-
 		return $content;
 	}
 

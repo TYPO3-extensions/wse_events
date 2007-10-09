@@ -248,13 +248,6 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			}
 		}
 		
-		// Get array with system languges
-		$this->syslang = t3lib_BEfunc::getSystemLanguages();
-		foreach ($this->syslang as &$thislang) {
-			$langname = explode(' ', $thislang[0]);
-			$thislang[0] = $langname[0];
-		}
-
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
 		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
@@ -300,7 +293,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			$orderBy = 'category,number,name';
 			$limit = '';
 
-			// Get list of all time slots
+			// Get list of all sessions
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'*',
 				$this->tableName,
@@ -324,7 +317,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 					$orderBy = 'sys_language_uid';
 					$limit = '';
 
-					// Get list of all time slots
+					// Get list of all translated sessions
 					$reslang = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 						'*',
 						$this->tableName,

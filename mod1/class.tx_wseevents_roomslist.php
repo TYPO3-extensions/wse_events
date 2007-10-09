@@ -131,12 +131,27 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
+		// Get list of pid 
+		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
+		// Check if sub pages available and remove main page from list
+		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
+			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
+		}
+		// Remove pages with event data
+		$commonPids = $this->removeEventPages($this->selectedPids);
+		// Get page titles
+		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
+		// Get the where clause
+		$wherePid = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids).')';
+
 		// Add icon for new record
-		$content .= $this->getNewIcon($this->page->pageInfo['uid']);
+		if (!empty($commonPids)) {
+			$content .= $this->getNewIconList($commonPids,$this->selectedPidsTitle);
+		}
 
 		// -------------------- Get list of locations --------------------
 		// Initialize variables for the database query.
-		$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -167,10 +182,10 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 		// Get list of rooms for an location
 		foreach ($locations as $location) {
 			// Show name of location
-			$content .= '<b>'.$LANG->getLL('rooms.location').' '.$location['name'].'</b><br />';
+			$content .= '<span style="font-size:1.2em"><b>'.$LANG->getLL('rooms.location').' '.$location['name'].'</b></span>';
 
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$this->page->pageInfo['uid'].' AND location='.$location['uid'].' AND deleted=0 AND sys_language_uid=0';
+			$queryWhere = $wherePid.' AND location='.$location['uid'].' AND deleted=0 AND sys_language_uid=0';
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'name';
@@ -189,7 +204,9 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 			$table = $tableheader;
 			
 			if ($res) {
+				$found = false;
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$found = true;
 					$uid = $row['uid'];
 					$hidden = $row['hidden'];
 					// Add the result row to the table array.
@@ -210,10 +227,14 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 							).LF,
 					);
 				}
+				if ($found) {
+					// Output the table array using the tableLayout array with the template
+					// class.
+					$content .= $this->page->doc->table($table, $tableLayout).'<br />'.LF;
+				} else {
+					$content .= '<br />'.$LANG->getLL('norecords').'<br /><br />'.LF;
+				}
 			}
-			// Output the table array using the tableLayout array with the template
-			// class.
-			$content .= $this->page->doc->table($table, $tableLayout).'<br /><br />';
 		}
 
 		return $content;

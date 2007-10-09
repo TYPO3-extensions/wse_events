@@ -204,13 +204,6 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
 
-		// Get array with system languges
-		$this->syslang = t3lib_BEfunc::getSystemLanguages();
-		foreach ($this->syslang as &$thislang) {
-			$langname = explode(' ', $thislang[0]);
-			$thislang[0] = $langname[0];
-		}
-
 		// Get list of pid 
 		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
 		// Check if sub pages available and remove main page from list

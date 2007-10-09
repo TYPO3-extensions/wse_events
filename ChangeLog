@@ -1,4 +1,8 @@
 2007-10-08
+	* Show common data from sub pages, if available.
+	* Changed localization files from php to xml format.
+
+2007-10-08
 	* Show event data from sub pages, if available.
 
 2007-10-06

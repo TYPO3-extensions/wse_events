@@ -111,7 +111,7 @@ class tx_wseevents_tcemainprocdm {
 	 * @param	array		$this: ToDo: insert description
 	 * @return	void		...
 	 */
-    function processDatamap_preProcessFieldArray ($incomingFieldArray, $table, $id, $this) {
+    function processDatamap_preProcessFieldArray ($incomingFieldArray, $table, $id, &$reference) {
         if ($table == 'tx_wseevents_timeslots') {
 			// Set the default slot length
 # ToDo: Get the default slot length from event record

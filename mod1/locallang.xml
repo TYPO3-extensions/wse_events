@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
 	<meta type="array">
 		<type>module</type>
@@ -6,6 +6,153 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="title">WSE Events</label>
+			<label index="language">Language</label>
+			<label index="norecords">No records defined</label>
+			<label index="event">Event:</label>
+			<label index="newrecord">Create new record in sys folder</label>
+			<label index="function1">Event data</label>
+			<label index="subModuleTitle_time_slots">Time slots</label>
+			<label index="timeslots.id">Id</label>
+			<label index="timeslots.name">Name of slot</label>
+			<label index="timeslots.eventday">Day</label>
+			<label index="timeslots.room">Room</label>
+			<label index="timeslots.allrooms">All rooms</label>
+			<label index="timeslots.begin">Begin</label>
+			<label index="timeslots.length">Length</label>
+			<label index="subModuleTitle_sessions">Sessions</label>
+			<label index="sessions.info">Note: Calculating of possible time slots is done before editing a session record. If you add or remove a speaker, save the session and edit it again to recalculate the possible time slots with the speaker restrictions. </label>
+			<label index="sessions.category">Cat.Num</label>
+			<label index="sessions.name">Name of session</label>
+			<label index="sessions.timeslots">Slots</label>
+			<label index="subModuleTitle_speaker_restrictions">Speaker restrictions</label>
+			<label index="speakers.speaker">Speaker</label>
+			<label index="speakers.eventday">Event day</label>
+			<label index="speakers.begin">Begin</label>
+			<label index="speakers.end">End</label>
+			<label index="subModuleTitle_events">Events</label>
+			<label index="events.name">Name of event</label>
+			<label index="events.begin">First day</label>
+			<label index="events.length">Days</label>
+			<label index="events.timebegin">Begin</label>
+			<label index="events.timeend">End</label>
+			<label index="function2">Common data</label>
+			<label index="subModuleTitle_locations">Locations</label>
+			<label index="locations.name">Name of location</label>
+			<label index="subModuleTitle_rooms">Rooms</label>
+			<label index="rooms.name">Name of room</label>
+			<label index="rooms.location">Location:</label>
+			<label index="subModuleTitle_speakers">Speaker</label>
+			<label index="speakers.name">Name of Speaker</label>
+			<label index="speakers.firstname">Firstname</label>
+			<label index="subModuleTitle_categories">Categories</label>
+			<label index="categories.shortkey">Shortkey</label>
+			<label index="categories.name">Name of Category</label>
+			<label index="function3">Session planning</label>
+			<label index="not_implemented">Editing is currently not implemented. Use the Web-&gt;List module instead to edit the data records.</label>
+		</languageKey>
+		<languageKey index="nl" type="array">
+			<label index="title">WSE Events</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="title">WSE Events</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">WSE Veranstaltungen</label>
+			<label index="language">Sprache</label>
+			<label index="norecords">Keine Datensätze vorhanden</label>
+			<label index="event">Veranstaltung:</label>
+			<label index="newrecord">Neuen Datensatz in Systemordner anlegen</label>
+			<label index="function1">Veranstaltungsdaten</label>
+			<label index="subModuleTitle_time_slots">Vortragszeiten</label>
+			<label index="timeslots.id">Id</label>
+			<label index="timeslots.name">Vortragszeit</label>
+			<label index="timeslots.eventday">Tag</label>
+			<label index="timeslots.room">Raum</label>
+			<label index="timeslots.allrooms">Alle Räume</label>
+			<label index="timeslots.begin">Anfang</label>
+			<label index="timeslots.length">Länge</label>
+			<label index="subModuleTitle_sessions">Vorträge</label>
+			<label index="sessions.info">Notiz: Die Berechnung der möglichen Vortragszeiten erfolgt vor dem Bearbeiten eines Vortragsdatensatzes. Wenn Sie einen Sprecher hinzufügen oder löschen, speichern Sie den Datensatz und Bearbeiten ihn erneut damit die möglichen Vortagszeiten neu berechnet werden.</label>
+			<label index="sessions.category">Kat.Num</label>
+			<label index="sessions.name">Name des Vortrags</label>
+			<label index="sessions.timeslots">Slots</label>
+			<label index="subModuleTitle_speaker_restrictions">Referenten Beschränkungen</label>
+			<label index="speakers.speaker">Referenten</label>
+			<label index="speakers.eventday">Veranst. Tag</label>
+			<label index="speakers.begin">Anfang</label>
+			<label index="speakers.end">Ende</label>
+			<label index="subModuleTitle_events">Veranstaltungen</label>
+			<label index="events.name">Name der Veranstaltung</label>
+			<label index="events.begin">Erster Tag</label>
+			<label index="events.length">Tage</label>
+			<label index="events.timebegin">Anfang</label>
+			<label index="events.timeend">Ende</label>
+			<label index="function2">Gemeinsame Daten</label>
+			<label index="subModuleTitle_locations">Veranstaltungsorte</label>
+			<label index="locations.name">Name des Veranstaltungsortes</label>
+			<label index="subModuleTitle_rooms">Räume</label>
+			<label index="rooms.name">Name des Raums</label>
+			<label index="rooms.location">Veranstaltungsort:</label>
+			<label index="subModuleTitle_speakers">Referenten</label>
+			<label index="speakers.name">Name des Referenten</label>
+			<label index="speakers.firstname">Vorname</label>
+			<label index="subModuleTitle_categories">Kategorien</label>
+			<label index="categories.shortkey">Kurzbezeichnung</label>
+			<label index="categories.name">Name der Kategorie</label>
+			<label index="function3">Veranstaltungsplanung</label>
+			<label index="not_implemented">Die Bearbeitung ist zur Zeit noch nicht implementiert. Benutzen Sie das Web-&gt;List Modul stattdessen um die Datensätze zu Bearbeiten.</label>
+		</languageKey>
+	</data>
+	<orig_hash type="array">
+		<languageKey index="de" type="array">
+			<label index="title" type="integer">135883494</label>
+			<label index="language" type="integer">77154959</label>
+			<label index="norecords" type="integer">89829399</label>
+			<label index="event" type="integer">261575777</label>
+			<label index="function1" type="integer">4814066</label>
+			<label index="subModuleTitle_time_slots" type="integer">147000660</label>
+			<label index="timeslots.id" type="integer">76589678</label>
+			<label index="timeslots.name" type="integer">113428640</label>
+			<label index="timeslots.eventday" type="integer">3614636</label>
+			<label index="timeslots.room" type="integer">214150095</label>
+			<label index="timeslots.allrooms" type="integer">54309742</label>
+			<label index="timeslots.begin" type="integer">27289385</label>
+			<label index="timeslots.length" type="integer">195209670</label>
+			<label index="subModuleTitle_sessions" type="integer">178015084</label>
+			<label index="sessions.info" type="integer">23021595</label>
+			<label index="sessions.category" type="integer">60420087</label>
+			<label index="sessions.name" type="integer">9596280</label>
+			<label index="sessions.timeslots" type="integer">257374934</label>
+			<label index="subModuleTitle_speaker_restrictions" type="integer">106345392</label>
+			<label index="speakers.speaker" type="integer">36488799</label>
+			<label index="speakers.eventday" type="integer">16738594</label>
+			<label index="speakers.begin" type="integer">27289385</label>
+			<label index="speakers.end" type="integer">141907953</label>
+			<label index="subModuleTitle_events" type="integer">142581619</label>
+			<label index="events.name" type="integer">76589815</label>
+			<label index="events.begin" type="integer">133731522</label>
+			<label index="events.length" type="integer">243301692</label>
+			<label index="events.timebegin" type="integer">27289385</label>
+			<label index="events.timeend" type="integer">141907953</label>
+			<label index="function2" type="integer">49114996</label>
+			<label index="subModuleTitle_locations" type="integer">250336056</label>
+			<label index="locations.name" type="integer">51589340</label>
+			<label index="subModuleTitle_rooms" type="integer">124352551</label>
+			<label index="rooms.name" type="integer">234399222</label>
+			<label index="rooms.location" type="integer">199837335</label>
+			<label index="subModuleTitle_speakers" type="integer">36488799</label>
+			<label index="speakers.name" type="integer">11588925</label>
+			<label index="speakers.firstname" type="integer">4290288</label>
+			<label index="subModuleTitle_categories" type="integer">183613834</label>
+			<label index="categories.shortkey" type="integer">145629827</label>
+			<label index="categories.name" type="integer">38340583</label>
+			<label index="function3" type="integer">18142970</label>
+			<label index="not_implemented" type="integer">110800253</label>
+		</languageKey>
+	</orig_hash>
+	<orig_text type="array">
+		<languageKey index="de" type="array">
 			<label index="title">WSE Events</label>
 			<label index="language">Language</label>
 			<label index="norecords">No records defined</label>
@@ -48,58 +195,7 @@
 			<label index="categories.shortkey">Shortkey</label>
 			<label index="categories.name">Name of Category</label>
 			<label index="function3">Session planning</label>
-			<label index="not_implemented">Editing is currently not implemented. Use the Web->List module instead to edit the data records.</label>
+			<label index="not_implemented">Editing is currently not implemented. Use the Web-&gt;List module instead to edit the data records.</label>
 		</languageKey>
-		<languageKey index="nl" type="array">
-			<label index="title">WSE Events</label>
-		</languageKey>
-		<languageKey index="fr" type="array">
-			<label index="title">WSE Events</label>
-		</languageKey>
-		<languageKey index="de" type="array">
-			<label index="title">WSE Veranst.</label>
-			<label index="language">Sprache</label>
-			<label index="norecords">Keine Datensätze vorhanden</label>
-			<label index="event">Veranstaltung:</label>
-			<label index="function1">Veranstaltungsdaten</label>
-			<label index="subModuleTitle_time_slots">Vortragszeiten</label>
-			<label index="timeslots.id">Id</label>
-			<label index="timeslots.name">Vortragszeit</label>
-			<label index="timeslots.eventday">Tag</label>
-			<label index="timeslots.room">Raum</label>
-			<label index="timeslots.allrooms">Alle Räume</label>
-			<label index="timeslots.begin">Anfang</label>
-			<label index="timeslots.length">Längee</label>
-			<label index="subModuleTitle_sessions">Vorträge</label>
-			<label index="sessions.info">Notiz: Die Berechnung der möglichen Vortragszeiten erfolgt vor dem Bearbeiten eines Vortragsdatensatzes. Wenn Sie einen Sprecher hinzufügen oder löschen, speichern Sie den Datensatz und Bearbeiten ihn erneut damit die möglichen Vortagszeiten neu berechnet werden.</label>
-			<label index="sessions.category">Kat.Num</label>
-			<label index="sessions.name">Name des Vortrags</label>
-			<label index="sessions.timeslots">Slots</label>
-			<label index="subModuleTitle_speaker_restrictions">Referenten Beschränkungen</label>
-			<label index="speakers.speaker">Referenten</label>
-			<label index="speakers.eventday">Veranst. Tag</label>
-			<label index="speakers.begin">Anfang</label>
-			<label index="speakers.end">Ende</label>
-			<label index="subModuleTitle_events">Veranstaltungen</label>
-			<label index="events.name">Name der Veranstaltung</label>
-			<label index="events.begin">Erster Tag</label>
-			<label index="events.length">Tage</label>
-			<label index="events.timebegin">Anfang</label>
-			<label index="events.timeend">Ende</label>
-			<label index="function2">Gemeinsame Daten</label>
-			<label index="subModuleTitle_locations">Veranstaltungsorte</label>
-			<label index="locations.name">Name des Veranstaltungsortes</label>
-			<label index="subModuleTitle_rooms">Räume</label>
-			<label index="rooms.name">Name des Raums</label>
-			<label index="rooms.location">Veranstaltungsort:</label>
-			<label index="subModuleTitle_speakers">Referenten</label>
-			<label index="speakers.name">Name des Referenten</label>
-			<label index="speakers.firstname">Vorname</label>
-			<label index="subModuleTitle_categories">Kategorien</label>
-			<label index="categories.shortkey">Kurzbezeichnung</label>
-			<label index="categories.name">Name der Kategorie</label>
-			<label index="function3">Veranstaltungsplanung</label>
-			<label index="not_implemented">Die Bearbeitung ist zur Zeit noch nicht implementiert. Benutzen Sie das Web->List Modul stattdessen um die Datensätze zu Bearbeiten.</label>
-		</languageKey>
-	</data>
+	</orig_text>
 </T3locallang>
