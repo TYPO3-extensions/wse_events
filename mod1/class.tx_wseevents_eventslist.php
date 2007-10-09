@@ -78,7 +78,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 										$BACK_PATH,
 										'gfx/'.$thislang[2],
 										'width="20" height="14"')
-									.' alt="'.$thislang[0].'">'.$thislang[0];
+									.' alt="'.$thislang[0].'"> '.$thislang[0];
 				}
 			}
 			
@@ -91,7 +91,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 					$BE_USER->uc['titleLen']
 				).LF,
 			TAB.TAB.TAB.TAB.TAB
-				.strftime($conf['strftime'], $row['begin']).LF,
+				.strftime($this->conf['strftime'], $row['begin']).LF,
 			TAB.TAB.TAB.TAB.TAB
 				.$row['length'].LF,
 			TAB.TAB.TAB.TAB.TAB
@@ -198,10 +198,10 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		);
 
 		# Get date format for selected language
-		if (!$conf[$index.'.']['fmtDate']){
-			$conf['strftime'] = '%d.%m.%Y';
+		if (!$this->conf[$index.'.']['fmtDate']){
+			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$index.'.']['fmtDate'];
 		}
 
 		// Get list of pid 

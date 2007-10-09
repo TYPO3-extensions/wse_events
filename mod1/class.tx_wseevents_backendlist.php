@@ -51,8 +51,12 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	// List of languages
 	var $syslang;
 	
+	// Configuration
+	var $conf;
+	
 	/**
 	 * The constructor. Sets the table name and the back-end page object.
+	 * Loads an array with system languages.
 	 *
 	 * @param	object		the current back-end page object
 	 * @return	void		...

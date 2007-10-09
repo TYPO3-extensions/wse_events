@@ -85,7 +85,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 										$BACK_PATH,
 										'gfx/'.$thislang[2],
 										'width="20" height="14"')
-									.' alt="'.$thislang[0].'">'.$thislang[0];
+									.' alt="'.$thislang[0].'"> '.$thislang[0];
 				}
 			}
 			
