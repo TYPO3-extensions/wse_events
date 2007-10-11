@@ -162,7 +162,7 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 		}
 
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.' AND deleted=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey,sys_language_uid';
@@ -222,6 +222,7 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 						).LF,
 				);
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			if ($found) {
 				// Output the table array using the tableLayout array with the template
 				// class.

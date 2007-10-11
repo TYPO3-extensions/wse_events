@@ -226,7 +226,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of categories --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.$thisPage.t3lib_BEfunc::deleteClause($this->tableCategories).' AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey';
@@ -250,7 +250,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).' AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -287,7 +287,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 //			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
 
 			// Initialize variables for the database query.
-			$queryWhere = $wherePid.' AND event='.$event['uid'].' AND deleted=0 AND sys_language_uid=0';
+			$queryWhere = $wherePid.' AND event='.$event['uid'].t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'category,number,name';

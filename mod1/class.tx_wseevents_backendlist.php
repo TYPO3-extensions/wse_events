@@ -107,7 +107,7 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'uid',
 			'pages',
-			'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($parentUid).') AND deleted=0 '
+			'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($parentUid).') '.t3lib_BEfunc::deleteClause('pages')
 			);
 		if($depth > 0){
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
@@ -129,7 +129,7 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 		$resultList = $pageList;
 		foreach (explode(',',$pageList) as $thisPage) {
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$thisPage.' AND deleted=0';
+			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableLocations);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'uid';
@@ -164,7 +164,7 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 		$resultList = $pageList;
 		foreach (explode(',',$pageList) as $thisPage) {
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$thisPage.' AND deleted=0';
+			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableEvents);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'uid';

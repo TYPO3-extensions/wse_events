@@ -156,7 +156,7 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 		}
 
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.' AND deleted=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';

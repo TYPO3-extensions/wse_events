@@ -162,7 +162,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 		}
 
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.' AND deleted=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name,firstname,sys_language_uid';

@@ -281,9 +281,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$select_item .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
 		}
+		
 		// Get list of categories
 		// Make query, pass query to SQL database:
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wseevents_categories', 'deleted=0 AND hidden=0 AND sys_language_uid=0', '', 'shortkey');
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wseevents_categories', 'sys_language_uid=0'.$this->cObj->enableFields('tx_wseevents_categories'), '', 'shortkey');
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				if (!t3lib_div::inList($hidecat,$row['uid'])) {
@@ -1497,7 +1498,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 		if ($index<>0) {
 			// for the name of a session, check if a translation is there
-			$where = 'deleted=0 AND hidden=0 AND l18n_parent='.$fUid.' AND sys_language_uid='.$index;
+			$where = 'l18n_parent='.$fUid.' AND sys_language_uid='.$index.$this->cObj->enableFields($dbname);
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($fN, $dbname, $where);
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			$datacount = $row[$fN];
@@ -1505,7 +1506,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $datacount;
 			} else {
 				// no translation get the field content from the default record
-				$where = 'deleted=0 AND hidden=0 AND uid='.$fUid;
+				$where = 'uid='.$fUid.$this->cObj->enableFields($dbname);
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($fN, $dbname, $where);
 				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 				$datacount = $row[$fN];
@@ -1514,7 +1515,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			//show default language
 //			return $this->internal['currentRow'][$fN];
-			$where = 'deleted=0 AND hidden=0 AND uid='.$fUid;
+			$where = 'uid='.$fUid.$this->cObj->enableFields($dbname);
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($fN, $dbname, $where);
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			$datacount = $row[$fN];
@@ -1542,7 +1543,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$index = $GLOBALS['TSFE']->sys_language_uid;
 		if ($index<>0) {
 			// for the name of a session, check if a translation is there
-			$where = 'deleted=0 AND hidden=0 AND l18n_parent='.$rowuid.' AND sys_language_uid='.$index;
+			$where = 'l18n_parent='.$rowuid.' AND sys_language_uid='.$index.$this->cObj->enableFields('tx_wseevents_categories');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('name', 'tx_wseevents_categories', $where);
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			$datacount = $row['name'];
@@ -1571,7 +1572,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	string		comma seperated list of sessions for the speaker
 	 */
 	function getSpeakerSessionList($speakerid,$eventPid) {
-		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0';
+		$where = 'sys_language_uid=0'.$this->cObj->enableFields('tx_wseevents_sessions');
 		$this->conf['pidList'] = $eventPid;
 #		$res = $this->pi_exec_query('tx_wseevents_sessions',0,$where);
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('speaker, uid', 'tx_wseevents_sessions', $where);
@@ -1619,7 +1620,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	array		record data of event
 	 */
 	function getEventInfo($event) {
-		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$event;
+		$where = 'sys_language_uid=0 AND uid='.$event.$this->cObj->enableFields('tx_wseevents_events');
 		$this->conf['pidList'] = $eventPid;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('name,location,begin,length,timebegin,timeend,slotsize,maxslot,defslotcount', 'tx_wseevents_events', $where);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -1634,7 +1635,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	array		record data of location
 	 */
 	function getLocationInfo($loc_id) {
-		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$loc_id;
+		$where = 'sys_language_uid=0 AND uid='.$loc_id.$this->cObj->enableFields('tx_wseevents_locations');
 		$this->conf['pidList'] = $eventPid;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('name,website,comment', 'tx_wseevents_locations', $where);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -1649,7 +1650,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	array		array with record data of all rooms of a location
 	 */
 	function getRoomInfo($loc_id) {
-		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND location='.$loc_id;
+		$where = 'sys_language_uid=0 AND location='.$loc_id.$this->cObj->enableFields('tx_wseevents_rooms');
 		$this->conf['pidList'] = $eventPid;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,name,comment,seats', 'tx_wseevents_rooms', $where);
 		$id = 1;
@@ -1671,7 +1672,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	integer		id of slot if a slot is found
 	 */
 	function getSlot($event, $day, $room, $slot) {
-		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND event='.$event.' AND eventday='.$day.' AND room='.$room.' AND begin='.$slot;
+		$where = 'sys_language_uid=0 AND event='.$event.' AND eventday='.$day.' AND room='.$room.' AND begin='.$slot.$this->cObj->enableFields('tx_wseevents_timeslots');
 		$this->conf['pidList'] = $eventPid;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'tx_wseevents_timeslots', $where);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -1686,7 +1687,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	integer		length of a time slot
 	 */
 	function getSlotLength($slot_id) {
-		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND uid='.$slot_id;
+		$where = 'sys_language_uid=0 AND uid='.$slot_id.$this->cObj->enableFields('tx_wseevents_timeslots');
 		$this->conf['pidList'] = $eventPid;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('length', 'tx_wseevents_timeslots', $where);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -1702,7 +1703,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	array		array with record of session data
 	 */
 	function getSlotSession($slot_id) {
-		$where = 'deleted=0 AND hidden=0 AND sys_language_uid=0';
+		$where = 'sys_language_uid=0'.$this->cObj->enableFields('tx_wseevents_sessions');
 		$this->conf['pidList'] = $eventPid;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,name,category,number,teaser,timeslots', 'tx_wseevents_sessions', $where);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {

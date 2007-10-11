@@ -203,7 +203,7 @@ class tx_wseevents_events {
 		if ($event>0) {
 			$queryWhere = 'uid='.$event;
 		} else {
-			$queryWhere = '';
+			$queryWhere = '0=0'.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -236,7 +236,7 @@ class tx_wseevents_events {
 		if ($event>0) {
 			$queryWhere = 'uid='.$event;
 		} else {
-			$queryWhere = '';
+			$queryWhere = '0=0'.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$additionalTables = '';
 		$groupBy = '';
@@ -301,7 +301,7 @@ class tx_wseevents_events {
 		if ($event>0) {
 			$queryWhere = 'uid='.$event;
 		} else {
-			$queryWhere = '';
+			$queryWhere = '0=0'.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$additionalTables = '';
 		$groupBy = '';
@@ -381,7 +381,7 @@ class tx_wseevents_events {
 		if ($event>0) {
 			$queryWhere = 'uid='.$event;
 		} else {
-			$queryWhere = '';
+			$queryWhere = '0=0'.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$groupBy = '';
 		$orderBy = 'uid';

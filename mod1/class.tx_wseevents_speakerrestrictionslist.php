@@ -167,7 +167,7 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of speakers --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableSpeakers).' AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -191,7 +191,7 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.' AND deleted=0 AND sys_language_uid=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).' AND sys_language_uid=0';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -229,7 +229,7 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 			$slots = tx_wseevents_events::getEventSlotlist($event['uid']);
 
 			// Initialize variables for the database query.
-			$queryWhere = $wherePid.' AND event='.$event['uid'].' AND deleted=0';
+			$queryWhere = $wherePid.' AND event='.$event['uid'].t3lib_BEfunc::deleteClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'speaker,eventday';

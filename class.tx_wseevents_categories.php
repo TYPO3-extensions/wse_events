@@ -92,7 +92,7 @@ class tx_wseevents_categories {
 		// --------------------- Get the list of speakers ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_categories';
-		$queryWhere = 'deleted=0 AND sys_language_uid=0';
+		$queryWhere = 'sys_language_uid=0'.t3lib_BEfunc::BEenableFields($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey';

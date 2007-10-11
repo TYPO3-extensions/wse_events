@@ -228,7 +228,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 //			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
 
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$eventPid.' AND deleted=0 AND sys_language_uid=0';
+			$queryWhere = 'pid='.$eventPid.t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'name';

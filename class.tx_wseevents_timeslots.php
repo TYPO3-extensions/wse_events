@@ -160,7 +160,7 @@ class tx_wseevents_timeslots {
 		if ($eventid>0) {
 			// Get list of all time slots for the event
 			$tableName = 'tx_wseevents_timeslots';
-			$queryWhere = 'deleted=0 AND hidden=0 AND sys_language_uid=0 AND event='.$eventid;
+			$queryWhere = 'sys_language_uid=0 AND event='.$eventid.t3lib_BEfunc::BEenableFields($tableName);
 			$groupBy = '';
 			$orderBy = 'eventday,begin,room';
 			$limit = '';
