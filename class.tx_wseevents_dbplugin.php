@@ -92,6 +92,14 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/** The front-end user who currently is logged in. */
 	var $feuser = null;
 
+	var $pageOverlays = array();			// Contains page translation languages
+	var $languageIconTitles = array();		// Contains sys language icons and titles
+
+	var $id;								// Page id
+	var $script = 'db_list.php';			// Current script name
+
+	var $backPath = '';
+	
 	/**
 	 * Dummy constructor: Does nothing.
 	 *
@@ -118,6 +126,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @access protected
 	 */
 	function init($conf = null) {
+		global $BACK_PATH;
+		
 		static $cachedConfigs = array();
 
 		if (!$this->isInitialized) {
@@ -125,6 +135,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 				$GLOBALS['TSFE']->config['config'] = array();
 			}
 
+			$this->backPath = $BACK_PATH;
+			
 			// call the base classe's constructor manually as this isn't done automatically
 			parent::tslib_pibase();
 
@@ -498,6 +510,105 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 			$noVersionPreview
 		);
 	}
+
+	/**
+	 * Initializes page languages and icons
+	 *
+	 * @return	void
+	 */
+	function initializeLanguages($pageId)	{
+		global $TCA,$LANG,$BACK_PATH;
+		
+			// Look up page overlays:
+		$this->pageOverlays = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'*',
+			'pages_language_overlay',
+			'pid='.intval($pageId).
+				t3lib_BEfunc::deleteClause('pages_language_overlay').
+				t3lib_BEfunc::versioningPlaceholderClause('pages_language_overlay'),
+			'',
+			'',
+			'',
+			'sys_language_uid'
+		);
+
+		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
+		$this->languageIconTitles = $t8Tools->getSystemLanguages($pageId, $BACK_PATH);
+	}
+
+	/**
+	 * Return the icon for the language
+	 *
+	 * @param	integer		Sys language uid
+	 * @return	string		Language icon
+	 */
+	function languageFlag($sys_language_uid)	{
+		return ($this->languageIconTitles[$sys_language_uid]['flagIcon'] ? '<img src="'.$this->languageIconTitles[$sys_language_uid]['flagIcon'].'" class="absmiddle" alt="" />&nbsp;' : '').
+				htmlspecialchars($this->languageIconTitles[$sys_language_uid]['title']);
+	}
+
+	/**
+	 * Creates the URL to this script, including all relevant GPvars
+	 *
+	 * @param	string		Alternative id value. Enter blank string for the current id ($this->id)
+	 * @return	string		URL
+	 */
+	function listURL($altId='')	{
+		return $this->script.
+			'?id='.(strcmp($altId,'')?$altId:$this->id);
+	}
+
+	/**
+	 * Creates the localization panel
+	 *
+	 * @param	string		The table
+	 * @param	array		The record for which to make the localization panel.
+	 * @return	array		Array with key 0/1 with content for column 1 and 2
+	 */
+	function makeLocalizationPanel($table,$row)	{
+		global $TCA, $LANG;
+
+#debug($TCA[$table],'TCA['.$table.']');
+
+		$out = array(
+			0 => '',
+			1 => '',
+		);
+		
+		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
+		$translations = $t8Tools->translationInfo($table,$row['uid']);
+
+			// Language title and icon:
+		$out[0] = $this->languageFlag($row[$TCA[$table]['ctrl']['languageField']]);
+
+		if (is_array($translations))	{
+
+				// Traverse page translations and add icon for each language that does NOT yet exist:
+			$lNew = '';
+			foreach($this->pageOverlays as $lUid_OnPage => $lsysRec)	{
+				if (!isset($translations['translations'][$lUid_OnPage]) && $GLOBALS['BE_USER']->checkLanguageAccess($lUid_OnPage))	{
+					$href = $GLOBALS['TBE_TEMPLATE']->issueCommand(
+						'&cmd['.$table.']['.$row['uid'].'][localize]='.$lUid_OnPage,
+						$this->listURL().'&justLocalized='.rawurlencode($table.':'.$row['uid'].':'.$lUid_OnPage)
+						.'&returnUrl='.t3lib_div::getIndpEnv('REQUEST_URI')
+					);
+
+					$lC = ($this->languageIconTitles[$lUid_OnPage]['flagIcon'] ? '<img src="'.$this->languageIconTitles[$lUid_OnPage]['flagIcon'].'" class="absmiddle" alt="" />' : $this->languageIconTitles[$lUid_OnPage]['title']);
+					$lC = '<a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'typo3/'.htmlspecialchars($href).'">'.$lC.'</a> ';
+
+					$lNew.=$lC;
+				}
+			}
+			
+			if ($lNew)	$out[1].= $lNew;
+		} else {
+			$out[0] = '&nbsp;&nbsp;&nbsp;&nbsp;'.$out[0];
+		}
+		
+
+		return $out;
+	}
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_dbplugin.php']) {

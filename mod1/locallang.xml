@@ -8,6 +8,7 @@
 		<languageKey index="default" type="array">
 			<label index="title">WSE Events</label>
 			<label index="language">Language</label>
+			<label index="translate">Translate</label>
 			<label index="norecords">No records defined</label>
 			<label index="event">Event:</label>
 			<label index="newrecord">Create new record in sys folder</label>
@@ -60,6 +61,7 @@
 		<languageKey index="de" type="array">
 			<label index="title">WSE Veranstaltungen</label>
 			<label index="language">Sprache</label>
+			<label index="translate">Übersetzung</label>
 			<label index="norecords">Keine Datensätze vorhanden</label>
 			<label index="event">Veranstaltung:</label>
 			<label index="newrecord">Neuen Datensatz in Systemordner anlegen</label>

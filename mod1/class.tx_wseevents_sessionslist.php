@@ -56,8 +56,13 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 	 * @return	void		...
 	 */
 	function tx_wseevents_sessionslist(&$page) {
+		global $BACK_PATH;
+
 		parent::tx_wseevents_backendlist($page);
 		$this->tableName = $this->tableSessions;
+
+		$this->backPath = $BACK_PATH;
+#debug($BACK_PATH,'BACK_PATH');	
 #		$this->page = $page;
 	}
 
@@ -73,23 +78,16 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		global $BE_USER, $BACK_PATH;
 		$uid = $row['uid'];
 		$hidden = $row['hidden'];
+		
 		if ($row['sys_language_uid']==0) {
 			$catnum = $this->categories[$row['category']].sprintf ('%02d', $row['number']);
-			$imglang = $this->syslang[0][0];
 		} else {
 			$catnum = '';
-			$imglang = '';
-			foreach ($this->syslang as $thislang) {
-				if ($row['sys_language_uid'] == $thislang[1]) {
-					$imglang = '<img'.t3lib_iconWorks::skinImg(
-										$BACK_PATH,
-										'gfx/'.$thislang[2],
-										'width="20" height="14"')
-									.' alt="'.$thislang[0].'"> '.$thislang[0];
-				}
-			}
-			
 		}
+		// Get language flag
+#		$imglang = $this->languageFlag($row['sys_language_uid']);
+		list($imglang, $imgtrans) = $this->makeLocalizationPanel($this->tableName,$row);
+
 		// Add the result row to the table array.
 		$table[] = array(
 			TAB.TAB.TAB.TAB.TAB
@@ -102,16 +100,15 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			TAB.TAB.TAB.TAB.TAB
 				.$imglang.LF,
 			TAB.TAB.TAB.TAB.TAB
+				.$imgtrans.LF,
+			TAB.TAB.TAB.TAB.TAB
 				.$row['timeslots'].LF,
 			TAB.TAB.TAB.TAB.TAB
 				.$this->getEditIcon($uid).LF
 				.TAB.TAB.TAB.TAB.TAB
 				.$this->getDeleteIcon($uid).LF
 				.TAB.TAB.TAB.TAB.TAB
-				.$this->getHideUnhideIcon(
-					$uid,
-					$hidden
-				).LF,
+				.$this->getHideUnhideIcon($uid,$hidden).LF,
 		);
 	}
 	
@@ -123,7 +120,10 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $LANG, $BE_USER;
+		global $TCA, $LANG, $BE_USER;
+
+		// Loading all TCA details for this table:
+		t3lib_div::loadTCA($this->tableSessions);
 
 #debug($BE_USER);
 		// Get selected backend language of user
@@ -131,12 +131,12 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 #		debug($userlang);
 		
 		// Initialize the variable for the HTML source code with info text
-		$content = '<span style="color:red">'.$LANG->getLL('sessions.info').'</span><br />';
+		$content = $this->page->doc->rfw($LANG->getLL('sessions.info')).'<br />'.LF;
 
 		// Set the table layout of the event list.
 		$tableLayout = array(
 			'table' => array(
-				TAB.TAB.'<table cellpadding="0" cellspacing="0" class="typo3-dblist">'.LF,
+				TAB.TAB.'<table cellpadding="0" cellspacing="0" class="typo3-dblist" border="1" rules="rows">'.LF,
 				TAB.TAB.'</table>'.LF
 			),
 			array(
@@ -168,6 +168,18 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 					TAB.TAB.TAB.TAB.'<td>'.LF,
 					TAB.TAB.TAB.TAB.'</td>'.LF
 				),
+				array(
+					TAB.TAB.TAB.TAB.'<td>'.LF,
+					TAB.TAB.TAB.TAB.'</td>'.LF
+				),
+				array(
+					TAB.TAB.TAB.TAB.'<td>'.LF,
+					TAB.TAB.TAB.TAB.'</td>'.LF
+				),
+				array(
+					TAB.TAB.TAB.TAB.'<td nowrap>'.LF,
+					TAB.TAB.TAB.TAB.'</td>'.LF
+				),
 				'defCol' => array(
 					TAB.TAB.TAB.TAB.'<td>'.LF,
 					TAB.TAB.TAB.TAB.'</td>'.LF
@@ -187,6 +199,9 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('language').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('translate').'</span>'.LF,
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('sessions.timeslots').'</span>'.LF,
@@ -282,10 +297,15 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		
 		// Get list of sessions for an event
 		foreach ($events as $event) {
+			$this->id = $event['pid'];
+			
 			// Show name of event
 			$content .= '<span style="font-size:1.2em"><b>'.$LANG->getLL('event').' '.$event['name'].'</b></span>';
 //			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
 
+			// Initialize languages
+			$this->initializeLanguages($event['pid']);
+			
 			// Initialize variables for the database query.
 			$queryWhere = $wherePid.' AND event='.$event['uid'].t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
 			$additionalTables = '';
