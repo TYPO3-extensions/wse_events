@@ -73,6 +73,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'location' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.location',		
 			'config' => Array (
 				'type' => 'select',	
@@ -100,6 +101,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'begin' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.begin',
 			'config' => Array (
 				'type' => 'input',
@@ -112,6 +114,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'length' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.length',
 			'config' => Array (
 				'type' => 'input',
@@ -127,6 +130,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'timebegin' => Array (
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.timebegin',
 			'config' => Array (
 				'type' => 'input',	
@@ -136,6 +140,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'timeend' => Array (
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.timeend',
 			'config' => Array (
 				'type' => 'input',	
@@ -145,6 +150,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'slotsize' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.slotsize',
 			'config' => Array (
 				'type' => 'input',
@@ -160,6 +166,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'maxslot' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.maxslot',
 			'config' => Array (
 				'type' => 'input',
@@ -175,6 +182,7 @@ $TCA['tx_wseevents_events'] = Array (
 		),
 		'defslotcount' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.defslotcount',
 			'config' => Array (
 				'type' => 'input',
@@ -590,7 +598,8 @@ $TCA['tx_wseevents_sessions'] = Array (
 			)
 		),
 		'event' => Array (		
-			'exclude' => 1,		
+			'exclude' => 1,
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.event',		
 			'config' => Array (
 				'type' => 'select',	
@@ -603,6 +612,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 		'name' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'prefixLangTitle',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.name',		
 			'config' => Array (
 				'type' => 'input',	
@@ -621,6 +631,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 		'speaker' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.speaker',		
 			'config' => Array (
 				'type' => 'select',	
@@ -634,6 +645,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 		'timeslots' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.timeslots',
 			'config' => Array (
 				'type' => 'select',	
@@ -647,6 +659,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 		'category' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.category',		
 			'config' => Array (
 				'type' => 'select',	
@@ -660,6 +673,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 		'number' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.number',		
 			'config' => Array (
 				'type' => 'input',
@@ -676,6 +690,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 		'teaser' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'prefixLangTitle',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.teaser',		
 			'config' => Array (
 				'type' => 'text',
@@ -685,6 +700,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 		'description' => Array (		
 			'exclude' => 1,		
+			'l10n_mode' => 'prefixLangTitle',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.description',		
 			'config' => Array (
 				'type' => 'text',

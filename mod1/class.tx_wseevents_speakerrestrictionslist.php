@@ -146,12 +146,22 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		} else {
 			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
 		}
+		$secofday = 60*60*24;
 
 		// Get list of pid 
 		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
 		// Check if sub pages available and remove main page from list
 		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
 			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
+		} else {
+			// if no sub pages, get one level up
+			$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['pid'],2);
+			// remove up level page
+			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['pid'],$this->selectedPids);
+			// remove other event pages
+			$this->selectedPids = $this->removeEventPages($this->selectedPids);
+			// add this page to the list
+			$this->selectedPids .= $this->selectedPids?','.$this->page->pageInfo['uid']:$this->page->pageInfo['uid'];
 		}
 		// Remove pages with common data
 		$eventPids = $this->removeCommonPages($this->selectedPids);
@@ -212,6 +222,7 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 				$event = array();
 				$event['uid'] = $row['uid'];
 				$event['name'] = $row['name'];
+				$event['begin'] = $row['begin'];
 				$events[] = $event;
 			}
 		}
@@ -250,12 +261,15 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 					$found = true;
 					$uid = $row['uid'];
 					$hidden = $row['hidden'];
+					$eventday = $row['eventday'];
+					// Format begin day of event
+					$eventdate = strftime($conf['strftime'], ($event['begin']+($eventday-1)*$secofday));
 					// Add the result row to the table array.
 					$table[] = array(
 						TAB.TAB.TAB.TAB.TAB
 							.$speakers[$row['speaker']].LF,
 						TAB.TAB.TAB.TAB.TAB
-							.$row['eventday'].LF,
+							.$eventdate.LF,
 						TAB.TAB.TAB.TAB.TAB
 							.$slots[$row['begin']].LF,
 						TAB.TAB.TAB.TAB.TAB

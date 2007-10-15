@@ -566,7 +566,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @return	array		Array with key 0/1 with content for column 1 and 2
 	 */
 	function makeLocalizationPanel($table,$row)	{
-		global $TCA, $LANG;
+		global $TCA, $LANG, $BE_USER, $BACK_PATH;
 
 #debug($TCA[$table],'TCA['.$table.']');
 
@@ -583,14 +583,22 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 
 		if (is_array($translations))	{
 
-				// Traverse page translations and add icon for each language that does NOT yet exist:
+#			if ($BE_USER->check('tables_modify', $table)
+#				&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $row['pid']), 16)) {
+#				$params = '&edit['.$table.']['.$uid.']=edit';
+#				$returnUrl = 'returnUrl='.rawurlencode(t3lib_div::getIndpEnv('REQUEST_URI'));
+#				$editOnClick = 'alt_doc.php?'.$returnUrl.$params;
+#			}
+		
+			// Traverse page translations and add icon for each language that does NOT yet exist:
 			$lNew = '';
 			foreach($this->pageOverlays as $lUid_OnPage => $lsysRec)	{
 				if (!isset($translations['translations'][$lUid_OnPage]) && $GLOBALS['BE_USER']->checkLanguageAccess($lUid_OnPage))	{
 					$href = $GLOBALS['TBE_TEMPLATE']->issueCommand(
-						'&cmd['.$table.']['.$row['uid'].'][localize]='.$lUid_OnPage,
-						$this->listURL().'&justLocalized='.rawurlencode($table.':'.$row['uid'].':'.$lUid_OnPage)
-						.'&returnUrl='.t3lib_div::getIndpEnv('REQUEST_URI')
+						'&cmd['.$table.']['.$row['uid'].'][localize]='.$lUid_OnPage //,
+#						$editOnClick
+#						$this->listURL().'&justLocalized='.rawurlencode($table.':'.$row['uid'].':'.$lUid_OnPage)
+#						.'&returnUrl='.t3lib_div::getIndpEnv('REQUEST_URI')
 					);
 
 					$lC = ($this->languageIconTitles[$lUid_OnPage]['flagIcon'] ? '<img src="'.$this->languageIconTitles[$lUid_OnPage]['flagIcon'].'" class="absmiddle" alt="" />' : $this->languageIconTitles[$lUid_OnPage]['title']);

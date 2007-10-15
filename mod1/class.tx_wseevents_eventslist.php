@@ -66,23 +66,10 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		global $BE_USER, $BACK_PATH;
 		$uid = $row['uid'];
 		$hidden = $row['hidden'];
-		if ($row['sys_language_uid']==0) {
-			$catnum = $this->categories[$row['category']].sprintf ('%02d', $row['number']);
-			$imglang = $this->syslang[0][0];
-		} else {
-			$catnum = '';
-			$imglang = '';
-			foreach ($this->syslang as $thislang) {
-				if ($row['sys_language_uid'] == $thislang[1]) {
-					$imglang = '<img'.t3lib_iconWorks::skinImg(
-										$BACK_PATH,
-										'gfx/'.$thislang[2],
-										'width="20" height="14"')
-									.' alt="'.$thislang[0].'"> '.$thislang[0];
-				}
-			}
-			
-		}
+		// Get language flag
+		list($imglang, $imgtrans) = $this->makeLocalizationPanel($this->tableName,$row);
+		// Format begin day of event
+		$begin = ($row['begin'])?strftime($this->conf['strftime'], $row['begin']):'';
 		// Add the result row to the table array.
 		$table[] = array(
 			TAB.TAB.TAB.TAB.TAB
@@ -91,7 +78,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 					$BE_USER->uc['titleLen']
 				).LF,
 			TAB.TAB.TAB.TAB.TAB
-				.strftime($this->conf['strftime'], $row['begin']).LF,
+				.$begin.LF,
 			TAB.TAB.TAB.TAB.TAB
 				.$row['length'].LF,
 			TAB.TAB.TAB.TAB.TAB
@@ -100,6 +87,8 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 				.$row['timeend'].LF,
 			TAB.TAB.TAB.TAB.TAB
 				.$imglang.LF,
+			TAB.TAB.TAB.TAB.TAB
+				.$imgtrans.LF,
 			TAB.TAB.TAB.TAB.TAB
 				.$this->getEditIcon($uid).LF
 				.TAB.TAB.TAB.TAB.TAB
@@ -160,6 +149,10 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 					TAB.TAB.TAB.TAB.'<td>'.LF,
 					TAB.TAB.TAB.TAB.'</td>'.LF
 				),
+				array(
+					TAB.TAB.TAB.TAB.'<td>'.LF,
+					TAB.TAB.TAB.TAB.'</td>'.LF
+				),
 				'defCol' => array(
 					TAB.TAB.TAB.TAB.'<td>'.LF,
 					TAB.TAB.TAB.TAB.'</td>'.LF
@@ -188,6 +181,9 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('language').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('translate').'</span>'.LF,
 				'',
 			)
 		);
@@ -227,6 +223,9 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			$content .= '<span style="font-size:1.2em"><b>'.$this->selectedPidsTitle[$eventPid].'</b></span>';
 //			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
 
+			// Initialize languages
+			$this->initializeLanguages($eventPid);
+
 			// Initialize variables for the database query.
 			$queryWhere = 'pid='.$eventPid.t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
 			$additionalTables = '';
@@ -248,9 +247,34 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 				$table = $tableHdr;
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 					$found = true;
-					$uid = $row['uid'];
-					$hidden = $row['hidden'];
+#					$uid = $row['uid'];
+#					$hidden = $row['hidden'];
 					$this->addRowToTable($table, $row);
+
+					// Check for translations.
+					$queryWhere = $wherePid.' AND l18n_parent='.$row['uid'].t3lib_BEfunc::deleteClause($this->tableName);
+					$additionalTables = '';
+					$groupBy = '';
+					$orderBy = 'sys_language_uid';
+					$limit = '';
+
+					// Get list of all translated sessions
+					$reslang = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+						'*',
+						$this->tableName,
+						$queryWhere,
+						$groupBy,
+						$orderBy,
+						$limit);
+					if ($reslang) {
+						while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
+							$row['begin'] = '';
+							$row['length'] = '';
+							$row['timebegin'] = '';
+							$row['timeend'] = '';
+							$this->addRowToTable($table, $row);
+						}
+					}
 				}
 				if ($found) {
 					// Output the table array using the tableLayout array with the template
