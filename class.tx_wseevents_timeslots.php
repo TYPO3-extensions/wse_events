@@ -141,9 +141,34 @@ class tx_wseevents_timeslots {
 		// Get event record
 		if ($eventid==0) {
 			$queryWhere = 'pid='.$PA['row']['pid'];
-			$tableName = 'tx_wseevents_events';
+		} else {
+			$queryWhere = 'uid='.$eventid;
+		}
+		$tableName = 'tx_wseevents_events';
+		$groupBy = '';
+		$orderBy = 'uid';
+		$limit = '';
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			$tableName,
+			$queryWhere,
+			$groupBy,
+			$orderBy,
+			$limit);
+		if ($res) {
+			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$eventid = $row['uid'];
+			$location = $row['location'];
+		}
+		
+		if ($eventid>0) {
+			// Get list of room ids and numbers
+			$rooms = array();
+			$rooms[0] = 0;
+			$tableName = 'tx_wseevents_rooms';
+			$queryWhere = 'sys_language_uid=0 AND location='.$location.t3lib_BEfunc::BEenableFields($tableName);
 			$groupBy = '';
-			$orderBy = 'uid';
+			$orderBy = 'number';
 			$limit = '';
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'*',
@@ -153,11 +178,11 @@ class tx_wseevents_timeslots {
 				$orderBy,
 				$limit);
 			if ($res) {
-				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-				$eventid = $row['uid'];
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$rooms[$row['uid']] = $row['number'];
+				}
 			}
-		}
-		if ($eventid>0) {
+			
 			// Get list of all time slots for the event
 			$tableName = 'tx_wseevents_timeslots';
 			$queryWhere = 'sys_language_uid=0 AND event='.$eventid.t3lib_BEfunc::BEenableFields($tableName);
@@ -201,6 +226,7 @@ class tx_wseevents_timeslots {
 				$groupBy = '';
 				$orderBy = 'uid';
 				$limit = '';
+				// Get list of time slots from speakers of the event
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 					'*',
 					$tableName,
@@ -218,7 +244,7 @@ class tx_wseevents_timeslots {
 								}
 							}
 						}
-						// Get speaker of session and check if sama as for actual session
+						// Get speaker of session and check if same as for actual session
 						$usedspeaker = $row['speaker'];
 						if (!empty($usedspeaker)) {
 							$foundslot = false;
@@ -287,33 +313,46 @@ class tx_wseevents_timeslots {
 					}
 				}
 
+#debug($slotlist,'$slotlist');
+#debug($eventslotarray,'$eventslotarray');
 				// Now subtract the not possible slots
 				foreach ($slotlist as &$slot) {
 					if ($slot['uid']>0) {
 						// Get slot record
 						$slotrow = t3lib_BEfunc::getRecord ('tx_wseevents_timeslots', $slot['uid']);
 						for ( $s = 0; $s < $slotrow['length']; $s++ ) {
-							if ($eventslotarray[$slotrow['eventday']][$slotrow['room']][$slotrow['begin']+$s] == 0) {
-								$slot['uid'] = 0;
+							if ($slotrow['room']<>0) {
+								if ($eventslotarray[$slotrow['eventday']][$rooms[$slotrow['room']]][$slotrow['begin']+$s] == 0) {
+									$slot['uid'] = 0;
+								}
+							} else {
+								for ($r = 1; $r <= $roomcount; $r++) {
+									if ($eventslotarray[$slotrow['eventday']][$r][$slotrow['begin']+$s] == 0) {
+										$slot['uid'] = 0;
+									}
+
+								}
 							}
 						}
 					}
 				}
-#debug($eventslotarray,'$eventslotarray');
 
+#debug($slotlist,'$slotlist');
 				// Put remained slots in result array
 				$thisslot = 1;
-				foreach ($slotlist as $slot) {
-					if ($slot['uid']>0) {
+				foreach ($slotlist as $oneslot) {
+#debug($oneslot,'$oneslot');
+					if ($oneslot['uid']>0) {
 						// Add the name and id to the itemlist
 						$entry = array();
-						$entry[0] = $this->formatSlotName($slot);
-						$entry[1] = $slot['uid'];
+						$entry[0] = $this->formatSlotName($oneslot);
+						$entry[1] = $oneslot['uid'];
 						$entry[2] = '';
 						$PA['items'][] = $entry;
 						$thisslot += 1;
 					}
 				}
+#debug($PA['items'],'$PA[items]');
 
 			}
 		}

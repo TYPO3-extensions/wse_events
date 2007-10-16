@@ -44,6 +44,7 @@ if (!defined('PATH_tslib')) {
 if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_dbplugin.php');
 
 /**
  * Class 'tx_wseevents_categories' for the 'wse_events' extension.
@@ -52,10 +53,13 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
  * @subpackage	wse_events
  * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
-class tx_wseevents_categories {
+class tx_wseevents_categories extends tx_wseevents_dbplugin {
 	/** The extension key. */
 	var $extKey = 'wseevents';
 
+	// List of page ids
+	var $selectedPids;
+	
 	/**
 	 * Dummy constructor: Does nothing.
 	 *
@@ -89,10 +93,14 @@ class tx_wseevents_categories {
 #		debug ($PA);
 #		debug ($fobj);
 
-		// --------------------- Get the list of speakers ---------------------
+		// Get list of common pids
+		$thispage = t3lib_BEfunc::getRecord('pages', $PA['row']['pid']);
+		$this->selectedPids = $this->getCommonPids($PA['row']['pid'], $thispage['pid']);
+
+		// --------------------- Get the list of categories ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_categories';
-		$queryWhere = 'sys_language_uid=0'.t3lib_BEfunc::BEenableFields($tableName);
+		$queryWhere = 'sys_language_uid=0'.t3lib_BEfunc::BEenableFields($tableName).' AND pid in('.$this->selectedPids.')';
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey';

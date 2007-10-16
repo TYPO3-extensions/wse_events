@@ -400,7 +400,7 @@ $TCA['tx_wseevents_rooms'] = Array (
 			'config' => Array (
 				'type' => 'select',	
 				'foreign_table' => 'tx_wseevents_locations',	
-				'foreign_table_where' => 'ORDER BY tx_wseevents_locations.uid',	
+				'foreign_table_where' => 'AND tx_wseevents_locations.pid=###CURRENT_PID### ORDER BY tx_wseevents_locations.uid',	
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,	
@@ -471,7 +471,7 @@ $TCA['tx_wseevents_timeslots'] = Array (
 			'config' => Array (
 				'type' => 'select',	
 				'foreign_table' => 'tx_wseevents_events',	
-				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### ORDER BY tx_wseevents_events.uid',	
+				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',	
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,
@@ -958,7 +958,7 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 			'config' => Array (
 				'type' => 'select',	
 				'foreign_table' => 'tx_wseevents_events',	
-				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### ORDER BY tx_wseevents_events.uid',	
+				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.uid',	
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,

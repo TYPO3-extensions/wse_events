@@ -191,6 +191,134 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	}
 
 	/**
+	 * Generates a list of pids of all sub pages for the given depth.
+	 *
+	 * @param	integer		the pid of the page
+	 * @param	integer		the depth for the search
+	 * @return	string		the list of pids
+	 * @access public
+	 */
+	function getRecursiveUidList($parentUid,$depth){
+		if($depth != -1) {
+			$depth = $depth-1; //decreasing depth
+		}
+		# Get ressource records:
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
+			'uid',
+			'pages',
+			'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($parentUid).') '.t3lib_BEfunc::deleteClause('pages')
+			);
+		if($depth > 0){
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$parentUid .= ','.$this->getRecursiveUidList($row['uid'],$depth);
+			}
+		}
+		return $parentUid;
+	}
+
+	
+	/**
+	 * Removes all pages which have common content from pid list.
+	 *
+	 * @param	string		list with page pids
+	 * @return	string		the list of pids, without pages with common data
+	 * @access public
+	 */
+	function removeCommonPages($pageList){
+		$resultList = $pageList;
+		foreach (explode(',',$pageList) as $thisPage) {
+			// Initialize variables for the database query.
+			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableLocations);
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'uid';
+			$limit = '';
+			// Get list of all events
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'count(*)',
+				$this->tableLocations,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+			if ($res) {
+				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				if ($row['count(*)']>0) {
+					$resultList = t3lib_div::rmFromList($thisPage,$resultList);
+				}
+			}
+		}
+		return $resultList;
+	}
+	
+	
+	/**
+	 * Removes all pages which have event content from pid list.
+	 *
+	 * @param	string		list with page pids
+	 * @return	string		the list of pids, without pages with event data
+	 * @access public
+	 */
+	function removeEventPages($pageList){
+		$resultList = $pageList;
+		foreach (explode(',',$pageList) as $thisPage) {
+			// Initialize variables for the database query.
+			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableEvents);
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'uid';
+			$limit = '';
+			// Get list of all events
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'count(*)',
+				$this->tableEvents,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+			if ($res) {
+				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				if ($row['count(*)']>0) {
+					$resultList = t3lib_div::rmFromList($thisPage,$resultList);
+				}
+			}
+		}
+		return $resultList;
+	}
+
+	/**
+	 * Get all pages which have common content
+	 *
+	 * @param	string		page uid
+	 * @param	string		page pid
+	 * @return	string		the list of pids, without pages with event data
+	 * @access public
+	 */
+	function getCommonPids($pageUid, $pagePid){
+		// Get list of pid 
+		$selectedPids = $this->getRecursiveUidList($pageUid,2);
+		// Check if sub pages available and remove main page from list
+		if ($selectedPids<>$pageUid) {
+			$selectedPids = t3lib_div::rmFromList($pageUid,$selectedPids);
+		} else {
+			// Get id of parent page
+			
+			// if no sub pages and parent page is not root, get one level up
+			if ($pagePid<>0) {
+				$selectedPids = $this->getRecursiveUidList($pagePid,2);
+				// remove up level page
+				$selectedPids = t3lib_div::rmFromList($pagePid,$selectedPids);
+				// remove other event pages
+				$selectedPids = $this->removeEventPages($selectedPids);
+				// add this page to the list
+				$selectedPids .= $selectedPids?','.$pageUid:$pageUid;
+			}
+		}
+		return $GLOBALS['TYPO3_DB']->cleanIntList($selectedPids);
+	}
+		
+	
+	/**
 	 * Sets the table names.
 	 *
 	 * @return	void		...

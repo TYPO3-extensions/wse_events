@@ -208,6 +208,10 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		}
 		// Remove pages with common data
 		$eventPids = $this->removeCommonPages($this->selectedPids);
+		// If all in one page than use page id
+		if (empty($eventPids)) {
+			$eventPids = $this->page->pageInfo['uid'];
+		}
 		// Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
 		// Get the where clause

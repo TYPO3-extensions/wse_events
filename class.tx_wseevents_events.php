@@ -56,6 +56,9 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
 class tx_wseevents_events {
 	/** The extension key. */
 	var $extKey = 'wseevents';
+	
+	// List of id's of rooms
+	var $roomIds;
 
 	/**
 	 * Dummy constructor: Does nothing.
@@ -91,7 +94,7 @@ class tx_wseevents_events {
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
-		$eventinfo = $this->getEventInfo($PA['row']['event']);
+		$eventinfo = $this->getEventInfo($PA['row']['event'], $PA['row']['pid']);
 
 		$thisday = 1;
 		$maxday = $eventinfo['length'];
@@ -118,7 +121,7 @@ class tx_wseevents_events {
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
-		$eventinfo = $this->getEventInfo($PA['row']['event']);
+		$eventinfo = $this->getEventInfo($PA['row']['event'], $PA['row']['pid']);
 
 		$thisslot = 1;
 		$maxslot = $eventinfo['maxslot'];
@@ -173,7 +176,7 @@ class tx_wseevents_events {
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
-		$slotlist = $this->getEventSlotList($PA['row']['event']);
+		$slotlist = $this->getEventSlotList($PA['row']['event'], $PA['row']['pid']);
 
 		$thisslot = 1;
 		// Create list of event days
@@ -195,15 +198,20 @@ class tx_wseevents_events {
 	 * @return	array		Event record
 	 * @access protected
 	 */
-	function getEventInfo($event) {
+	function getEventInfo($event, $eventpid=0) {
 
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
+		if ($eventpid==0) {
+			$pidWhere = '0=0';
+		} else {
+			$pidWhere = 'pid='.$eventpid;
+		}
 		if ($event>0) {
 			$queryWhere = 'uid='.$event;
 		} else {
-			$queryWhere = '0=0'.t3lib_BEfunc::deleteClause($tableName);
+			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -228,15 +236,20 @@ class tx_wseevents_events {
 	 * @return	array		List of slots for the event
 	 * @access protected
 	 */
-	function getEventSlotList($event) {
+	function getEventSlotList($event, $eventpid=0) {
 
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
+		if ($eventpid==0) {
+			$pidWhere = '0=0';
+		} else {
+			$pidWhere = 'pid='.$eventpid;
+		}
 		if ($event>0) {
 			$queryWhere = 'uid='.$event;
 		} else {
-			$queryWhere = '0=0'.t3lib_BEfunc::deleteClause($tableName);
+			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$additionalTables = '';
 		$groupBy = '';
@@ -293,15 +306,20 @@ class tx_wseevents_events {
 	 * @return	array		List of slots for the event
 	 * @access protected
 	 */
-	function getEventSlotArray($event) {
+	function getEventSlotArray($event, $eventpid=0) {
 
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
+		if ($eventpid==0) {
+			$pidWhere = '0=0';
+		} else {
+			$pidWhere = 'pid='.$eventpid;
+		}
 		if ($event>0) {
 			$queryWhere = 'uid='.$event;
 		} else {
-			$queryWhere = '0=0'.t3lib_BEfunc::deleteClause($tableName);
+			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$additionalTables = '';
 		$groupBy = '';
@@ -373,15 +391,20 @@ class tx_wseevents_events {
 	 * @return	array		List of room names
 	 * @access protected
 	 */
-	function getEventRooms($event) {
+	function getEventRooms($event, $eventpid=0) {
 
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
+		if ($eventpid==0) {
+			$pidWhere = '0=0';
+		} else {
+			$pidWhere = 'pid='.$eventpid;
+		}
 		if ($event>0) {
 			$queryWhere = 'uid='.$event;
 		} else {
-			$queryWhere = '0=0'.t3lib_BEfunc::deleteClause($tableName);
+			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -416,10 +439,10 @@ class tx_wseevents_events {
 				$groupBy,
 				$orderBy,
 				$limit);
-			$roomindex = 1;
+#			$roomindex = 1;
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$roomlist[$roomindex] = $row['name'];
-				$roomindex += 1;
+				$roomlist[$row['uid']] = $row['name'];
+#				$roomindex += 1;
 			}
 		}
 		return $roomlist;

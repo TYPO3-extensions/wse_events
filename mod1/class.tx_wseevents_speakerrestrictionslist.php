@@ -155,16 +155,22 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
 		} else {
 			// if no sub pages, get one level up
-			$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['pid'],2);
-			// remove up level page
-			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['pid'],$this->selectedPids);
-			// remove other event pages
-			$this->selectedPids = $this->removeEventPages($this->selectedPids);
-			// add this page to the list
-			$this->selectedPids .= $this->selectedPids?','.$this->page->pageInfo['uid']:$this->page->pageInfo['uid'];
+			if ($this->page->pageInfo['pid']<>0) {
+				$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['pid'],2);
+				// remove up level page
+				$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['pid'],$this->selectedPids);
+				// remove other event pages
+				$this->selectedPids = $this->removeEventPages($this->selectedPids);
+				// add this page to the list
+				$this->selectedPids .= $this->selectedPids?','.$this->page->pageInfo['uid']:$this->page->pageInfo['uid'];
+			}
 		}
 		// Remove pages with common data
 		$eventPids = $this->removeCommonPages($this->selectedPids);
+		// If all in one page than use page id
+		if (empty($eventPids)) {
+			$eventPids = $this->page->pageInfo['uid'];
+		}
 		// Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
 		// Get the where clause

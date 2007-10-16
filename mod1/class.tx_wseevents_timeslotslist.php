@@ -155,6 +155,10 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 		}
 		// Remove pages with common data
 		$eventPids = $this->removeCommonPages($this->selectedPids);
+		// If all in one page than use page id
+		if (empty($eventPids)) {
+			$eventPids = $this->page->pageInfo['uid'];
+		}
 		// Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
 		// Get the where clause
@@ -166,29 +170,6 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 		}
 
 
-		// -------------------- Get list of rooms --------------------
-		// Initialize variables for the database query.
-		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableRooms).' AND sys_language_uid=0';
-		$additionalTables = '';
-		$groupBy = '';
-		$orderBy = 'uid';
-		$limit = '';
-
-		// Get list of all events
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'*',
-			$this->tableRooms,
-			$queryWhere,
-			$groupBy,
-			$orderBy,
-			$limit);
-
-		$rooms = array();
-		if ($res) {
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$rooms[$row['uid']] = $row['name'];
-			}
-		}
 		if (!isset($this->page->pageInfo['uid'])) {
 			return;
 		}
@@ -223,6 +204,7 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 		}
 		
 		// ToDo: Add box for event selection
+
 		
 		
 		// Get list of time slots for an event
@@ -236,6 +218,31 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 			
 			// Get info about event
 			$eventinfo = tx_wseevents_events::getEventInfo($event['uid']);
+
+			// -------------------- Get list of rooms --------------------
+			// Initialize variables for the database query.
+			$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableRooms).' AND sys_language_uid=0 AND location='.$event['location'];
+			$additionalTables = '';
+			$groupBy = '';
+			$orderBy = 'number';
+			$limit = '';
+
+			// Get list of all rooms for the location of the event
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'*',
+				$this->tableRooms,
+				$queryWhere,
+				$groupBy,
+				$orderBy,
+				$limit);
+
+			$rooms = array();
+			$rooms[0] = $LANG->getLL('timeslots.allrooms');
+			if ($res) {
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$rooms[$row['uid']] = $row['name'];
+				}
+			}
 
 			// Initialize variables for the database query.
 			$queryWhere = $wherePid.' AND event='.$event['uid'].t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
