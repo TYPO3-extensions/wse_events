@@ -90,7 +90,7 @@ class tx_wseevents_events {
 	 */
 	function getTCAeventDays($PA) {
 		global $LANG;
-
+#debug($PA,'$PA');
 		// Clear the item array
 		$PA['items'] = array();
 		// Get the event info
@@ -214,7 +214,7 @@ class tx_wseevents_events {
 			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$groupBy = '';
-		$orderBy = 'uid';
+		$orderBy = 'name';
 		$limit = '';
 
 		// Get info about time slots of the event
@@ -253,7 +253,7 @@ class tx_wseevents_events {
 		}
 		$additionalTables = '';
 		$groupBy = '';
-		$orderBy = 'uid';
+		$orderBy = 'name';
 		$limit = '';
 
 		// Get info about time slots of the event
@@ -323,7 +323,7 @@ class tx_wseevents_events {
 		}
 		$additionalTables = '';
 		$groupBy = '';
-		$orderBy = 'uid';
+		$orderBy = 'name';
 		$limit = '';
 
 		// Get info about time slots of the event
@@ -407,7 +407,7 @@ class tx_wseevents_events {
 			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
 		$groupBy = '';
-		$orderBy = 'uid';
+		$orderBy = 'name';
 		$limit = '';
 
 		// Get info about the event

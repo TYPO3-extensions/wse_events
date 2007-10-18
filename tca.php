@@ -2,6 +2,7 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
+require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_locations.php');
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_rooms.php');
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_speakers.php');
 require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_categories.php');
@@ -77,26 +78,12 @@ $TCA['tx_wseevents_events'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.location',		
 			'config' => Array (
 				'type' => 'select',	
+				'itemsProcFunc' => 'tx_wseevents_locations->getTCAlocationlist',
 				'foreign_table' => 'tx_wseevents_locations',	
-				'foreign_table_where' => 'ORDER BY tx_wseevents_locations.uid',	
+				'foreign_table_where' => 'ORDER BY tx_wseevents_locations.name',	
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,	
-				'wizards' => Array(
-					'_PADDING' => 2,
-					'_VERTICAL' => 1,
-					'add' => Array(
-						'type' => 'script',
-						'title' => 'Create new record',
-						'icon' => 'add.gif',
-						'params' => Array(
-							'table'=>'tx_wseevents_locations',
-							'pid' => '###CURRENT_PID###',
-							'setValue' => 'prepend'
-						),
-						'script' => 'wizard_add.php',
-					),
-				),
 			)
 		),
 		'begin' => Array (		
@@ -400,25 +387,10 @@ $TCA['tx_wseevents_rooms'] = Array (
 			'config' => Array (
 				'type' => 'select',	
 				'foreign_table' => 'tx_wseevents_locations',	
-				'foreign_table_where' => 'AND tx_wseevents_locations.pid=###CURRENT_PID### ORDER BY tx_wseevents_locations.uid',	
+				'foreign_table_where' => 'AND tx_wseevents_locations.pid=###CURRENT_PID### ORDER BY tx_wseevents_locations.name',	
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,	
-				'wizards' => Array(
-					'_PADDING' => 2,
-					'_VERTICAL' => 1,
-					'add' => Array(
-						'type' => 'script',
-						'title' => 'Create new record',
-						'icon' => 'add.gif',
-						'params' => Array(
-							'table'=>'tx_wseevents_locations',
-							'pid' => '###CURRENT_PID###',
-							'setValue' => 'prepend'
-						),
-						'script' => 'wizard_add.php',
-					),
-				),
 			)
 		),
 	),
@@ -604,7 +576,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 			'config' => Array (
 				'type' => 'select',	
 				'foreign_table' => 'tx_wseevents_events',	
-				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### ORDER BY tx_wseevents_events.uid',	
+				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',	
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,
@@ -958,7 +930,7 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 			'config' => Array (
 				'type' => 'select',	
 				'foreign_table' => 'tx_wseevents_events',	
-				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.uid',	
+				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',	
 				'size' => 1,	
 				'minitems' => 0,
 				'maxitems' => 1,

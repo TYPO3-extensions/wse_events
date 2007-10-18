@@ -295,23 +295,26 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @access public
 	 */
 	function getCommonPids($pageUid, $pagePid){
-		// Get list of pid 
-		$selectedPids = $this->getRecursiveUidList($pageUid,2);
-		// Check if sub pages available and remove main page from list
-		if ($selectedPids<>$pageUid) {
-			$selectedPids = t3lib_div::rmFromList($pageUid,$selectedPids);
-		} else {
-			// Get id of parent page
-			
-			// if no sub pages and parent page is not root, get one level up
-			if ($pagePid<>0) {
-				$selectedPids = $this->getRecursiveUidList($pagePid,2);
-				// remove up level page
-				$selectedPids = t3lib_div::rmFromList($pagePid,$selectedPids);
-				// remove other event pages
-				$selectedPids = $this->removeEventPages($selectedPids);
-				// add this page to the list
-				$selectedPids .= $selectedPids?','.$pageUid:$pageUid;
+		// Check for root page
+		if ($pageUid<>0) {
+			// Get list of pid 
+			$selectedPids = $this->getRecursiveUidList($pageUid,2);
+			// Check if sub pages available and remove main page from list
+			if ($selectedPids<>$pageUid) {
+				$selectedPids = t3lib_div::rmFromList($pageUid,$selectedPids);
+			} else {
+				// Get id of parent page
+				
+				// if no sub pages and parent page is not root, get one level up
+				if ($pagePid<>0) {
+					$selectedPids = $this->getRecursiveUidList($pagePid,2);
+					// remove up level page
+					$selectedPids = t3lib_div::rmFromList($pagePid,$selectedPids);
+					// remove other event pages
+					$selectedPids = $this->removeEventPages($selectedPids);
+					// add this page to the list
+					$selectedPids .= $selectedPids?','.$pageUid:$pageUid;
+				}
 			}
 		}
 		return $GLOBALS['TYPO3_DB']->cleanIntList($selectedPids);

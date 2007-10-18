@@ -222,22 +222,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		}
 
 		// Get list of pid 
-		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
-		// Check if sub pages available and remove main page from list
-		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
-			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
-		} else {
-			// if no sub pages and parent page is not root, get one level up
-			if ($this->page->pageInfo['pid']<>0) {
-				$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['pid'],2);
-				// remove up level page
-				$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['pid'],$this->selectedPids);
-				// remove other event pages
-				$this->selectedPids = $this->removeEventPages($this->selectedPids);
-				// add this page to the list
-				$this->selectedPids .= $this->selectedPids?','.$this->page->pageInfo['uid']:$this->page->pageInfo['uid'];
-			}
-		}
+		$this->selectedPids = $this->getCommonPids($this->page->pageInfo['uid'],$this->page->pageInfo['pid']);
 		// Remove pages with common data
 		$eventPids = $this->removeCommonPages($this->selectedPids);
 		// If all in one page than use page id

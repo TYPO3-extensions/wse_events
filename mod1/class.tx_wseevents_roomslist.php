@@ -139,6 +139,10 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 		}
 		// Remove pages with event data
 		$commonPids = $this->removeEventPages($this->selectedPids);
+		// If all in one page than use page id
+		if (empty($commonPids)) {
+			$commonPids = $this->page->pageInfo['uid'];
+		}
 		// Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
 		// Get the where clause
