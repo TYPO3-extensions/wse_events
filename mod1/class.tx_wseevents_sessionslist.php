@@ -331,10 +331,14 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 					$found = true;
 					$this->addRowToTable($table, $row);
 					// Check for translations.
-					$queryWhere = $wherePid.' AND l18n_parent='.$row['uid'].t3lib_BEfunc::deleteClause($this->tableName);
+					$queryWhere = $wherePid.
+							' AND '.$TCA[$this->tableName]['ctrl']['transOrigPointerField'].'='.intval($row['uid']).
+							t3lib_BEfunc::deleteClause($this->tableName);
+							#	t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+
 					$additionalTables = '';
 					$groupBy = '';
-					$orderBy = 'sys_language_uid';
+					$orderBy = $TCA[$table]['ctrl']['languageField'];
 					$limit = '';
 
 					// Get list of all translated sessions
@@ -346,8 +350,10 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 						$orderBy,
 						$limit);
 					if ($reslang) {
-						while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
-							$this->addRowToTable($table, $row);
+						while ($lRow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
+							if ($GLOBALS['BE_USER']->checkLanguageAccess($lRow[$TCA[$this->tableName]['ctrl']['languageField']]))	{
+								$this->addRowToTable($table, $row);
+							}
 						}
 					}
 				}
