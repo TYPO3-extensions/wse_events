@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
 	<meta type="array">
 		<type>module</type>
@@ -7,19 +7,23 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="mlang_tabs_tab">WSE Events</label>
-			<label index="mlang_labels_tabdescr">Data input</label>
+			<label index="mlang_labels_tablabel">Warpstock Europe Event Management</label>
+			<label index="mlang_labels_tabdescr">With this modul, speaker and session data for events can be managed.</label>
 		</languageKey>
 		<languageKey index="nl" type="array">
 			<label index="mlang_tabs_tab">WSE Events</label>
-			<label index="mlang_labels_tabdescr">Data input</label>
+			<label index="mlang_labels_tablabel">Warpstock Europe Event Management</label>
+			<label index="mlang_labels_tabdescr">With this modul, speaker and session data for events can be managed.</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="mlang_tabs_tab">WSE Events</label>
-			<label index="mlang_labels_tabdescr">Data input</label>
+			<label index="mlang_labels_tablabel">Warpstock Europe Event Management</label>
+			<label index="mlang_labels_tabdescr">With this modul, speaker and session data for events can be managed.</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="mlang_tabs_tab">WSE Veranst.</label>
-			<label index="mlang_labels_tabdescr">Daten Eingabe</label>
+			<label index="mlang_labels_tablabel">Warpstock Europe Veranstaltungs Management</label>
+			<label index="mlang_labels_tabdescr">Mit diesem Modul können Sprecher und Vortragsdaten für Veranstaltungen verwaltet werden.</label>
 		</languageKey>
 	</data>
 </T3locallang>
