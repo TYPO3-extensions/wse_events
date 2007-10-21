@@ -75,11 +75,11 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 	 * @return	void
 	 */
 	function addRowToTable(&$table, $row) {
-		global $BE_USER, $BACK_PATH;
+		global $TCA, $BE_USER, $BACK_PATH;
 		$uid = $row['uid'];
 		$hidden = $row['hidden'];
-		
-		if ($row['sys_language_uid']==0) {
+	
+		if ($row[$TCA[$this->tableName]['ctrl']['languageField']]==0) {
 			$catnum = $this->categories[$row['category']].sprintf ('%02d', $row['number']);
 		} else {
 			$catnum = '';
@@ -123,6 +123,8 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		global $TCA, $LANG, $BE_USER;
 
 		// Loading all TCA details for this table:
+		t3lib_div::loadTCA($this->tableCategories);
+		t3lib_div::loadTCA($this->tableEvents);
 		t3lib_div::loadTCA($this->tableSessions);
 
 #debug($BE_USER);
@@ -241,7 +243,9 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of categories --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.$thisPage.t3lib_BEfunc::deleteClause($this->tableCategories).' AND sys_language_uid=0';
+		$queryWhere = $wherePid.$thisPage.t3lib_BEfunc::deleteClause($this->tableCategories).
+			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableCategories);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey';
@@ -265,7 +269,9 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).' AND sys_language_uid=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).
+			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -307,7 +313,9 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			$this->initializeLanguages($event['pid']);
 			
 			// Initialize variables for the database query.
-			$queryWhere = $wherePid.' AND event='.$event['uid'].t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
+			$queryWhere = $wherePid.' AND event='.$event['uid'].t3lib_BEfunc::deleteClause($this->tableName).
+					' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+					t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'category,number,name';
@@ -333,12 +341,12 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 					// Check for translations.
 					$queryWhere = $wherePid.
 							' AND '.$TCA[$this->tableName]['ctrl']['transOrigPointerField'].'='.intval($row['uid']).
-							t3lib_BEfunc::deleteClause($this->tableName);
-							#	t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+							t3lib_BEfunc::deleteClause($this->tableName).
+							t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 
 					$additionalTables = '';
 					$groupBy = '';
-					$orderBy = $TCA[$table]['ctrl']['languageField'];
+					$orderBy = $TCA[$this->tableName]['ctrl']['languageField'];
 					$limit = '';
 
 					// Get list of all translated sessions
@@ -352,7 +360,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 					if ($reslang) {
 						while ($lRow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
 							if ($GLOBALS['BE_USER']->checkLanguageAccess($lRow[$TCA[$this->tableName]['ctrl']['languageField']]))	{
-								$this->addRowToTable($table, $row);
+								$this->addRowToTable($table, $lRow);
 							}
 						}
 					}
