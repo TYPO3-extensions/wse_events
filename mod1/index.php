@@ -70,6 +70,8 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	/** the currently selected sub module */
 	var $subModule;
 
+	/** Variable for session data */
+	var $my_vars;
 
 	/**
 	 * Initializes the Module
@@ -134,8 +136,11 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		$this->pageInfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 		$access = is_array($this->pageInfo) ? 1 : 0;
 
-		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id))	{
+		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id) && ($this->id>0))	{
 
+			// Get session data
+			$this->my_vars = $GLOBALS["BE_USER"]->getSessionData("tx_wseevents");
+			
 			// Draw the header.
 			$this->doc = t3lib_div::makeInstance('bigDoc');
 			$this->doc->backPath = $BACK_PATH;
@@ -189,13 +194,16 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		} else {
 			// If no access or if ID == zero
 
-			$this->doc = t3lib_div::makeInstance('bigDoc');
+			$this->doc = t3lib_div::makeInstance('mediumDoc');
 			$this->doc->backPath = $BACK_PATH;
 
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
 			$this->content.=$this->doc->header($LANG->getLL('title'));
 			$this->content.=$this->doc->spacer(5);
 			$this->content.=$this->doc->spacer(10);
+			if ($this->id==0) {
+				$this->content .= $LANG->getLL('notOnRootpage');
+			}
 		}
 	}
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
 	<meta type="array">
 		<type>module</type>
@@ -7,6 +7,7 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="title">WSE Events</label>
+			<label index="notOnRootpage">Select a sys folder for event and common data input.</label>
 			<label index="language">Language</label>
 			<label index="translate">Translate</label>
 			<label index="norecords">No records defined</label>
@@ -60,6 +61,7 @@
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">WSE Veranstaltungen</label>
+			<label index="notOnRootpage">Wählen Sie einen Systemordner um Veranstaltungs- und Gemeinsame Daten einzugeben.</label>
 			<label index="language">Sprache</label>
 			<label index="translate">Übersetzung</label>
 			<label index="norecords">Keine Datensätze vorhanden</label>
