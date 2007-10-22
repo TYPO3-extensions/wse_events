@@ -199,10 +199,15 @@ class tx_wseevents_events {
 	 * @access protected
 	 */
 	function getEventInfo($event, $eventpid=0) {
+		global $TCA;
 
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
+		
+		// Loading all TCA details for this table:
+		t3lib_div::loadTCA($tableName);
+		
 		if ($eventpid==0) {
 			$pidWhere = '0=0';
 		} else {
@@ -213,6 +218,8 @@ class tx_wseevents_events {
 		} else {
 			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
+		$queryWhere .= ' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
@@ -237,10 +244,15 @@ class tx_wseevents_events {
 	 * @access protected
 	 */
 	function getEventSlotList($event, $eventpid=0) {
+		global $TCA;
 
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
+
+		// Loading all TCA details for this table:
+		t3lib_div::loadTCA($tableName);
+		
 		if ($eventpid==0) {
 			$pidWhere = '0=0';
 		} else {
@@ -251,6 +263,8 @@ class tx_wseevents_events {
 		} else {
 			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
+		$queryWhere .= ' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -307,7 +321,8 @@ class tx_wseevents_events {
 	 * @access protected
 	 */
 	function getEventSlotArray($event, $eventpid=0) {
-
+		global $TCA;
+	
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
@@ -321,6 +336,8 @@ class tx_wseevents_events {
 		} else {
 			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
+		$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -346,11 +363,14 @@ class tx_wseevents_events {
 			$size = $row['slotsize'];
 			$daycount = $row['length'];
 			$location = $row['location'];
+			$queryWhere = 'location='.$location.
+				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			// Get info about rooms of the event
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'count(*)',
 				'tx_wseevents_rooms',
-				'location='.$location,
+				$queryWhere,
 				$groupBy,
 				$orderBy,
 				$limit);
@@ -392,6 +412,7 @@ class tx_wseevents_events {
 	 * @access protected
 	 */
 	function getEventRooms($event, $eventpid=0) {
+		global $TCA;
 
 		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
@@ -406,6 +427,8 @@ class tx_wseevents_events {
 		} else {
 			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
+		$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
@@ -426,7 +449,9 @@ class tx_wseevents_events {
 		$location = $row['location'];
 		if ($location>0) {
 			$tableName ='tx_wseevents_rooms';
-			$queryWhere = 'location='.$location;
+			$queryWhere = 'location='.$location.
+				$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$groupBy = '';
 			$orderBy = 'uid';
 			$limit = '';

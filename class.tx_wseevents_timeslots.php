@@ -115,8 +115,12 @@ class tx_wseevents_timeslots {
 	 * @access protected
 	 */
 	function getSlotName($slotid) {
+		global $TCA;
+		
 		$slotname = '';
-		$where = 'uid='.$slotid;
+		$where = 'uid='.$slotid.
+			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,event,eventday,room,begin,length', 'tx_wseevents_timeslots', $where);
 		if ($res) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -133,10 +137,12 @@ class tx_wseevents_timeslots {
 	 * @access protected
 	 */
 	function getTCAavailableSlots($PA) {
+		global $TCA;
 #debug($PA);
 		// Clear the item array
 		$PA['items'] = array();
 
+		$tableName = 'tx_wseevents_events';
 		$eventid = $PA['row']['event'];
 		// Get event record
 		if ($eventid==0) {
@@ -144,7 +150,8 @@ class tx_wseevents_timeslots {
 		} else {
 			$queryWhere = 'uid='.$eventid;
 		}
-		$tableName = 'tx_wseevents_events';
+		$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$groupBy = '';
 		$orderBy = 'uid';
 		$limit = '';
@@ -166,7 +173,10 @@ class tx_wseevents_timeslots {
 			$rooms = array();
 			$rooms[0] = 0;
 			$tableName = 'tx_wseevents_rooms';
-			$queryWhere = 'sys_language_uid=0 AND location='.$location.t3lib_BEfunc::BEenableFields($tableName);
+			$queryWhere = 'location='.$location.
+				t3lib_BEfunc::BEenableFields($tableName).
+				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$groupBy = '';
 			$orderBy = 'number';
 			$limit = '';
@@ -185,7 +195,10 @@ class tx_wseevents_timeslots {
 			
 			// Get list of all time slots for the event
 			$tableName = 'tx_wseevents_timeslots';
-			$queryWhere = 'sys_language_uid=0 AND event='.$eventid.t3lib_BEfunc::BEenableFields($tableName);
+			$queryWhere = 'event='.$eventid.
+				t3lib_BEfunc::BEenableFields($tableName).
+				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$groupBy = '';
 			$orderBy = 'eventday,begin,room';
 			$limit = '';
@@ -222,7 +235,9 @@ class tx_wseevents_timeslots {
 				// and subtract them from the slot list
 				// Get list of time slots from speakers of the event
 				$tableName = 'tx_wseevents_sessions';
-				$queryWhere = 'sys_language_uid=0 AND event='.$eventid;
+				$queryWhere = 'event='.$eventid.
+					' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+					t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 				$groupBy = '';
 				$orderBy = 'uid';
 				$limit = '';
@@ -291,7 +306,9 @@ class tx_wseevents_timeslots {
 				// and subtract them from the slot list if speaker is not present at the time
 				foreach (explode(',',$speakerlist) as $speaker) {
 					$tableName = 'tx_wseevents_speakerrestrictions';
-					$queryWhere = 'speaker='.$speaker.' AND event='.$eventid;
+					$queryWhere = 'speaker='.$speaker.' AND event='.$eventid.
+						' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+						t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 					$groupBy = '';
 					$orderBy = 'uid';
 					$limit = '';

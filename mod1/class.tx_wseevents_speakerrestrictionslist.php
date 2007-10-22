@@ -63,13 +63,20 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $LANG, $BE_USER;
+		global $TCA, $LANG, $BE_USER;
 
 #debug ($LANG);
 #debug ($BE_USER);
 
 		// Get selected backend language of user
 		$userlang = $BE_USER->uc[moduleData][web_layout][language];
+
+		// Loading all TCA details for this table:
+		t3lib_div::loadTCA($this->tableSpeakers);
+		t3lib_div::loadTCA($this->tableEvents);
+		t3lib_div::loadTCA($this->tableName);
+		
+		
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -183,7 +190,9 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of speakers --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableSpeakers).' AND sys_language_uid=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableSpeakers).
+			' AND '.$TCA[$this->tableSpeakers]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableSpeakers);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -207,7 +216,9 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).' AND sys_language_uid=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).
+			' AND '.$TCA[$this->tableEvents]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -246,7 +257,9 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 			$slots = tx_wseevents_events::getEventSlotlist($event['uid']);
 
 			// Initialize variables for the database query.
-			$queryWhere = $wherePid.' AND event='.$event['uid'].t3lib_BEfunc::deleteClause($this->tableName);
+			$queryWhere = $wherePid.' AND event='.$event['uid'].
+				t3lib_BEfunc::deleteClause($this->tableName).
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'speaker,eventday';

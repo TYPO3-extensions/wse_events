@@ -62,7 +62,7 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $LANG, $BE_USER;
+		global $TCA, $LANG, $BE_USER;
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -155,7 +155,9 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of locations --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableLocations).' AND sys_language_uid=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableLocations).
+			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -189,7 +191,10 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 			$content .= '<span style="font-size:1.2em"><b>'.$LANG->getLL('rooms.location').' '.$location['name'].'</b></span>';
 
 			// Initialize variables for the database query.
-			$queryWhere = $wherePid.' AND location='.$location['uid'].t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
+			$queryWhere = $wherePid.' AND location='.$location['uid'].
+				t3lib_BEfunc::deleteClause($this->tableName).
+				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'name';

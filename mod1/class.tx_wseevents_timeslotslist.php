@@ -63,7 +63,7 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $LANG, $BE_USER;
+		global $TCA, $LANG, $BE_USER;
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -176,7 +176,9 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 		
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).' AND sys_language_uid=0';
+		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).
+			' AND '.$TCA[$this->tableEvents]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -221,7 +223,10 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 
 			// -------------------- Get list of rooms --------------------
 			// Initialize variables for the database query.
-			$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableRooms).' AND sys_language_uid=0 AND location='.$event['location'];
+			$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableRooms).
+				' AND location='.$event['location'].
+				' AND '.$TCA[$this->tableRooms]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableRooms);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'number';
@@ -245,7 +250,9 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 			}
 
 			// Initialize variables for the database query.
-			$queryWhere = $wherePid.' AND event='.$event['uid'].t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
+			$queryWhere = $wherePid.' AND event='.$event['uid'].
+				t3lib_BEfunc::deleteClause($this->tableName).
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'eventday,begin,room';

@@ -87,6 +87,7 @@ class tx_wseevents_speakers extends tx_wseevents_dbplugin {
 	 * @access protected
 	 */
 	function getTCAspeakerlist($PA,$fobj) {
+		global $TCA;
 #		debug ($PA);
 #		debug ($fobj);
 
@@ -97,7 +98,10 @@ class tx_wseevents_speakers extends tx_wseevents_dbplugin {
 		// --------------------- Get the list of speakers ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_speakers';
-		$queryWhere = 'sys_language_uid=0'.t3lib_BEfunc::BEenableFields($tableName).' AND pid in('.$this->selectedPids.')';
+		$queryWhere = t3lib_BEfunc::BEenableFields($tableName).
+			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			' AND pid in('.$this->selectedPids.')'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name,firstname';

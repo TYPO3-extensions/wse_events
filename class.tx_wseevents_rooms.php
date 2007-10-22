@@ -86,13 +86,18 @@ class tx_wseevents_rooms {
 	 * @access protected
 	 */
 	function getTCAroomlist($PA,$fobj) {
+		global $TCA;
 #		debug ($PA);
 #		debug ($fobj);
 
 		// --------------------- Get the location of the selected event ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
-		$queryWhere = 'uid='.$PA['row']['event'].' AND sys_language_uid=0'.t3lib_BEfunc::BEenableFields($tableName).t3lib_BEfunc::deleteClause($tableName);
+		$queryWhere = 'uid='.$PA['row']['event'].
+			t3lib_BEfunc::BEenableFields($tableName).
+			t3lib_BEfunc::deleteClause($tableName).
+			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -100,7 +105,11 @@ class tx_wseevents_rooms {
 
 		// Check if event is selected, if not get first event
 		if ($PA['row']['event'] == 0) {
-			$queryWhere = 'pid='.$PA['row']['pid'].' AND sys_language_uid=0'.t3lib_BEfunc::BEenableFields($tableName).t3lib_BEfunc::deleteClause($tableName);
+			$queryWhere = 'pid='.$PA['row']['pid'].
+				t3lib_BEfunc::BEenableFields($tableName).
+				t3lib_BEfunc::deleteClause($tableName).
+				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		}
 
 		// Get location of the event
@@ -118,7 +127,11 @@ class tx_wseevents_rooms {
 		// --------------------- Get the rooms of the location of the selected event ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_rooms';
-		$queryWhere = 'location='.$location.' AND sys_language_uid=0'.t3lib_BEfunc::BEenableFields($tableName).t3lib_BEfunc::deleteClause($tableName);
+		$queryWhere = 'location='.$location.
+			t3lib_BEfunc::BEenableFields($tableName).
+			t3lib_BEfunc::deleteClause($tableName).
+			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';

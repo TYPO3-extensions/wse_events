@@ -199,6 +199,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @access public
 	 */
 	function getRecursiveUidList($parentUid,$depth){
+		global $TCA;
+
 		if($depth != -1) {
 			$depth = $depth-1; //decreasing depth
 		}
@@ -206,7 +208,9 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'uid',
 			'pages',
-			'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($parentUid).') '.t3lib_BEfunc::deleteClause('pages')
+			'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($parentUid).') '.
+				t3lib_BEfunc::deleteClause('pages').
+				t3lib_BEfunc::versioningPlaceholderClause('pages')
 			);
 		if($depth > 0){
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
@@ -225,10 +229,14 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @access public
 	 */
 	function removeCommonPages($pageList){
+		global $TCA;
+
 		$resultList = $pageList;
 		foreach (explode(',',$pageList) as $thisPage) {
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableLocations);
+			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableLocations).
+				' AND '.$TCA[$this->tableLocations]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableLocations);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'uid';
@@ -260,10 +268,14 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @access public
 	 */
 	function removeEventPages($pageList){
+		global $TCA;
+		
 		$resultList = $pageList;
 		foreach (explode(',',$pageList) as $thisPage) {
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableEvents);
+			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableEvents).
+				' AND '.$TCA[$this->tableEvents]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'uid';
@@ -328,6 +340,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @access	protected
 	 */
 	function setTableNames() {
+		global $TCA;
 		$dbPrefix = 'tx_'.$this->extKey.'_';
 
 		$this->tableLocations         = $dbPrefix.'locations';
@@ -338,6 +351,16 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		$this->tableSpeakerRestrictions = $dbPrefix.'speakerrestrictions';
 		$this->tableSessions          = $dbPrefix.'sessions';
 		$this->tableTimeslots         = $dbPrefix.'timeslots';
+
+		// Loading all TCA details for this table:
+		t3lib_div::loadTCA($this->tableLocations);
+		t3lib_div::loadTCA($this->tableRooms);
+		t3lib_div::loadTCA($this->tableSpeakers);
+		t3lib_div::loadTCA($this->tableCategories);
+		t3lib_div::loadTCA($this->tableEvents);
+		t3lib_div::loadTCA($this->tableSpeakerRestrictions);
+		t3lib_div::loadTCA($this->tableSessions);
+		t3lib_div::loadTCA($this->tableTimeslots);
 
 		return;
 	}

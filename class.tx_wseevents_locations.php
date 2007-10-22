@@ -87,6 +87,7 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 	 * @access protected
 	 */
 	function getTCAlocationlist($PA,$fobj) {
+		global $TCA;
 #		debug ($PA);
 #		debug ($fobj);
 
@@ -97,7 +98,11 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 		// --------------------- Get the rooms of the location of the selected event ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_locations';
-		$queryWhere = 'sys_language_uid=0 AND pid in('.$this->selectedPids.')'.t3lib_BEfunc::BEenableFields($tableName).t3lib_BEfunc::deleteClause($tableName);
+		$queryWhere = 'pid in('.$this->selectedPids.')'.
+			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::BEenableFields($tableName).
+			t3lib_BEfunc::deleteClause($tableName).
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';

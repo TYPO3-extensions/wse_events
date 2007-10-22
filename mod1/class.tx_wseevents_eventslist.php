@@ -109,7 +109,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $LANG, $BE_USER;
+		global $TCA, $LANG, $BE_USER;
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -231,7 +231,9 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			$this->initializeLanguages($eventPid);
 
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$eventPid.t3lib_BEfunc::deleteClause($this->tableName).' AND sys_language_uid=0';
+			$queryWhere = 'pid='.$eventPid.t3lib_BEfunc::deleteClause($this->tableName).
+				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'name';
@@ -256,7 +258,10 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 					$this->addRowToTable($table, $row);
 
 					// Check for translations.
-					$queryWhere = $wherePid.' AND l18n_parent='.$row['uid'].t3lib_BEfunc::deleteClause($this->tableName);
+					$queryWhere = $wherePid.' AND l18n_parent='.$row['uid'].
+						t3lib_BEfunc::deleteClause($this->tableName).
+						' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+						t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 					$additionalTables = '';
 					$groupBy = '';
 					$orderBy = 'sys_language_uid';
