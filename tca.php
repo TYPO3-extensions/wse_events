@@ -569,6 +569,14 @@ $TCA['tx_wseevents_sessions'] = Array (
 				'default' => '0'
 			)
 		),
+		't3ver_label' => Array (
+			'displayCond' => 'FIELD:t3ver_label:REQ:true',
+			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.versionLabel',
+			'config' => Array (
+				'type'=>'none',
+				'cols' => 27
+			)
+		),
 		'event' => Array (		
 			'exclude' => 1,
 			'l10n_mode' => 'exclude',
@@ -693,8 +701,8 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, event, name, category, number, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
-		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, comment, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, event, name, category, number, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
+		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, name, comment, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -747,6 +755,14 @@ $TCA['tx_wseevents_speakers'] = Array (
 			'config' => Array (
 				'type' => 'check',
 				'default' => '0'
+			)
+		),
+		't3ver_label' => Array (
+			'displayCond' => 'FIELD:t3ver_label:REQ:true',
+			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.versionLabel',
+			'config' => Array (
+				'type'=>'none',
+				'cols' => 27
 			)
 		),
 		'fullname' => Array (		
@@ -877,8 +893,8 @@ $TCA['tx_wseevents_speakers'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, company, companylink, country, email, image, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
-		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, firstname, comment, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, name, firstname, comment, company, companylink, country, email, image, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
+		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, name, firstname, comment, info;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')
@@ -890,7 +906,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 $TCA['tx_wseevents_speakerrestrictions'] = Array (
 	'ctrl' => $TCA['tx_wseevents_speakerrestrictions']['ctrl'],
 	'interface' => Array (
-		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,speaker,comment,event,eventday,begin,end'
+		'showRecordFieldList' => 'hidden,speaker,comment,event,eventday,begin,end'
 	),
 	'feInterface' => $TCA['tx_wseevents_speakerrestrictions']['feInterface'],
 	'columns' => Array (
@@ -987,7 +1003,7 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, speaker,comment, event, eventday, begin, end')
+		'0' => Array('showitem' => 'hidden;;1, speaker,comment, event, eventday, begin, end')
 	),
 	'palettes' => Array (
 		'1' => Array('showitem' => '')

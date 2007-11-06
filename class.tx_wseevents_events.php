@@ -336,8 +336,8 @@ class tx_wseevents_events {
 		} else {
 			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
-		$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+		$queryWhere .= ' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -358,18 +358,19 @@ class tx_wseevents_events {
 		$slotarray = array();
 
 		if (!empty($row)) {
+			$tableName ='tx_wseevents_rooms';
 			$begin = $row['timebegin'];
 			$end = $row['timeend'];
 			$size = $row['slotsize'];
 			$daycount = $row['length'];
 			$location = $row['location'];
 			$queryWhere = 'location='.$location.
-				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+				' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+				t3lib_BEfunc::versioningPlaceholderClause($tableName);
 			// Get info about rooms of the event
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'count(*)',
-				'tx_wseevents_rooms',
+				$tableName,
 				$queryWhere,
 				$groupBy,
 				$orderBy,
@@ -441,33 +442,37 @@ class tx_wseevents_events {
 			$groupBy,
 			$orderBy,
 			$limit);
-		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		if ($res) {
+			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 
-		$roomlist = array();
-		$roomlist[0] = '- All rooms -';
-		// Get the room list from the location
-		$location = $row['location'];
-		if ($location>0) {
-			$tableName ='tx_wseevents_rooms';
-			$queryWhere = 'location='.$location.
-				$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-			$groupBy = '';
-			$orderBy = 'uid';
-			$limit = '';
+			$roomlist = array();
+			$roomlist[0] = '- All rooms -';
+			// Get the room list from the location
+			$location = $row['location'];
+			if ($location>0) {
+				$tableName ='tx_wseevents_rooms';
+				$queryWhere = 'location='.$location.
+					$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+					t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+				$groupBy = '';
+				$orderBy = 'uid';
+				$limit = '';
 
-			// Get info about the event
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-				'*',
-				$tableName,
-				$queryWhere,
-				$groupBy,
-				$orderBy,
-				$limit);
+				// Get info about the event
+				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+					'*',
+					$tableName,
+					$queryWhere,
+					$groupBy,
+					$orderBy,
+					$limit);
 #			$roomindex = 1;
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$roomlist[$row['uid']] = $row['name'];
+				if ($res) {
+					while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+						$roomlist[$row['uid']] = $row['name'];
 #				$roomindex += 1;
+					}
+				}
 			}
 		}
 		return $roomlist;

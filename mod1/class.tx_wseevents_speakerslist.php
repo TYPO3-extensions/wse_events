@@ -66,11 +66,11 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 	 * @return	void
 	 */
 	function addRowToTable(&$table, $row) {
-		global $BE_USER, $BACK_PATH;
+		global $TCA, $BE_USER, $BACK_PATH;
 		$uid = $row['uid'];
 		$hidden = $row['hidden'];
 		
-		if ($row['sys_language_uid']==0) {
+		if ($row[$TCA[$this->tableName]['ctrl']['languageField']]==0) {
 			$catnum = $this->categories[$row['category']].sprintf ('%02d', $row['number']);
 		} else {
 			$catnum = '';

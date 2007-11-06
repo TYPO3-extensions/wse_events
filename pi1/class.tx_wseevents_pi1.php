@@ -159,6 +159,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	string		Content for output on the web site
 	 */
 	function listSessionView($content,$conf)	{
+		global $TCA;
+		
 		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();		// Loading the LOCAL_LANG values
@@ -168,6 +170,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		// Set table to session table
 		$this->internal['currentTable'] = 'tx_wseevents_sessions';
+
+		// Loading all TCA details for this table:
+		t3lib_div::loadTCA($this->internal['currentTable']);
 
 		if (!isset($this->piVars['pointer']))	$this->piVars['pointer']=0;
 		if (!isset($this->piVars['mode']))	$this->piVars['mode']=1;
@@ -203,7 +208,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->internal['maxPages']=t3lib_div::intInRange($lConf['maxPages'],0,1000,2);;		// The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
 		$this->internal['searchFieldList']='uid,name,category,number,speaker,room,timeslots,teaser';
 		$this->internal['orderByList']='category,number,name';
-	    $where = ' AND '.$this->internal['currentTable'].'.sys_language_uid = 0';
+	    $where = ' AND '.$this->internal['currentTable'].'.'.$TCA[$this->internal['currentTable']]['ctrl']['languageField'].'=0';
 
 		# Check for catagory selection
 		$showcat = $this->piVars['showCategory'];
@@ -237,19 +242,29 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray = array();
 		// Make listing query, pass query to SQL database:
 		$res = $this->pi_exec_query('tx_wseevents_events',0,$where1);
-		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			# Take the first event as selected if no event is selected in the URL
-			if ($showevent==0) {
-				$showevent = $row['uid'];
-			}
-			$eventname = $this->getTranslatedCategory('tx_wseevents_events', $row['uid'], $row['name']);
-			# Set one event option
-			$markerArray['###VALUE###'] = $row['uid'];
-			$markerArray['###OPTION###'] = $eventname;
-			if ($showevent==$row['uid']) {
-				$event_item .= $this->cObj->substituteMarkerArrayCached($template['evtoptionsel'], $markerArray);
-			} else {
-				$event_item .= $this->cObj->substituteMarkerArrayCached($template['evtoption'], $markerArray);
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			# Get overload workspace record
+#			$row = $GLOBALS['TSFE']->sys_page->versionOL('tx_wseevents_events', $row);
+#			if ($this->versioningEnabled) {
+#				// get workspaces Overlay
+#				$GLOBALS['TSFE']->sys_page->versionOL('tt_news',$row);
+#				// fix pid for record from workspace
+#				$GLOBALS['TSFE']->sys_page->fixVersioningPid('tt_news',$row);
+#			}
+				# Take the first event as selected if no event is selected in the URL
+				if ($showevent==0) {
+					$showevent = $row['uid'];
+				}
+				$eventname = $this->getTranslatedCategory('tx_wseevents_events', $row['uid'], $row['name']);
+				# Set one event option
+				$markerArray['###VALUE###'] = $row['uid'];
+				$markerArray['###OPTION###'] = $eventname;
+				if ($showevent==$row['uid']) {
+					$event_item .= $this->cObj->substituteMarkerArrayCached($template['evtoptionsel'], $markerArray);
+				} else {
+					$event_item .= $this->cObj->substituteMarkerArrayCached($template['evtoption'], $markerArray);
+				}
 			}
 		}
 		# Show selection combo box if more than one event is found
@@ -1180,6 +1195,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->pi_loadLL();
 
 		$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'],$this->piVars['showSpeakerUid']);
+#ToDo: t3lib_pageSelect::getRecordOverlay
 
 		# Check if upload directory is set, if not use the default directory
 		if (!isset($conf['uploadDirectory'])) {

@@ -128,6 +128,11 @@ $TCA['tx_wseevents_sessions'] = Array (
 		'languageField' => 'sys_language_uid',	
 		'transOrigPointerField' => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',
+
+		'versioning_followPages' => TRUE,
+		'origUid' => 't3_origuid',
+		'shadowColumnsForNewPlaceholders' => 'sys_language_uid,l18n_parent',
+
 		'default_sortby' => 'ORDER BY crdate',	
 		'delete' => 'deleted',	
 		'type' => 'sys_language_uid',
@@ -157,6 +162,11 @@ $TCA['tx_wseevents_speakers'] = Array (
 		'languageField' => 'sys_language_uid',	
 		'transOrigPointerField' => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
+
+		'versioning_followPages' => TRUE,
+		'origUid' => 't3_origuid',
+		'shadowColumnsForNewPlaceholders' => 'sys_language_uid,l18n_parent',
+
 		'default_sortby' => 'ORDER BY name,firstname',	
 		'delete' => 'deleted',	
 		'type' => 'sys_language_uid',
@@ -226,6 +236,15 @@ $TCA['tx_wseevents_categories'] = Array (
 	)
 );
 
+
+// enable Workspace versioning only for TYPO3 v 4.0 and higher
+if (t3lib_div::int_from_ver(TYPO3_version) >= 4000000) {
+	$TCA['tx_wseevents_sessions']['ctrl']['versioningWS'] = TRUE;
+	$TCA['tx_wseevents_speakers']['ctrl']['versioningWS'] = TRUE;
+} else {
+	$TCA['tx_wseevents_sessions']['ctrl']['versioning'] = TRUE;
+	$TCA['tx_wseevents_speakers']['ctrl']['versioning'] = TRUE;
+}
 
 t3lib_div::loadTCA('tt_content');
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages';

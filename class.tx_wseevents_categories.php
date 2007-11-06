@@ -101,10 +101,10 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 		// --------------------- Get the list of categories ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_categories';
-		$queryWhere = t3lib_BEfunc::BEenableFields($tableName).
-			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+		$queryWhere = $TCA[$tableName]['ctrl']['languageField'].'=0'.
 			' AND pid in('.$this->selectedPids.')'.
-			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+			t3lib_BEfunc::BEenableFields($tableName).
+			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey';
@@ -122,13 +122,15 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 		// Clear the item array
 		$PA['items'] = array();
 		// Fill item array with rooms of location of selected event
-		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			// Add the name and id to the itemlist
-			$entry = array();
-			$entry[0] = $row['shortkey'].' - '.$row['name'];
-			$entry[1] = $row['uid'];
-			$entry[2] = '';
-			$PA['items'][] = $entry;
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				// Add the name and id to the itemlist
+				$entry = array();
+				$entry[0] = $row['shortkey'].' - '.$row['name'];
+				$entry[1] = $row['uid'];
+				$entry[2] = '';
+				$PA['items'][] = $entry;
+			}
 		}
 
 #		debug ($PA);
