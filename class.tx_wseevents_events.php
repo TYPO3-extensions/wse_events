@@ -428,11 +428,12 @@ class tx_wseevents_events {
 		} else {
 			$queryWhere = $pidWhere.t3lib_BEfunc::deleteClause($tableName);
 		}
-		$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+		$queryWhere .= ' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
+#debug($queryWhere,'$queryWhere tx_wseevents_events');
 
 		// Get info about the event
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -452,13 +453,14 @@ class tx_wseevents_events {
 			if ($location>0) {
 				$tableName ='tx_wseevents_rooms';
 				$queryWhere = 'location='.$location.
-					$queryWhere .= ' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-					t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+					' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+					t3lib_BEfunc::versioningPlaceholderClause($tableName);
 				$groupBy = '';
 				$orderBy = 'uid';
 				$limit = '';
+#debug($queryWhere,'$queryWhere tx_wseevents_rooms');
 
-				// Get info about the event
+				// Get info about the roomss of the location
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 					'*',
 					$tableName,
@@ -475,6 +477,7 @@ class tx_wseevents_events {
 				}
 			}
 		}
+#debug($roomlist,'$roomlist');
 		return $roomlist;
 	}
 

@@ -115,6 +115,9 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('rooms.name').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('rooms.seats').'</span>'.LF,
 				'',
 			)
 		);
@@ -225,6 +228,8 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 								$row['name'],
 								$BE_USER->uc['titleLen']
 							).LF,
+						TAB.TAB.TAB.TAB.TAB
+							.$row['seats'].LF,
 						TAB.TAB.TAB.TAB.TAB
 							.$this->getEditIcon($uid).LF
 							.TAB.TAB.TAB.TAB.TAB

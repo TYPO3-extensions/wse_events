@@ -99,10 +99,10 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_locations';
 		$queryWhere = 'pid in('.$this->selectedPids.')'.
-			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
 			t3lib_BEfunc::BEenableFields($tableName).
 			t3lib_BEfunc::deleteClause($tableName).
-			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';

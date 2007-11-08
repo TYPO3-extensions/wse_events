@@ -43,6 +43,7 @@
 			<label index="locations.name">Name of location</label>
 			<label index="subModuleTitle_rooms">Rooms</label>
 			<label index="rooms.name">Name of room</label>
+			<label index="rooms.seats">Seats</label>
 			<label index="rooms.location">Location:</label>
 			<label index="subModuleTitle_speakers">Speaker</label>
 			<label index="speakers.name">Name of Speaker</label>
@@ -97,6 +98,7 @@
 			<label index="locations.name">Name des Veranstaltungsortes</label>
 			<label index="subModuleTitle_rooms">Räume</label>
 			<label index="rooms.name">Name des Raums</label>
+			<label index="rooms.seats">Plätze</label>
 			<label index="rooms.location">Veranstaltungsort:</label>
 			<label index="subModuleTitle_speakers">Referenten</label>
 			<label index="speakers.name">Name des Referenten</label>

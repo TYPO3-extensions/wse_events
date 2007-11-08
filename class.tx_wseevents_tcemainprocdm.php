@@ -64,18 +64,20 @@ class tx_wseevents_tcemainprocdm {
 			$fieldArray['fullname'] = $name.', '.$firstname;
 		}
         if ($table == 'tx_wseevents_timeslots') {
+#debug($fieldArray,'$fieldArray');
 			if ($status == 'update') {
 				// If record is edited, than read the data from database
 				$row = t3lib_BEfunc::getRecord ($table, $id);
 			} else {
 				// If record is created, read the data from input fields
 				$row = array();
-				$row['event'] = $fieldArray['event'];
-				$row['eventday'] = $fieldArray['eventday'];
-				$row['begin'] = $fieldArray['begin'];
-				$row['length'] = $fieldArray['length'];
-				$row['room'] = $fieldArray['room'];
 			}
+			if (!empty($fieldArray['event']))		$row['event'] = $fieldArray['event'];
+			if (!empty($fieldArray['eventday']))	$row['eventday'] = $fieldArray['eventday'];
+			if (!empty($fieldArray['begin']))		$row['begin'] = $fieldArray['begin'];
+			if (!empty($fieldArray['length']))		$row['length'] = $fieldArray['length'];
+			if (!empty($fieldArray['room']))		$row['room'] = $fieldArray['room'];
+			
 			$fieldArray['name'] = tx_wseevents_timeslots::formatSlotName($row);
 		}
         if ($table == 'tx_wseevents_speakerrestrictions') {

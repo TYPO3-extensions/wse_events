@@ -671,10 +671,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$catcolor_notdefined = '#FFFFFF';
 		}
 
-		# For debugging output used in development
+		# Check for given width of time column
 		$timecolwidth = $conf['listTimeslotView.']['timeColWidth'];
 		if (empty($timecolwidth)) {
 			$timecolwidth = 0;
+		}
+
+		# Check for given width of column between days in "All days" view
+		if ($showday==0) {
+			$daydelimwidth = $conf['listTimeslotView.']['dayDelimWidth'];
+		}
+		if (empty($daydelimwidth)) {
+			$daydelimwidth = 0;
 		}
 
 		# For debugging output used in development
@@ -708,6 +716,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['titlecol']       = $this->cObj->getSubpart($template['titlerow'],  '###TITLECOLUMN###');
 		$template['headerrow']      = $this->cObj->getSubpart($template['total'],     '###HEADERROW###');
 		$template['headercol']      = $this->cObj->getSubpart($template['headerrow'], '###HEADERCOLUMN###');
+		$template['headercolempty'] = $this->cObj->getSubpart($template['headerrow'], '###HEADERCOLUMNEMPTY###');
 		$template['slotrow']        = $this->cObj->getSubpart($template['total'],     '###SLOTROW###');
 		$template['timecol']        = $this->cObj->getSubpart($template['slotrow'],   '###TIMECOLUMN###');
 		$template['timecolfree']    = $this->cObj->getSubpart($template['slotrow'],   '###TIMECOLUMNEMPTY###');
@@ -855,7 +864,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			} else {
 				$columncount = $roomcount;
 			}
-			$slotcolwidth = (100 - $timecolwidth) / $columncount;
+			$slotcolwidth = (100 - $timecolwidth - (($daycount-1) * $daydelimwidth)) / $columncount;
 		}
 
 		# Here the output begins
@@ -884,6 +893,16 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$markerArray['###COLUMNWIDTH###']  = $slotcolwidth.'%';
 					}
 					$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercol'], $markerArray);
+				}
+				
+				# Insert space between days if defined
+				if (($showday==0) and ($d<$daycount)) {
+					if ($daydelimwidth>0) {
+						$markerArray = array();
+						$markerArray['###COLUMNWIDTH###']  = $daydelimwidth.'%';
+						$content_title .= $this->cObj->substituteMarkerArrayCached($template['headercolempty'], $markerArray);
+						$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercolempty'], $markerArray);
+					}
 				}
 			}
 		}
@@ -1005,6 +1024,29 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							}
 						}
 					}
+					if (($showday==0) and ($d<$daycount)) {
+						if ($daydelimwidth>0) {
+							$markerArray = array();
+/*
+							$markerArray['###SLOTDAY###'] = '';
+							$markerArray['###SLOTROOM###'] = '';
+							$markerArray['###SLOTNUM###'] = '';
+							$markerArray['###SLOTBEGIN###'] = '';
+							$markerArray['###SLOTEND###'] = '';
+							$markerArray['###SLOTNAME###'] = '';
+							$markerArray['###SLOTSESSION###'] = '';
+							$markerArray['###SLOTTEASER###'] = '';
+							$markerArray['###SLOTCATEGORYKEY###'] = '';
+							$markerArray['###SLOTCATEGORYCOLOR###'] = $catcolor_notdefined;
+							$markerArray['###SLOTLINK###'] = '';
+*/
+							$markerArray['###SLOTCATEGORY###'] = 0;
+							$markerArray['###SLOTSIZE###'] = 1;
+							$markerArray['###SLOTWIDTH###'] = 1;
+							$markerArray['###COLUMNWIDTH###']  = $daydelimwidth.'%';
+							$content_slotrow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
+						}
+					}
 				}
 			}
 			$subpartArray1['###SLOTCOLUMN###'] = $content_slotrow;
@@ -1071,6 +1113,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 
 		$subpartArray1['###HEADERCOLUMN###'] = $content_header;
+		$subpartArray1['###HEADERCOLUMNEMPTY###'] = '';
 		$markerArray = array();
 		if ($hidetime==0) {
 			$markerArray['###HEADERBEGIN###'] = $this->pi_getLL('tx_wseevents_sessions.slot_titlebegin','Time');

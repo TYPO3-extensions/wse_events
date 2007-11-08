@@ -1,3 +1,6 @@
+2007-11-08
+	* Added option to set delimiter between the days in time slot view.
+
 2007-10-18
 	* Finished changes for more than one sys folder for event and common data.
 	* "localize to" function for common and event data.

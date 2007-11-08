@@ -96,8 +96,8 @@ class tx_wseevents_rooms {
 		$queryWhere = 'uid='.$PA['row']['event'].
 			t3lib_BEfunc::BEenableFields($tableName).
 			t3lib_BEfunc::deleteClause($tableName).
-			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -130,8 +130,8 @@ class tx_wseevents_rooms {
 		$queryWhere = 'location='.$location.
 			t3lib_BEfunc::BEenableFields($tableName).
 			t3lib_BEfunc::deleteClause($tableName).
-			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';

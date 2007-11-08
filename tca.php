@@ -157,8 +157,8 @@ $TCA['tx_wseevents_events'] = Array (
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.maxslot',
 			'config' => Array (
 				'type' => 'input',
-				'size' => '1',
-				'max' => '1',
+				'size' => '2',
+				'max' => '2',
 				'eval' => 'int',
 				'range' => Array (
 					'upper' => '99',
@@ -701,11 +701,12 @@ $TCA['tx_wseevents_sessions'] = Array (
 		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, event, name, category, number, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, event, name;;2, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
 		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, name, comment, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (
-		'1' => Array('showitem' => '')
+		'1' => Array('showitem' => ''),
+		'2' => Array('showitem' => 'category,number')
 	)
 );
 
