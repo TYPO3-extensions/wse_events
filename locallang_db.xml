@@ -46,6 +46,7 @@
 			<label index="tx_wseevents_sessions.number">Session number</label>
 			<label index="tx_wseevents_sessions.teaser">Teaser text</label>
 			<label index="tx_wseevents_sessions.description">Session description</label>
+			<label index="tx_wseevents_sessions.documents">Presentations</label>
 			<label index="tx_wseevents_speakers">WSE Speakers</label>
 			<label index="tx_wseevents_speakers.name">Name</label>
 			<label index="tx_wseevents_speakers.firstname">First name</label>
@@ -124,6 +125,7 @@
 			<label index="tx_wseevents_sessions.number">Vortragsnummer</label>
 			<label index="tx_wseevents_sessions.teaser">Kurztext</label>
 			<label index="tx_wseevents_sessions.description">Vortragsbeschreibung</label>
+			<label index="tx_wseevents_sessions.documents">Präsentationen</label>
 			<label index="tx_wseevents_speakers">WSE-Referenten</label>
 			<label index="tx_wseevents_speakers.name">Name</label>
 			<label index="tx_wseevents_speakers.firstname">Vorname</label>

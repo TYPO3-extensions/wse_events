@@ -167,6 +167,7 @@ CREATE TABLE tx_wseevents_sessions (
 	number int(11) DEFAULT '0' NOT NULL,
 	teaser text NOT NULL,
 	description text NOT NULL,
+	documents blob NOT NULL,
 	
 	t3ver_oid int(11) DEFAULT '0' NOT NULL,
 	t3ver_id int(11) DEFAULT '0' NOT NULL,

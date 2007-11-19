@@ -201,6 +201,20 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['row'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM###');
 		$template['row_alt'] = $this->cObj->getSubpart($template['singlerow'],'###ITEM_ALT###');
 
+		# Check if target for documents link is set, if not use the default target
+		if (!isset($conf['documentsTarget'])) {
+			$this->documentsTarget = 'target="_blank"';
+		} else {
+			$this->documentsTarget = $conf['documentsTarget'];
+		}
+		# Check for delimiter between the documents
+		if (!isset($conf['documentsdelimiter'])) {
+			$this->internal['documentsdelimiter'] = '<br />';
+		} else {
+			$this->internal['documentsdelimiter'] = $conf['documentsdelimiter'];
+		}
+
+
 		# Initializing the query parameters:
 		$sorting = $this->conf['sorting'];
 //		list($this->internal['orderBy'],$this->internal['descFlag']) = explode(':',$sorting);
@@ -341,6 +355,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###SPEAKER###'] = $this->getFieldHeader('speaker');
 #		$markerArray['###ROOM###'] = $this->getFieldHeader('room');
 		$markerArray['###TIMESLOTS###'] = $this->getFieldHeader('timeslots');
+		$markerArray['###DOCUMENTSNAME###'] = $this->getFieldHeader('documents');
 		$content_item .= $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray);
 
 		$switch_row = 0;
@@ -366,6 +381,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
 					$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
 					$markerArray['###DESCRIPTIONDATA###'] = $this->getFieldContent('description');
+					$markerArray['###DOCUMENTSNAME###'] = $this->getFieldHeader('documents');
+					$markerArray['###DOCUMENTSDATA###'] = $this->getFieldContent('documents');
 					$markerArray['###NAME###'] = $sessionname;
 					$markerArray['###SPEAKER###'] = $this->getFieldContent('speaker');
 #					$markerArray['###ROOM###'] = $this->getFieldContent('room');
@@ -1183,6 +1200,19 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		// This sets the title of the page for use in indexed search results:
 		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
 
+		# Check if target for documents link is set, if not use the default target
+		if (!isset($conf['documentsTarget'])) {
+			$this->documentsTarget = 'target="_blank"';
+		} else {
+			$this->documentsTarget = $conf['documentsTarget'];
+		}
+		# Check for delimiter between the documents
+		if (!isset($conf['documentsdelimiter'])) {
+			$this->internal['documentsdelimiter'] = '<br />';
+		} else {
+			$this->internal['documentsdelimiter'] = $conf['documentsdelimiter'];
+		}
+
 		// Link for back to list view
 		$label = $this->pi_getLL('back','Back');  // the link text
 		if ($this->piVars['back2list']<>1) {
@@ -1210,6 +1240,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###TIMESLOTSDATA###'] = $this->getFieldContent('timeslots');
 		$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
 		$markerArray['###DESCRIPTIONDATA###'] = $this->getFieldContent('description');
+		$markerArray['###DOCUMENTSNAME###'] = $this->getFieldHeader('documents');
+		$markerArray['###DOCUMENTSDATA###'] = $this->getFieldContent('documents');
 		$markerArray['###BACKLINK###'] = $backlink;
 
 #		$this->pi_getEditPanel();
@@ -1526,6 +1558,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$data = $this->pi_getRecord('static_countries',$this->internal['currentRow'][$fN]);
 				$iso = $data['cn_iso_3'];
 				return $this->staticInfo->getStaticInfoName('COUNTRIES', $iso);
+			break;
+
+			case 'documents':
+				foreach(explode(',',$this->internal['currentRow'][$fN]) as $k){
+				    $documentsname = '<a href="uploads/tx_wseevents/'.$k.'" '.$this->documentsTarget.'>'.$k.'</a>';
+					if (isset($content)) {	
+						$content .= $this->internal['documentsdelimiter'].$documentsname;
+					} else {
+						$content = $documentsname;
+					}
+				}
+				return $content;
 			break;
 
 			default:

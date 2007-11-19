@@ -699,9 +699,25 @@ $TCA['tx_wseevents_sessions'] = Array (
 				),
 			)
 		),
+		'documents' => Array (		
+			'exclude' => 1,		
+			'l10n_mode' => 'exclude',
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.documents',
+			'config' => Array (
+	            'type' => 'group',
+	            'internal_type' => 'file',
+	            'allowed' => '',    
+	            'disallowed' => 'php,php3',    
+	            'max_size' => 2000,    
+	            'uploadfolder' => 'uploads/tx_wseevents',
+				'size' => 6,	
+				'minitems' => 0,
+				'maxitems' => 99,
+			)
+		),
 	),
 	'types' => Array (
-		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, event, name;;2, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]'),
+		'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, event, name;;2, comment, speaker, room, timeslots, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], documents'),
 		'1' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, t3ver_label, name, comment, teaser, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts]')
 	),
 	'palettes' => Array (

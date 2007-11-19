@@ -16,6 +16,7 @@
             <label index="tx_wseevents_sessions.listFieldHeader_teaser">Teaser</label>
             <label index="tx_wseevents_sessions.listFieldHeader_timeslots">Time slots</label>
             <label index="tx_wseevents_sessions.listFieldHeader_description">Description</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_documents">Presentations</label>
             <label index="tx_wseevents_sessions.notimeslots">not yet scheduled</label>
             <label index="tx_wseevents_sessions.nospeakers">no speaker assigned</label>
             <label index="tx_wseevents_sessions.choosecategory">Choose category</label>
@@ -48,6 +49,7 @@
             <label index="tx_wseevents_sessions.listFieldHeader_teaser">Kurzinfo</label>
             <label index="tx_wseevents_sessions.listFieldHeader_timeslots">Zeitblock</label>
             <label index="tx_wseevents_sessions.listFieldHeader_description">Beschreibung</label>
+            <label index="tx_wseevents_sessions.listFieldHeader_documents">Präsentationen</label>
             <label index="tx_wseevents_sessions.notimeslots">noch nicht geplant</label>
             <label index="tx_wseevents_sessions.nospeakers">noch kein Referent</label>
             <label index="tx_wseevents_sessions.choosecategory">Kategorie wählen</label>
