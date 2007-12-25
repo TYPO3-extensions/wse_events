@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
 	<meta type="array">
 		<type>module</type>
@@ -61,8 +61,8 @@
 			<label index="title">WSE Events</label>
 		</languageKey>
 		<languageKey index="de" type="array">
-			<label index="title">WSE Veranstaltungen</label>
-			<label index="notOnRootpage">Wählen Sie einen Systemordner um Veranstaltungs- und Gemeinsame Daten einzugeben.</label>
+			<label index="title">WSE-Veranstaltungen</label>
+			<label index="notOnRootpage">Wählen Sie einen Systemordner, um Veranstaltungs- und gemeinsame Daten einzugeben.</label>
 			<label index="language">Sprache</label>
 			<label index="translate">Übersetzung</label>
 			<label index="norecords">Keine Datensätze vorhanden</label>
@@ -70,7 +70,7 @@
 			<label index="newrecord">Neuen Datensatz in Systemordner anlegen</label>
 			<label index="function1">Veranstaltungsdaten</label>
 			<label index="subModuleTitle_time_slots">Vortragszeiten</label>
-			<label index="timeslots.id">Id</label>
+			<label index="timeslots.id">ID</label>
 			<label index="timeslots.name">Vortragszeit</label>
 			<label index="timeslots.eventday">Tag</label>
 			<label index="timeslots.room">Raum</label>
@@ -78,13 +78,13 @@
 			<label index="timeslots.begin">Anfang</label>
 			<label index="timeslots.length">Länge</label>
 			<label index="subModuleTitle_sessions">Vorträge</label>
-			<label index="sessions.info">Notiz: Die Berechnung der möglichen Vortragszeiten erfolgt vor dem Bearbeiten eines Vortragsdatensatzes. Wenn Sie einen Sprecher hinzufügen oder löschen, speichern Sie den Datensatz und Bearbeiten ihn erneut damit die möglichen Vortagszeiten neu berechnet werden.</label>
+			<label index="sessions.info">Hinweis: Die Berechnung der möglichen Vortragszeiten erfolgt vor dem Bearbeiten eines Vortragsdatensatzes. Wenn Sie einen Referenten hinzufügen oder löschen, speichern Sie den Datensatz und bearbeiten ihn erneut, damit die möglichen Vortagszeiten neu berechnet werden.</label>
 			<label index="sessions.category">Kat.Num</label>
 			<label index="sessions.name">Name des Vortrags</label>
-			<label index="sessions.timeslots">Slots</label>
-			<label index="subModuleTitle_speaker_restrictions">Referenten Beschränkungen</label>
+			<label index="sessions.timeslots">Zeitblöcke</label>
+			<label index="subModuleTitle_speaker_restrictions">Referentenbeschränkungen</label>
 			<label index="speakers.speaker">Referenten</label>
-			<label index="speakers.eventday">Veranst. Tag</label>
+			<label index="speakers.eventday">Veranst.-Tag</label>
 			<label index="speakers.begin">Anfang</label>
 			<label index="speakers.end">Ende</label>
 			<label index="subModuleTitle_events">Veranstaltungen</label>
@@ -107,7 +107,7 @@
 			<label index="categories.shortkey">Kurzbezeichnung</label>
 			<label index="categories.name">Name der Kategorie</label>
 			<label index="function3">Veranstaltungsplanung</label>
-			<label index="not_implemented">Die Bearbeitung ist zur Zeit noch nicht implementiert. Benutzen Sie das Web-&gt;List Modul stattdessen um die Datensätze zu Bearbeiten.</label>
+			<label index="not_implemented">Die Bearbeitung ist zur Zeit noch nicht implementiert. Benutzen Sie stattdessen das Modul Web&gt;List, um die Datensätze zu bearbeiten.</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">
@@ -155,6 +155,10 @@
 			<label index="categories.name" type="integer">38340583</label>
 			<label index="function3" type="integer">18142970</label>
 			<label index="not_implemented" type="integer">110800253</label>
+			<label index="notOnRootpage" type="integer">4865620</label>
+			<label index="translate" type="integer">233622500</label>
+			<label index="newrecord" type="integer">265063023</label>
+			<label index="rooms.seats" type="integer">187299883</label>
 		</languageKey>
 	</orig_hash>
 	<orig_text type="array">
@@ -202,6 +206,10 @@
 			<label index="categories.name">Name of Category</label>
 			<label index="function3">Session planning</label>
 			<label index="not_implemented">Editing is currently not implemented. Use the Web-&gt;List module instead to edit the data records.</label>
+			<label index="notOnRootpage">Select a sys folder for event and common data input.</label>
+			<label index="translate">Translate</label>
+			<label index="newrecord">Create new record in sys folder</label>
+			<label index="rooms.seats">Seats</label>
 		</languageKey>
 	</orig_text>
 </T3locallang>
