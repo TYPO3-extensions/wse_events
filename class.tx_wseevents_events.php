@@ -391,6 +391,9 @@ class tx_wseevents_events {
 					$this_h += 1;
 					$this_m -= 60;
 				}
+				if ($this_h>=24) {
+					$finished = true;
+				}
 				if ($thistime==$end) {
 					$finished = true;
 				}

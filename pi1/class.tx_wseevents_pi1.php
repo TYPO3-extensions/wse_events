@@ -881,6 +881,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			} else {
 				$columncount = $roomcount;
 			}
+			if ($columncount==0) {
+				$columncount = 1;
+			}
 			$slotcolwidth = (100 - $timecolwidth - (($daycount-1) * $daydelimwidth)) / $columncount;
 		}
 
@@ -1675,7 +1678,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	string		comma seperated list of sessions for the speaker
 	 */
 	function getSpeakerSessionList($speakerid,$eventPid) {
-		$where = 'sys_language_uid=0'.$this->cObj->enableFields('tx_wseevents_sessions');
+		$where = 'sys_language_uid=0'.$this->cObj->enableFields('tx_wseevents_sessions').' AND pid='.$eventPid;
 		$this->conf['pidList'] = $eventPid;
 #		$res = $this->pi_exec_query('tx_wseevents_sessions',0,$where);
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('speaker, uid', 'tx_wseevents_sessions', $where);
