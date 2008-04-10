@@ -708,6 +708,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$showdebug = 0;
 		}
 
+		# For debugging SQL output used in development
+		$showdebugsql = $conf['listTimeslotView.']['debugsql'];
+		if (empty($showdebugsql)) {
+			$showdebugsql = 0;
+		}
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -749,6 +755,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		# Check for amount of events
 		$this->conf['pidList'] = $this->conf['pidListEvents'];
 	    $where1 = ' AND sys_language_uid = 0';
+		if ($showdebugsql==1) { echo 'SQL1:'.$where1.'<br>'; };
 		$res = $this->pi_exec_query('tx_wseevents_events',1,$where1,'','','name,uid');
 		list($eventcount) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
 
@@ -756,6 +763,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$event_item = '';	// Clear var;
 		$markerArray = array();
 		// Make listing query, pass query to SQL database:
+		if ($showdebugsql==1) { echo 'SQL2:'.$where1.'<br>'; };
 		$res = $this->pi_exec_query('tx_wseevents_events',0,$where1);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			# Take the first event as selected if no event is selected in the URL
@@ -834,6 +842,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 
 		# Get count of rooms and name of rooms
+		if ($showdebugsql==1) { echo 'getRoomInfo:'.$event['location'].'<br>'; };
 		$rooms = $this->getRoomInfo($event['location']);
 		$roomcount = count($rooms);
 		$roomids = '';
@@ -939,15 +948,20 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						if ($showdebug>0) {
 							$content_slotrow .= LF.'<!-- s='.$s.' d='.$d.' r='.$r.' -->';
 						}
-						$slot_id = $this->getSlot($showevent, $d, $rooms[$r]['uid'], $s);
+						if ($showdebugsql==1) { echo '<br>getSlot:'.$showevent.', '.$d.', '.$rooms[$r]['uid'].', '.$s.'<br>'; };
+						$slot_id = $this->getSlot($showevent, $d, $rooms[$r]['uid'], $s, $showdebugsql);
 						if (empty($slot_id) && !$allrooms) {
 							// Check if a slot is assigned for all rooms
-							$slot_id = $this->getSlot($showevent, $d, 0, $s);
+							if ($showdebugsql==1) { echo 'getSlot:'.$showevent.', '.$d.', 0, '.$s.'<br>'; };
+							$slot_id = $this->getSlot($showevent, $d, 0, $s, $showdebugsql);
 							$allrooms = true;
 						}
 						if (!empty($slot_id)) {
+							if ($showdebugsql==1) { echo 'getSlotLength:'.$slot_id.'<br>'; };
 							$slot_len = $this->getSlotLength($slot_id);
+							if ($showdebugsql==1) { echo 'slot_len:'.$slot_len.'<br>getSlotSession:'.$slot_id.'<br>'; };
 							$sessiondata = $this->getSlotSession($slot_id);
+							if ($showdebugsql==1) { echo 'sessiondata:'.$sessiondata.'<br>'; };
 							if (!empty($sessiondata)) {
 							    $label = $sessiondata['catnum'];  // the link text
 							    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
@@ -1777,12 +1791,19 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @param	integer		$slot: number of time slot
 	 * @return	integer		id of slot if a slot is found
 	 */
-	function getSlot($event, $day, $room, $slot) {
-		$where = 'sys_language_uid=0 AND event='.$event.' AND eventday='.$day.' AND room='.$room.' AND begin='.$slot.$this->cObj->enableFields('tx_wseevents_timeslots');
+	function getSlot($event, $day, $room, $slot, $showdbgsql) {
+		$where = 'event='.$event.' AND eventday='.$day.' AND room='.$room.' AND begin='.$slot.$this->cObj->enableFields('tx_wseevents_timeslots');
 		$this->conf['pidList'] = $eventPid;
+		if ($showdbgsql==1) { echo 'getSlot where:'.$where.'<br>'; };
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'tx_wseevents_timeslots', $where);
-		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		return $row['uid'];
+		if ($res) {
+			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			if ($showdbgsql==1) { echo 'getSlot return:'.$row['uid'].'<br>'; };
+			return $row['uid'];
+		} else {
+			if ($showdbgsql==1) { echo 'getSlot return:0<br>'; };
+			return 0;
+		}
 	}
 
 
@@ -1793,7 +1814,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	integer		length of a time slot
 	 */
 	function getSlotLength($slot_id) {
-		$where = 'sys_language_uid=0 AND uid='.$slot_id.$this->cObj->enableFields('tx_wseevents_timeslots');
+		$where = 'uid='.$slot_id.$this->cObj->enableFields('tx_wseevents_timeslots');
 		$this->conf['pidList'] = $eventPid;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('length', 'tx_wseevents_timeslots', $where);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
