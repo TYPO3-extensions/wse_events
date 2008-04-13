@@ -2,8 +2,11 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
+* (c) 2007 Niels Pardon (mail@niels-pardon.de)
 * All rights reserved
+*
+* Adapted for use by the 'wse_events' extension 
+* from Michael Oehlhof <typo3@oehlhof.de>
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
 * free software; you can redistribute it and/or modify
@@ -32,11 +35,13 @@ define('LF', chr(10));
 
 /**
  * Class 'tx_wseevents_backendlist' for the 'wse_events' extension.
+ * Adapted from subpackage 'tx_seminars' for use by the 'wse_events' extension by Michael Oehlhof <typo3@oehlhof.de>
  *
  * @package		TYPO3
  * @subpackage	wse_events
- * @author		Michael Oehlhof <typo3@oehlhof.de>
- */
+ * @author		Niels Pardon <mail@niels-pardon.de>
+ *  
+*/
 class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	/** the table we're working on */
 	var $tableName;
