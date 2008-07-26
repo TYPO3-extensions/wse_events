@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof
+* (c) 2007-2008 Michael Oehlhof
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -68,6 +68,7 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 	 * @return	void		...
 	 */
 	function tx_wseevents_categories() {
+		$this->init();
 	}
 
 	/**

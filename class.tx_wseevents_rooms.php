@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof
+* (c) 2007-2008 Michael Oehlhof
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -96,7 +96,7 @@ class tx_wseevents_rooms {
 		$queryWhere = 'uid='.$PA['row']['event'].
 			t3lib_BEfunc::BEenableFields($tableName).
 			t3lib_BEfunc::deleteClause($tableName).
-			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
+//			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
 			t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
@@ -108,7 +108,7 @@ class tx_wseevents_rooms {
 			$queryWhere = 'pid='.$PA['row']['pid'].
 				t3lib_BEfunc::BEenableFields($tableName).
 				t3lib_BEfunc::deleteClause($tableName).
-				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
+//				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
 				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		}
 
@@ -123,11 +123,16 @@ class tx_wseevents_rooms {
 
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)		;
 		$location = $row['location'];
+		if (!empty($location)) {
+			$location = 'location='.$location;
+		} else {
+			$location = '1=1';
+		}
 
 		// --------------------- Get the rooms of the location of the selected event ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_rooms';
-		$queryWhere = 'location='.$location.
+		$queryWhere = $location.
 			t3lib_BEfunc::BEenableFields($tableName).
 			t3lib_BEfunc::deleteClause($tableName).
 			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.

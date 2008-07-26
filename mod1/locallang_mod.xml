@@ -16,9 +16,9 @@
 			<label index="mlang_labels_tabdescr">With this modul, speaker and session data for events can be managed.</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
-			<label index="mlang_tabs_tab">WSE Events</label>
-			<label index="mlang_labels_tablabel">Warpstock Europe Event Management</label>
-			<label index="mlang_labels_tabdescr">With this modul, speaker and session data for events can be managed.</label>
+			<label index="mlang_tabs_tab">Événements WSE</label>
+			<label index="mlang_labels_tablabel">Gestion d'événements Warpstock Europe</label>
+			<label index="mlang_labels_tabdescr">À l'aide de ce module, les intervenants et les sessions peuvent être gérés.</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="mlang_tabs_tab">WSE-Veranst.</label>
@@ -32,9 +32,19 @@
 			<label index="mlang_labels_tablabel" type="integer">75876475</label>
 			<label index="mlang_labels_tabdescr" type="integer">266910884</label>
 		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="mlang_tabs_tab" type="integer">135883494</label>
+			<label index="mlang_labels_tablabel" type="integer">75876475</label>
+			<label index="mlang_labels_tabdescr" type="integer">266910884</label>
+		</languageKey>
 	</orig_hash>
 	<orig_text type="array">
 		<languageKey index="de" type="array">
+			<label index="mlang_tabs_tab">WSE Events</label>
+			<label index="mlang_labels_tablabel">Warpstock Europe Event Management</label>
+			<label index="mlang_labels_tabdescr">With this modul, speaker and session data for events can be managed.</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
 			<label index="mlang_tabs_tab">WSE Events</label>
 			<label index="mlang_labels_tablabel">Warpstock Europe Event Management</label>
 			<label index="mlang_labels_tabdescr">With this modul, speaker and session data for events can be managed.</label>

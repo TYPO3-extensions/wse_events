@@ -251,13 +251,13 @@
 			<label index="tx_wseevents_events.timeend">Heure de fin (hh:mm)</label>
 			<label index="tx_wseevents_events.slotsize">Durée des créneaux (mm)</label>
 			<label index="tx_wseevents_events.maxslot">Créneaux/session max</label>
-			<label index="tx_wseevents_events.defslotcount">Default slot count</label>
+			<label index="tx_wseevents_events.defslotcount">Compte de créneaux par défaut</label>
 			<label index="tx_wseevents_locations">Lieux des WSE</label>
 			<label index="tx_wseevents_locations.name">Nom du lieu</label>
 			<label index="tx_wseevents_locations.website">Site Web</label>
 			<label index="tx_wseevents_rooms">Salles WSE</label>
 			<label index="tx_wseevents_rooms.name">Nom de la salle</label>
-			<label index="tx_wseevents_rooms.number">Nombre de la salle</label>
+			<label index="tx_wseevents_rooms.number">Numéro de la salle</label>
 			<label index="tx_wseevents_rooms.seats">Nombre de places</label>
 			<label index="tx_wseevents_rooms.location">Lieu</label>
 			<label index="tx_wseevents_timeslots">Créneaux horaires WSE</label>
@@ -278,6 +278,7 @@
 			<label index="tx_wseevents_sessions.number">Numéro de session</label>
 			<label index="tx_wseevents_sessions.teaser">Texte d'introduction</label>
 			<label index="tx_wseevents_sessions.description">Description de la session</label>
+			<label index="tx_wseevents_sessions.documents">Présentations</label>
 			<label index="tx_wseevents_speakers">Intervenants WSE</label>
 			<label index="tx_wseevents_speakers.name">Nom</label>
 			<label index="tx_wseevents_speakers.firstname">Prénom</label>
@@ -288,14 +289,19 @@
 			<label index="tx_wseevents_speakers.companylink">Lien vers la compagnie</label>
 			<label index="tx_wseevents_speakers.companylinkwizard">Choisir le lien</label>
 			<label index="tx_wseevents_speakers.info">Informations sur l'intervenant</label>
+			<label index="tx_wseevents_speakers.info_rte">Édition texte enrichi plein écran</label>
 			<label index="tx_wseevents_speakers.image">Photographie</label>
+			<label index="tx_wseevents_speakerrestrictions">Restrictions de l'intervenant WSE</label>
 			<label index="tx_wseevents_speakerrestrictions.speaker">Intervenant</label>
 			<label index="tx_wseevents_speakerrestrictions.comment">Remarque</label>
 			<label index="tx_wseevents_speakerrestrictions.event">Nom de l'événement</label>
 			<label index="tx_wseevents_speakerrestrictions.eventday">Jour de l'événement</label>
-			<label index="tx_wseevents_categories">WSE Categories</label>
+			<label index="tx_wseevents_speakerrestrictions.begin">Début de l'absence</label>
+			<label index="tx_wseevents_speakerrestrictions.end">Fin de l'absence</label>
+			<label index="tx_wseevents_categories">Catégorie WSE</label>
 			<label index="tx_wseevents_categories.name">Nom de la catégorie</label>
 			<label index="tx_wseevents_categories.shortkey">Clé courte</label>
+			<label index="tx_wseevents_categories.color">Couleur de la catégorie</label>
 			<label index="tt_content.list_type_pi1">Gestion de l'événement WSE</label>
 			<label index="tt_content.pi_flexform.sheet_general">Paramètres généraux</label>
 			<label index="tt_content.pi_flexform.sheet_display">Paramètres d'affichage</label>
@@ -540,6 +546,12 @@
 			<label index="tx_wseevents_speakerrestrictions.comment" type="integer">12485638</label>
 			<label index="tx_wseevents_speakerrestrictions.event" type="integer">76589815</label>
 			<label index="tx_wseevents_speakerrestrictions.eventday" type="integer">233325191</label>
+			<label index="tx_wseevents_sessions.documents" type="integer">255288974</label>
+			<label index="tx_wseevents_speakers.info_rte" type="integer">223346550</label>
+			<label index="tx_wseevents_speakerrestrictions" type="integer">139978450</label>
+			<label index="tx_wseevents_speakerrestrictions.begin" type="integer">52338947</label>
+			<label index="tx_wseevents_speakerrestrictions.end" type="integer">194165235</label>
+			<label index="tx_wseevents_categories.color" type="integer">112651918</label>
 		</languageKey>
 	</orig_hash>
 	<orig_text type="array">
@@ -768,6 +780,12 @@
 			<label index="tx_wseevents.pi_flexform.singleSpeaker">Speaker single view page</label>
 			<label index="tx_wseevents.pi_flexform.lastnameFirst">Lastname, Firstname</label>
 			<label index="tx_wseevents.pi_flexform.sorting">Field to be sorted</label>
+			<label index="tx_wseevents_sessions.documents">Presentations</label>
+			<label index="tx_wseevents_speakers.info_rte">Full screen Rich Text Editing</label>
+			<label index="tx_wseevents_speakerrestrictions">WSE Speaker Restrictions</label>
+			<label index="tx_wseevents_speakerrestrictions.begin">Begin of absence</label>
+			<label index="tx_wseevents_speakerrestrictions.end">End of absence</label>
+			<label index="tx_wseevents_categories.color">Color of category</label>
 		</languageKey>
 	</orig_text>
 </T3locallang>

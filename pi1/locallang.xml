@@ -111,10 +111,13 @@
 			<label index="tx_wseevents_sessions.listFieldHeader_teaser">Introduction</label>
 			<label index="tx_wseevents_sessions.listFieldHeader_timeslots">Créneaux horaires</label>
 			<label index="tx_wseevents_sessions.listFieldHeader_description">Description</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_documents">Présentations</label>
 			<label index="tx_wseevents_sessions.notimeslots">pas encore planifiée</label>
 			<label index="tx_wseevents_sessions.nospeakers">pas d'intervenant assigné</label>
 			<label index="tx_wseevents_sessions.choosecategory">Choisir la catégorie</label>
+			<label index="tx_wseevents_sessions.chooseeventday">Choisir un jour d'événement</label>
 			<label index="tx_wseevents_sessions.chooseall">- Toutes les catégories -</label>
+			<label index="tx_wseevents_sessions.choosealldays">- Tous les jours -</label>
 			<label index="tx_wseevents_sessions.showselection">Afficher la catégorie sélectionnée</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_name">Nom de l'intervenant</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_email">Courriel</label>
@@ -124,6 +127,13 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_info">Informations</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_image">Photographie</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessions</label>
+			<label index="tx_wseevents_sessions.slot_titletime">Heure</label>
+			<label index="tx_wseevents_sessions.slot_headerbegin">Début</label>
+			<label index="tx_wseevents_sessions.slot_notassigned">non assigné</label>
+			<label index="tx_wseevents_sessions.slot_notdefined">libre</label>
+			<label index="tx_wseevents_sessions.slot_notassigned_catkey">INUTILISÉ</label>
+			<label index="tx_wseevents_sessions.slot_notdefined_catkey">AUCUN</label>
+			<label index="back">Retour</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">
@@ -210,6 +220,16 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_info" type="integer">176340495</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_image" type="integer">199571973</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions" type="integer">178015084</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_documents" type="integer">255288974</label>
+			<label index="tx_wseevents_sessions.chooseeventday" type="integer">63893531</label>
+			<label index="tx_wseevents_sessions.choosealldays" type="integer">239545202</label>
+			<label index="tx_wseevents_sessions.slot_titletime" type="integer">175559919</label>
+			<label index="tx_wseevents_sessions.slot_headerbegin" type="integer">27289385</label>
+			<label index="tx_wseevents_sessions.slot_notassigned" type="integer">158137343</label>
+			<label index="tx_wseevents_sessions.slot_notdefined" type="integer">178444004</label>
+			<label index="tx_wseevents_sessions.slot_notassigned_catkey" type="integer">62658571</label>
+			<label index="tx_wseevents_sessions.slot_notdefined_catkey" type="integer">189805466</label>
+			<label index="back" type="integer">5603241</label>
 		</languageKey>
 	</orig_hash>
 	<orig_text type="array">
@@ -248,6 +268,36 @@
 		<languageKey index="nl" type="array">
 		</languageKey>
 		<languageKey index="fr" type="array">
+			<label index="tx_wseevents_sessions.listFieldHeader_number">Session number</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_name">Session name</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_speaker">Speaker</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_room">Room</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_teaser">Teaser</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_timeslots">Time slots</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_description">Description</label>
+			<label index="tx_wseevents_sessions.listFieldHeader_documents">Presentations</label>
+			<label index="tx_wseevents_sessions.notimeslots">not yet scheduled</label>
+			<label index="tx_wseevents_sessions.nospeakers">no speaker assigned</label>
+			<label index="tx_wseevents_sessions.choosecategory">Choose category</label>
+			<label index="tx_wseevents_sessions.chooseeventday">Choose event day</label>
+			<label index="tx_wseevents_sessions.chooseall">- All Categories -</label>
+			<label index="tx_wseevents_sessions.choosealldays">- All Days -</label>
+			<label index="tx_wseevents_sessions.showselection">Show selected category</label>
+			<label index="tx_wseevents_speakers.listFieldHeader_name">Speaker name</label>
+			<label index="tx_wseevents_speakers.listFieldHeader_email">E-Mail</label>
+			<label index="tx_wseevents_speakers.listFieldHeader_country">Country of origin</label>
+			<label index="tx_wseevents_speakers.listFieldHeader_company">Company</label>
+			<label index="tx_wseevents_speakers.listFieldHeader_companylink">Link to company</label>
+			<label index="tx_wseevents_speakers.listFieldHeader_info">Information</label>
+			<label index="tx_wseevents_speakers.listFieldHeader_image">Image</label>
+			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessions</label>
+			<label index="tx_wseevents_sessions.slot_titletime">Time</label>
+			<label index="tx_wseevents_sessions.slot_headerbegin">Begin</label>
+			<label index="tx_wseevents_sessions.slot_notassigned">not assigned</label>
+			<label index="tx_wseevents_sessions.slot_notdefined">free</label>
+			<label index="tx_wseevents_sessions.slot_notassigned_catkey">UNUSED</label>
+			<label index="tx_wseevents_sessions.slot_notdefined_catkey">NONE</label>
+			<label index="back">Back</label>
 		</languageKey>
 	</orig_text>
 </T3locallang>

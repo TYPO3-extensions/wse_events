@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
+* (c) 2007-2008 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -224,7 +224,13 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		}
 
 		// Get list of pid 
-		$this->selectedPids = $this->getCommonPids($this->page->pageInfo['uid'],$this->page->pageInfo['pid']);
+//		$this->selectedPids = $this->getCommonPids($this->page->pageInfo['uid'],$this->page->pageInfo['pid']);
+		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
+		// Check if sub pages available and remove main page from list
+		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
+			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
+		}
+
 		// Remove pages with common data
 		$eventPids = $this->removeCommonPages($this->selectedPids);
 		// If all in one page than use page id

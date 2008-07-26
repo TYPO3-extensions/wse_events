@@ -5,8 +5,8 @@
 * (c) 2007 Niels Pardon (mail@niels-pardon.de)
 * All rights reserved
 *
-* Adapted for use by the 'wse_events' extension 
-* from Michael Oehlhof <typo3@oehlhof.de>
+* Adapted and modified 2007-2008 for use by the 'wse_events' 
+* extension from Michael Oehlhof <typo3@oehlhof.de>
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
 * free software; you can redistribute it and/or modify
@@ -277,13 +277,13 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		foreach (explode(',',$pageList) as $thisPage) {
 			// Initialize variables for the database query.
 			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableEvents).
-				' AND '.$TCA[$this->tableEvents]['ctrl']['languageField'].'=0'.
+//				' AND '.$TCA[$this->tableEvents]['ctrl']['languageField'].'=0'.
 				t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
 			$additionalTables = '';
 			$groupBy = '';
-			$orderBy = 'uid';
+			$orderBy = '';
 			$limit = '';
-			// Get list of all events
+			// Check if event exist
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'count(*)',
 				$this->tableEvents,

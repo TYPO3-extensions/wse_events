@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
+* (c) 2007-2008 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -65,6 +65,7 @@ class tx_wseevents_speakers extends tx_wseevents_dbplugin {
 	 * @return	void		...
 	 */
 	function tx_wseevents_speakers() {
+		$this->init();
 	}
 
 	/**

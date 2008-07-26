@@ -153,6 +153,8 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
 			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
 		}
+		// Remove duplicate entries
+		$this->selectedPids = t3lib_div::uniqueList($this->selectedPids);
 		// Remove pages with common data
 		$eventPids = $this->removeCommonPages($this->selectedPids);
 		// If all in one page than use page id
