@@ -313,30 +313,32 @@ class tx_wseevents_timeslots {
 				// Get list of all restrictions from speakers of the event
 				// and subtract them from the slot list if speaker is not present at the time
 				foreach (explode(',',$speakerlist) as $speaker) {
-					$tableName = 'tx_wseevents_speakerrestrictions';
-					$queryWhere = 'speaker='.$speaker.' AND event='.$eventid.
-						t3lib_BEfunc::versioningPlaceholderClause($tableName).
-						t3lib_BEfunc::deleteClause($tableName);
-					$groupBy = '';
-					$orderBy = 'uid';
-					$limit = '';
-					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-						'*',
-						$tableName,
-						$queryWhere,
-						$groupBy,
-						$orderBy,
-						$limit);
-					if ($res) {
-						while ($speakerrow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-							for ( $s = $speakerrow['begin']; $s <= $speakerrow['end']; $s++ ) {
-								for ($r = 1; $r <= $roomcount; $r++) {
-									$eventslotarray[$speakerrow['eventday']][$r][$s] = 0;
+					if ($speaker) {
+						$tableName = 'tx_wseevents_speakerrestrictions';
+						$queryWhere = 'speaker='.$speaker.' AND event='.$eventid.
+							t3lib_BEfunc::versioningPlaceholderClause($tableName).
+							t3lib_BEfunc::deleteClause($tableName);
+						$groupBy = '';
+						$orderBy = 'uid';
+						$limit = '';
+						$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+							'*',
+							$tableName,
+							$queryWhere,
+							$groupBy,
+							$orderBy,
+							$limit);
+						if ($res) {
+							while ($speakerrow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+								for ( $s = $speakerrow['begin']; $s <= $speakerrow['end']; $s++ ) {
+									for ($r = 1; $r <= $roomcount; $r++) {
+										$eventslotarray[$speakerrow['eventday']][$r][$s] = 0;
+									}
 								}
 							}
-						}
-					} else {
+						} else {
 #debug($queryWhere, '$queryWhere');
+						}
 					}
 				}
 

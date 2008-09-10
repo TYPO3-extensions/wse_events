@@ -224,7 +224,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		}
 
 		// Get list of pid 
-//		$this->selectedPids = $this->getCommonPids($this->page->pageInfo['uid'],$this->page->pageInfo['pid']);
+		$this->selectedPidsAll = $this->getCommonPids($this->page->pageInfo['uid'],$this->page->pageInfo['pid']);
 		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
 		// Check if sub pages available and remove main page from list
 		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
@@ -241,6 +241,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
 		// Get the where clause
 		$wherePid = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids).')';
+		$wherePidAll = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPidsAll).')';
 
 		// Add icon for new record
 		if (!empty($eventPids)) {
@@ -249,7 +250,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of categories --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.$thisPage.t3lib_BEfunc::deleteClause($this->tableCategories).
+		$queryWhere = $wherePidAll.$thisPage.t3lib_BEfunc::deleteClause($this->tableCategories).
 			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
 			t3lib_BEfunc::versioningPlaceholderClause($this->tableCategories);
 		$additionalTables = '';

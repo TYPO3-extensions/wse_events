@@ -1,3 +1,19 @@
+2008-09-10
+	* Version 1.1.14
+	* BE: Fixed SQL error when creating new session.
+	* BE: Fixed missing short category name in sessionlist when no sub pages exist.
+	* BE: Fixed SQL error when creating a session or speaker translation.
+
+2008-07-28
+	* In the presentation titmetable it is possible to cut the title
+	  after a given length and add "..." to the title text.
+	* In the marker section SLOTSALL a new marker SLOTSPEAKER for 
+	  displaying the names of the speakers is added.
+
+2008-07-26
+	* Fixed errors when creating the first session, time slot or 
+	  speaker restriction records and no event record was created before.
+	  
 2008-02-11
 	* Fixed out of memory error when create the first session.
 	* Speaker list now shows only speaker with sessions for the event.

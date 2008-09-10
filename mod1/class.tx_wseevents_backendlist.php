@@ -51,6 +51,7 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 
 	/** Holds a list of pids of the sub pages of the selected page. */
 	var $selectedPids;
+	var $selectedPidsAll;
 	var $selectedPidsTitle;
 	
 	// List of languages

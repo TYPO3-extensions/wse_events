@@ -130,7 +130,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 		'transOrigDiffSourceField' => 'l18n_diffsource',
 
 		'versioning_followPages' => TRUE,
-		'origUid' => 't3_origuid',
+		'origUid' => 't3ver_oid',
 		'shadowColumnsForNewPlaceholders' => 'sys_language_uid,l18n_parent',
 
 		'default_sortby' => 'ORDER BY crdate',	
@@ -164,7 +164,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
 
 		'versioning_followPages' => TRUE,
-		'origUid' => 't3_origuid',
+		'origUid' => 't3ver_oid',
 		'shadowColumnsForNewPlaceholders' => 'sys_language_uid,l18n_parent',
 
 		'default_sortby' => 'ORDER BY name,firstname',	
