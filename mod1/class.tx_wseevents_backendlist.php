@@ -234,8 +234,8 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	function getNewIconList($pidList,$pidTitles) {
 		global $BACK_PATH, $LANG, $BE_USER;
 
-		$result = '<br /><b>'.$LANG->getLL('newrecord').'</b>&nbsp;';
-		$result .= TAB.TAB.'<div id="typo3-newRecordLink">'.LF;
+		$result = TAB.'<br /><b>'.$LANG->getLL('newrecord').'</b>&nbsp;'.LF;
+		$result .= TAB.'<div id="typo3-newRecordLink">'.LF;
 		foreach (explode(',',$pidList) as $thisPid) {
 			# the name of the table where the record should be saved to is stored in $this->tableName
 			if ($BE_USER->check('tables_modify', $this->tableName)
@@ -243,20 +243,20 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 				&& $this->page->pageInfo['doktype'] == 254) {
 				$params = '&edit['.$this->tableName.']['.$thisPid.']=new';
 				$editOnClick = $this->editNewUrl($params, $BACK_PATH);
-				$result .= TAB.TAB.TAB.'<a href="'.htmlspecialchars($editOnClick).'">'.LF
-					.TAB.TAB.TAB.TAB.'<img'.t3lib_iconWorks::skinImg(
+				$result .= TAB.TAB.'<a href="'.htmlspecialchars($editOnClick).'">'.LF
+					.TAB.TAB.TAB.'<img'.t3lib_iconWorks::skinImg(
 						$BACK_PATH,
 						'gfx/new_record.gif',
 						'width="7" height="4"')
 					// We use an empty alt attribute as we already have a textual
 					// representation directly next to the icon.
 					.' title="'.$pidTitles[$thisPid].'" alt="" />'.LF
-					.TAB.TAB.TAB.TAB.$pidTitles[$thisPid].LF
-					.TAB.TAB.TAB.'</a>'.LF
+					.TAB.TAB.TAB.$pidTitles[$thisPid].LF
+					.TAB.TAB.'</a>'.LF
 					.TAB.TAB.'<br />'.LF;
 			}
 		}
-		$result .= TAB.TAB.'</div><br />'.LF;
+		$result .= TAB.'</div><br />'.LF;
 
 		return $result;
 	}

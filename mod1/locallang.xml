@@ -15,6 +15,13 @@
 			<label index="newrecord">Create new record in sys folder</label>
 			<label index="function1">Event data</label>
 			<label index="subModuleTitle_time_slots">Time slots</label>
+			<label index="slotCreate">Create many time slots together</label>
+			<label index="showCreateForm">For every row with a non empty begin time (Slotbegin) there will be time slots created for every checked room.</label>
+			<label index="slotCreated">These time slots were created</label>
+			<label index="slotCreatedComment">Automaticly created</label>
+			<label index="createSlots">Create time slots</label>
+			<label index="tscf_begin">Slotbegin</label>
+			<label index="tscf_len">Length</label>
 			<label index="timeslots.id">Id</label>
 			<label index="timeslots.name">Name of slot</label>
 			<label index="timeslots.eventday">Day</label>
@@ -70,6 +77,13 @@
 			<label index="newrecord">Neuen Datensatz in Systemordner anlegen</label>
 			<label index="function1">Veranstaltungsdaten</label>
 			<label index="subModuleTitle_time_slots">Vortragszeiten</label>
+			<label index="slotCreate">Viele Zeitblöcke zusammen anlegen</label>
+			<label index="showCreateForm">Für jede Zeile mit einer angegebenen Anfangsszeit werden für alle ausgewählten Räume die entsprechenden Zeitblöcke angelegt.</label>
+			<label index="slotCreated">Diese Zeitblöcke wurden angelegt</label>
+			<label index="slotCreatedComment">Automatisch angelegt</label>
+			<label index="createSlots">Zeitblöcke anlegen</label>
+			<label index="tscf_begin">Anfang</label>
+			<label index="tscf_len">Länge</label>
 			<label index="timeslots.id">ID</label>
 			<label index="timeslots.name">Vortragszeit</label>
 			<label index="timeslots.eventday">Tag</label>

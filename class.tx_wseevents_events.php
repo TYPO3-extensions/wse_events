@@ -179,7 +179,7 @@ class tx_wseevents_events {
 		$slotlist = $this->getEventSlotList($PA['row']['event'], $PA['row']['pid']);
 
 		$thisslot = 1;
-		// Create list of event days
+		// Create list of event slots
 		foreach ($slotlist as $slot) {
 			// Add the name and id to the itemlist
 			$entry = array();
@@ -287,7 +287,7 @@ class tx_wseevents_events {
 			$end = $row['timeend'];
 			$size = $row['slotsize'];
 
-			if ((!empty($begin)) && (!empty($begin))) {
+			if ((!empty($begin)) && (!empty($end))) {
 				list($this_h, $this_m) = explode(':', $begin);
 				list($end_h, $end_m) = explode(':', $end);
 

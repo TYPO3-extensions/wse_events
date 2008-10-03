@@ -1,3 +1,8 @@
+2008-10-03
+	* Version 1.1.15
+	* BE: Added form to create many time slots when no time slots are defined
+	  for an event.
+
 2008-09-10
 	* Version 1.1.14
 	* BE: Fixed SQL error when creating new session.
