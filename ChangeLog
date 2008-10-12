@@ -1,3 +1,7 @@
+2008-10-12
+	* FE: Fixed wrong sort order of room in time slot view.
+	* FE: Fix wrong width of time slot if one slot in a row is missing.
+	
 2008-10-03
 	* Version 1.1.15
 	* BE: Added form to create many time slots when no time slots are defined
