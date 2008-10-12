@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
+*  (c) 2007-2008 Michael Oehlhof <typo3@oehlhof.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -702,6 +702,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$daydelimwidth = 0;
 		}
 
+		# Check for given width of event titles
+		$teaserwidth = $conf['listTimeslotView.']['teaserWidth'];
+		if (empty($teaserwidth)) {
+			$teaserwidth = 0;
+		}
+
 		# For debugging output used in development
 		$showdebug = $conf['listTimeslotView.']['debug'];
 		if (empty($showdebug)) {
@@ -729,14 +735,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$template['total']     = $this->cObj->getSubpart($this->templateCode,'###SLOTSALL###');
 		}
 		$template['titlerow']       = $this->cObj->getSubpart($template['total'],     '###TITLEROW###');
+		$template['select']         = $this->cObj->getSubpart($template['titlerow'],  '###SELECT###');
+		$template['titlecol']       = $this->cObj->getSubpart($template['titlerow'],  '###TITLECOLUMN###');
 		$template['evtsection']     = $this->cObj->getSubpart($template['total'],     '###EVENTSELECT###');
 		$template['evtselect']      = $this->cObj->getSubpart($template['evtsection'],'###SELECT###');
 		$template['evtoption']      = $this->cObj->getSubpart($template['evtselect'], '###OPTIONNOTSELECTED###');
 		$template['evtoptionsel']   = $this->cObj->getSubpart($template['evtselect'], '###OPTIONSELECTED###');
-		$template['select']         = $this->cObj->getSubpart($template['titlerow'],  '###SELECT###');
 		$template['option']         = $this->cObj->getSubpart($template['select'],    '###OPTIONNOTSELECTED###');
 		$template['optionsel']      = $this->cObj->getSubpart($template['select'],    '###OPTIONSELECTED###');
-		$template['titlecol']       = $this->cObj->getSubpart($template['titlerow'],  '###TITLECOLUMN###');
 		$template['headerrow']      = $this->cObj->getSubpart($template['total'],     '###HEADERROW###');
 		$template['headercol']      = $this->cObj->getSubpart($template['headerrow'], '###HEADERCOLUMN###');
 		$template['headercolempty'] = $this->cObj->getSubpart($template['headerrow'], '###HEADERCOLUMNEMPTY###');
@@ -950,7 +956,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						}
 						if ($showdebugsql==1) { echo '<br>getSlot:'.$showevent.', '.$d.', '.$rooms[$r]['uid'].', '.$s.'<br>'; };
 						$slot_id = $this->getSlot($showevent, $d, $rooms[$r]['uid'], $s, $showdebugsql);
-						if (empty($slot_id) && !$allrooms) {
+						if ($r==1 && empty($slot_id) && !$allrooms) {
 							// Check if a slot is assigned for all rooms
 							if ($showdebugsql==1) { echo 'getSlot:'.$showevent.', '.$d.', 0, '.$s.'<br>'; };
 							$slot_id = $this->getSlot($showevent, $d, 0, $s, $showdebugsql);
@@ -983,17 +989,26 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTLINK###'] = $sessionlink;
 								$markerArray['###SLOTLINKNAME###'] = $sessionlinkname;
 								$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
-								$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
+								# Cut teaser if longer than max teaser width
+								if ($teaserwidth > 0) {
+									$markerArray['###SLOTTEASER###'] = substr($sessiondata['teaser'], 0, $teaserwidth).'...';
+								} else {
+									$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
+								}
+								# Get speaker list of session
+								$markerArray['###SLOTSPEAKER###'] = $this->getSpeakerNames($sessiondata['speaker']);
 							} else {
 								$markerArray = array();
 								if ($hidenotassigned==0) {
 									$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
 									$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
 									$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+									$markerArray['###SLOTSPEAKER###'] = '';
 								} else {
 									$markerArray['###SLOTNAME###'] = '';
 									$markerArray['###SLOTSESSION###'] = '';
 									$markerArray['###SLOTTEASER###'] = '';
+									$markerArray['###SLOTSPEAKER###'] = '';
 								}
 								$markerArray['###SLOTCATEGORY###'] = 0;
 								$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned_catkey');
@@ -1574,7 +1589,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'country':
 				$data = $this->pi_getRecord('static_countries',$this->internal['currentRow'][$fN]);
 				$iso = $data['cn_iso_3'];
-				return $this->staticInfo->getStaticInfoName('COUNTRIES', $iso);
+				return $this->staticInfo->getStaticInfoName('COUNTRIES', $iso);//.':'.$iso.':'.$this->staticInfo->getCurrentLanguage();
 			break;
 
 			case 'documents':
@@ -1772,7 +1787,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	function getRoomInfo($loc_id) {
 		$where = 'sys_language_uid=0 AND location='.$loc_id.$this->cObj->enableFields('tx_wseevents_rooms');
 		$this->conf['pidList'] = $eventPid;
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,name,comment,seats', 'tx_wseevents_rooms', $where);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,name,comment,seats,number', 'tx_wseevents_rooms', $where, 'number');
 		$id = 1;
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			$rows[$id] = $row;
@@ -1793,7 +1808,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 */
 	function getSlot($event, $day, $room, $slot, $showdbgsql) {
 		$where = 'event='.$event.' AND eventday='.$day.' AND room='.$room.' AND begin='.$slot.$this->cObj->enableFields('tx_wseevents_timeslots');
-		$this->conf['pidList'] = $eventPid;
+//		$this->conf['pidList'] = $eventPid;
 		if ($showdbgsql==1) { echo 'getSlot where:'.$where.'<br>'; };
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'tx_wseevents_timeslots', $where);
 		if ($res) {
@@ -1832,7 +1847,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	function getSlotSession($slot_id) {
 		$where = 'sys_language_uid=0'.$this->cObj->enableFields('tx_wseevents_sessions');
 		$this->conf['pidList'] = $eventPid;
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,name,category,number,teaser,timeslots', 'tx_wseevents_sessions', $where);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,name,category,number,teaser,timeslots,speaker', 'tx_wseevents_sessions', $where);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 //			foreach(explode(',',$row['timeslots']) as $k){
 //				if ($k==$slot_id) {
@@ -1848,6 +1863,40 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			}
 		}
 		return $session;
+	}
+
+
+
+
+	/**
+	 * Get speaker names for a list of speaker id's
+	 *
+	 * @param	integer		$speakerlist: list of speaker id's
+	 * @return	string		string with list of speakers
+	 */
+	function getSpeakerNames($speakerlist) {
+		foreach(explode(',',$speakerlist) as $k){
+			$data = $this->pi_getRecord('tx_wseevents_speakers',$k);
+			// Get the name and firstname
+			if (!empty($data['firstname'])) {
+				if (((isset($this->conf['lastnameFirst']))) && ($this->conf['lastnameFirst']==1)) {
+					$speakername =  $data['name'].', '.$data['firstname'];
+				} else {
+					$speakername =  $data['firstname'].' '.$data['name'];
+				}
+			} else {
+				$speakername =  $data['name'];
+			}
+			if (isset($content)) {
+				$content .= $this->internal['speakerdelimiter'].$speakername;
+			} else {
+				$content = $speakername;
+			}
+		}
+		if (empty($content)) {
+			$content = $this->pi_getLL('tx_wseevents_sessions.nospeakers','[no speaker assigned]');
+		}
+		return $content;
 	}
 
 }
