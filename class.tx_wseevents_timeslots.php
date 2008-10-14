@@ -104,7 +104,7 @@ class tx_wseevents_timeslots {
 		// Get name of room
 		$eventrooms = tx_wseevents_events::getEventRooms($row['event']);
 		// Compose name of time slot
-		return	$weekday.' '.$eventslots[$row['begin']].'-'.$eventslots[$row['begin']+$row['length']].' '.$eventrooms[$row['room']];
+		return	$weekday.' '.$eventslots[$row['begin']].' '.$eventrooms[$row['room']];
 	}
 
 	/**

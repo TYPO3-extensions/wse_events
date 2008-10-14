@@ -33,7 +33,6 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_image">Image</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessions</label>
 			<label index="tx_wseevents_sessions.slot_titlebegin"></label>
-			<label index="tx_wseevents_sessions.slot_titletime">Time</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin">Begin</label>
 			<label index="tx_wseevents_sessions.slot_notassigned">not assigned</label>
 			<label index="tx_wseevents_sessions.slot_notdefined">free</label>
@@ -65,7 +64,6 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_info">Information</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_image">Bild</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Vorträge</label>
-			<label index="tx_wseevents_sessions.slot_titletime">Zeit</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin">Beginn</label>
 			<label index="tx_wseevents_sessions.slot_notassigned">nicht zugewiesen</label>
 			<label index="tx_wseevents_sessions.slot_notdefined">Frei</label>
@@ -97,7 +95,6 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_image">Beeld</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessies</label>
 			<label index="tx_wseevents_sessions.slot_titlebegin"></label>
-			<label index="tx_wseevents_sessions.slot_titletime">Time</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin">Aanvang</label>
 			<label index="tx_wseevents_sessions.slot_notassigned">niet in gebruik</label>
 			<label index="tx_wseevents_sessions.slot_notdefined">vrije</label>
@@ -127,7 +124,6 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_info">Informations</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_image">Photographie</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessions</label>
-			<label index="tx_wseevents_sessions.slot_titletime">Heure</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin">Début</label>
 			<label index="tx_wseevents_sessions.slot_notassigned">non assigné</label>
 			<label index="tx_wseevents_sessions.slot_notdefined">libre</label>
@@ -160,7 +156,6 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_info" type="integer">176340495</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_image" type="integer">199571973</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions" type="integer">178015084</label>
-			<label index="tx_wseevents_sessions.slot_titletime" type="integer">175559919</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin" type="integer">27289385</label>
 			<label index="tx_wseevents_sessions.slot_notassigned" type="integer">158137343</label>
 			<label index="tx_wseevents_sessions.slot_notdefined" type="integer">178444004</label>
@@ -193,7 +188,6 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_image" type="integer">199571973</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions" type="integer">178015084</label>
 			<label index="tx_wseevents_sessions.slot_titlebegin" type="integer">222419149</label>
-			<label index="tx_wseevents_sessions.slot_titletime" type="integer">175559919</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin" type="integer">27289385</label>
 			<label index="tx_wseevents_sessions.slot_notassigned" type="integer">158137343</label>
 			<label index="tx_wseevents_sessions.slot_notdefined" type="integer">178444004</label>
@@ -223,7 +217,6 @@
 			<label index="tx_wseevents_sessions.listFieldHeader_documents" type="integer">255288974</label>
 			<label index="tx_wseevents_sessions.chooseeventday" type="integer">63893531</label>
 			<label index="tx_wseevents_sessions.choosealldays" type="integer">239545202</label>
-			<label index="tx_wseevents_sessions.slot_titletime" type="integer">175559919</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin" type="integer">27289385</label>
 			<label index="tx_wseevents_sessions.slot_notassigned" type="integer">158137343</label>
 			<label index="tx_wseevents_sessions.slot_notdefined" type="integer">178444004</label>
@@ -257,7 +250,6 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_info">Information</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_image">Image</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessions</label>
-			<label index="tx_wseevents_sessions.slot_titletime">Time</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin">Begin</label>
 			<label index="tx_wseevents_sessions.slot_notassigned">not assigned</label>
 			<label index="tx_wseevents_sessions.slot_notdefined">free</label>
@@ -291,7 +283,6 @@
 			<label index="tx_wseevents_speakers.listFieldHeader_info">Information</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_image">Image</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_speakersessions">Sessions</label>
-			<label index="tx_wseevents_sessions.slot_titletime">Time</label>
 			<label index="tx_wseevents_sessions.slot_headerbegin">Begin</label>
 			<label index="tx_wseevents_sessions.slot_notassigned">not assigned</label>
 			<label index="tx_wseevents_sessions.slot_notdefined">free</label>

@@ -44,6 +44,8 @@ require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_locati
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_roomslist.php');
 require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_categorieslist.php');
 
+require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_sessionplanning.php');
+
 $LANG->includeLLFile('EXT:lang/locallang_show_rechis.xml');
 $LANG->includeLLFile('EXT:lang/locallang_mod_web_list.xml');
 $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
@@ -231,8 +233,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				$this->moduleCommonContent();
 			break;
 			case 3:
-				$content='<div align=center><strong>Not implemented yet ...</strong></div>';
-				$this->content.=$this->doc->section('Session planning:',$content,0,1);
+				$this->moduleSessionPlanning();
 			break;
 		}
 	}
@@ -386,6 +387,19 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				$this->content .= '';
 				break;
 		}
+	}
+
+
+	/**
+	 * Generates the content for session planning
+	 *
+	 * @return	void
+	 */
+	function moduleSessionPlanning()	{
+
+		$eventsListClassname = t3lib_div::makeInstanceClassName('tx_wseevents_sessionplanning');
+		$eventsList = new $eventsListClassname($this);
+		$this->content .= $eventsList->show();
 	}
 
 }

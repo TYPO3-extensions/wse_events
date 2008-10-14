@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
+* (c) 2007-2008 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -209,6 +209,100 @@ $content .= '---POST end ---'.'<br />'.LF;
 		return $content;
 	}
 
+
+	/**
+	 * Update the name of all time slot entries in one action.
+	 *
+	 * @return	string		the HTML source code of the result
+	 * @access public
+	 */
+	function updateSlots() {
+		global $BACK_PATH, $TCA, $LANG, $BE_USER;
+
+		$content = $LANG->getLL('slotUpdate').'<br />'.LF;
+		// Show name of event
+		$eventid = t3lib_div::_GET('event');
+		$event = tx_wseevents_events::getEventInfo($eventid);
+
+		// Show name of event
+		$content .= LF.TAB.'<br /><span style="font-size:1.2em"><b>'.$LANG->getLL('event').' '.$event['name'].'</b></span><br />';
+
+		// Get list of all possible timeslots for the event
+		$slots = tx_wseevents_events::getEventSlotList($event['uid']);
+		
+		// Get info about event
+		$eventinfo = tx_wseevents_events::getEventInfo($event['uid']);
+
+		// -------------------- Get list of rooms --------------------
+		// Initialize variables for the database query.
+		$queryWhere = 'location='.$event['location'].
+			' AND '.$TCA[$this->tableRooms]['ctrl']['languageField'].'=0'.
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableRooms).
+			t3lib_BEfunc::deleteClause($this->tableRooms);
+		$additionalTables = '';
+		$groupBy = '';
+		$orderBy = 'number';
+		$limit = '';
+
+		// Get list of all rooms for the location of the event
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			$this->tableRooms,
+			$queryWhere,
+			$groupBy,
+			$orderBy,
+			$limit);
+
+		// Initialize variables for the database query.
+		$queryWhere = 'event='.$event['uid'].
+			t3lib_BEfunc::deleteClause($this->tableName).
+			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+		$additionalTables = '';
+		$groupBy = '';
+		$orderBy = 'eventday,begin,room';
+		$limit = '';
+
+		// Get list of all used time slots
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			$this->tableName,
+			$queryWhere,
+			$groupBy,
+			$orderBy,
+			$limit);
+
+		if ($res) {
+			$slotlist = tx_wseevents_events::getEventSlotList($eventid);
+			$rooms = tx_wseevents_events::getEventRooms($event['uid']);
+			$daycount = $event['length'];
+			$secofday = 60*60*24;
+			for ( $d = 1; $d <= $daycount; $d++ ) {
+				$thisday = $event['begin']+($d-1)*$secofday;
+//				$dayname[$d] = strftime('%Y-%m-%d', $thisday);
+				$weekdays[$d] = strftime('%A', $thisday);
+			}
+
+			$found = false;
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$found = true;
+				$uid = $row['uid'];
+				$hidden = $row['hidden'];
+				// Add the result row to the table array.
+				$updateArray = array (
+					'name' => $weekdays[$row['eventday']].' '.$slotlist[$row['begin']].' '.$rooms[$row['room']],
+				);
+				// Print out info
+				$newname = '['.$uid.'] '.$weekdays[$row['eventday']].' '.$slotlist[$row['begin']].' '.$rooms[$row['room']];
+				$content .= $newname.'<br />'.LF;
+				$query  = $GLOBALS['TYPO3_DB']->exec_UPDATEquery($this->tableName, 'uid='.$uid, $updateArray);
+			}
+			$content .= LF;
+		}
+		// Finished creating the form
+		return $content;
+	}
+
+
 	/**
 	 * Generates and prints out an time slot list.
 	 *
@@ -232,6 +326,9 @@ $content .= '---POST end ---'.'<br />'.LF;
 		}
 		if ($action=='slotCreate') {
 			return $initcomment.$this->createSlots();
+		}
+		if ($action=='slotUpdate') {
+			return $initcomment.$this->updateSlots();
 		}
 
 		// Initialize the variable for the HTML source code.
@@ -486,8 +583,6 @@ $content .= '---POST end ---'.'<br />'.LF;
 				
 					// Show button for creating many slots together
 					$params = '&action=slotCreateForm&event='.$event['uid'];
-//				$newOnClick = $this->editNewUrl($params, $BACK_PATH);
-// REQUEST_URI
 					$newOnClick = t3lib_div::getIndpEnv('REQUEST_URI').$params;
 					$langNew = $LANG->getLL('slotCreate');
 					$content .= TAB.'<div id="typo3-newRecordLink">'.LF;
@@ -508,6 +603,23 @@ $content .= '---POST end ---'.'<br />'.LF;
 					// Output the table array using the tableLayout array with the template
 					// class.
 					$content .= $this->page->doc->table($table, $tableLayout).TAB.'<br />'.LF;
+					
+					// Show button for updating name of all slots together
+					$params = '&action=slotUpdate&event='.$event['uid'];
+					$newOnClick = t3lib_div::getIndpEnv('REQUEST_URI').$params;
+					$langNew = $LANG->getLL('updateSlots');
+					$content .= TAB.'<div id="typo3-newRecordLink">'.LF;
+					$content .= TAB.TAB.'<a href="'.$newOnClick.'">'
+						.'<img '
+						.t3lib_iconWorks::skinImg(
+							$BACK_PATH,
+							'gfx/synchronize_el.gif',
+							'width="16" height="16"')
+						.' title="'.$langNew.'" alt="'.$langNew.'" class="icon" />'
+						.$langNew
+						.'</a>'.LF;
+					$content .= TAB.'</div><br />'.LF;
+					
 				} 
 			}
 		}

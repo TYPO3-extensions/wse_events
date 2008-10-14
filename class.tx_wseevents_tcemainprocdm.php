@@ -94,7 +94,7 @@ class tx_wseevents_tcemainprocdm {
 				// If record is created, read the data from input fields
 				$row = array();
 				$row['begin'] = $fieldArray['begin'];
-				$row['end']   = $fieldArray['length'];
+				$row['end']   = $fieldArray['end'];
 				$row['event'] = $fieldArray['event'];
 			}
 #			$eventslots = tx_wseevents_events::getEventSlotList($row['event']);

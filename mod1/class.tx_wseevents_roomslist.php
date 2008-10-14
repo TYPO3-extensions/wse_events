@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
+* (c) 2007-2008 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -118,6 +118,9 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 				TAB.TAB.TAB.TAB.TAB.TAB
 					.'<span style="color: #ffffff; font-weight: bold;">'
 					.$LANG->getLL('rooms.seats').'</span>'.LF,
+				TAB.TAB.TAB.TAB.TAB.TAB
+					.'<span style="color: #ffffff; font-weight: bold;">'
+					.$LANG->getLL('rooms.number').'</span>'.LF,
 				'',
 			)
 		);
@@ -200,7 +203,7 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
-			$orderBy = 'name';
+			$orderBy = 'number';
 			$limit = '';
 
 			// Get list of all time slots
@@ -230,6 +233,8 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 							).LF,
 						TAB.TAB.TAB.TAB.TAB
 							.$row['seats'].LF,
+						TAB.TAB.TAB.TAB.TAB
+							.$row['number'].LF,
 						TAB.TAB.TAB.TAB.TAB
 							.$this->getEditIcon($uid).LF
 							.TAB.TAB.TAB.TAB.TAB

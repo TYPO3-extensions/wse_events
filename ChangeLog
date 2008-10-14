@@ -1,3 +1,10 @@
+2008-10-14
+	* Version 1.1.16
+	* BE: New function to update the names of timeslots.
+	* BE: New format of time slot names when editing time slots.
+	* BE: Show room number in room list and show order by room number.
+	* BE: Fixed wrong end time when creating new speaker restriction record.
+
 2008-10-12
 	* FE: Fixed wrong sort order of room in time slot view.
 	* FE: Fix wrong width of time slot if one slot in a row is missing.

@@ -20,6 +20,7 @@
 			<label index="slotCreated">These time slots were created</label>
 			<label index="slotCreatedComment">Automaticly created</label>
 			<label index="createSlots">Create time slots</label>
+			<label index="updateSlots">Update names of time slots</label>
 			<label index="tscf_begin">Slotbegin</label>
 			<label index="tscf_len">Length</label>
 			<label index="timeslots.id">Id</label>
@@ -51,6 +52,7 @@
 			<label index="subModuleTitle_rooms">Rooms</label>
 			<label index="rooms.name">Name of room</label>
 			<label index="rooms.seats">Seats</label>
+			<label index="rooms.number">Number</label>
 			<label index="rooms.location">Location:</label>
 			<label index="subModuleTitle_speakers">Speaker</label>
 			<label index="speakers.name">Name of Speaker</label>
@@ -135,6 +137,7 @@
 			<label index="slotCreated">Diese Zeitblöcke wurden angelegt</label>
 			<label index="slotCreatedComment">Automatisch angelegt</label>
 			<label index="createSlots">Zeitblöcke anlegen</label>
+			<label index="updateSlots">Namen der Zeitblöcke aktualisieren</label>
 			<label index="tscf_begin">Anfang</label>
 			<label index="tscf_len">Länge</label>
 			<label index="timeslots.id">ID</label>
@@ -166,6 +169,7 @@
 			<label index="subModuleTitle_rooms">Räume</label>
 			<label index="rooms.name">Name des Raums</label>
 			<label index="rooms.seats">Plätze</label>
+			<label index="rooms.number">Nummer</label>
 			<label index="rooms.location">Veranstaltungsort:</label>
 			<label index="subModuleTitle_speakers">Referenten</label>
 			<label index="speakers.name">Name des Referenten</label>
