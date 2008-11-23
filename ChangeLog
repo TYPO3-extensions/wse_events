@@ -1,3 +1,9 @@
+2008-11-23
+	* Version 1.1.17
+	* FE: When the event is in the past and no presentation handouts are available
+	  then show a message about missing handouts.
+	* Raise the maximum document size for presentations from 5000kB to 10000kB.
+
 2008-10-14
 	* Version 1.1.16
 	* BE: New function to update the names of timeslots.

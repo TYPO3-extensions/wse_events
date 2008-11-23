@@ -19,6 +19,7 @@
 			<label index="tx_wseevents_sessions.listFieldHeader_documents">Presentations</label>
 			<label index="tx_wseevents_sessions.notimeslots">not yet scheduled</label>
 			<label index="tx_wseevents_sessions.nospeakers">no speaker assigned</label>
+			<label index="tx_wseevents_sessions.nohandout">No presentation handouts available yet</label>
 			<label index="tx_wseevents_sessions.choosecategory">Choose category</label>
 			<label index="tx_wseevents_sessions.chooseeventday">Choose event day</label>
 			<label index="tx_wseevents_sessions.chooseall">- All Categories -</label>
@@ -51,6 +52,7 @@
 			<label index="tx_wseevents_sessions.listFieldHeader_documents">Präsentationen</label>
 			<label index="tx_wseevents_sessions.notimeslots">noch nicht geplant</label>
 			<label index="tx_wseevents_sessions.nospeakers">noch kein Referent</label>
+			<label index="tx_wseevents_sessions.nohandout">Noch keine Präsentationsunterlagen vorhanden</label>
 			<label index="tx_wseevents_sessions.choosecategory">Kategorie wählen</label>
 			<label index="tx_wseevents_sessions.chooseeventday">Veranstaltungstag wählen</label>
 			<label index="tx_wseevents_sessions.chooseall">- Alle Kategorien -</label>

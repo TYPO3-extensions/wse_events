@@ -300,6 +300,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 
 
+		// Get date of event
+		$this->eventrecord = $this->pi_getRecord('tx_wseevents_events',$showevent);
+		
+		
 		# Create template data for category combobox
 		$select_item = '';	// Clear var;
 		$markerArray = array();
@@ -1595,13 +1599,22 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'documents':
 				foreach(explode(',',$this->internal['currentRow'][$fN]) as $k){
 				    $documentsname = '<a href="uploads/tx_wseevents/'.$k.'" '.$this->documentsTarget.'>'.$k.'</a>';
-					if (isset($content)) {	
-						$content .= $this->internal['documentsdelimiter'].$documentsname;
+					if (isset($doccontent)) {	
+						$doccontent .= $this->internal['documentsdelimiter'].$documentsname;
 					} else {
-						$content = $documentsname;
+						$doccontent = $documentsname;
 					}
 				}
-				return $content;
+				// Check if any presentation handouts are available
+				if (empty($this->internal['currentRow'][$fN])) {
+					// if not then check for the date and get back a message if event is in the past
+					$eventdate = date('Ymd', $this->eventrecord['begin']);
+					$thisdate = date('Ymd');
+					if ($thisdate>=$eventdate) {
+						$doccontent = $this->pi_getLL('tx_wseevents_sessions.nohandout');
+					}
+				}
+				return $doccontent;
 			break;
 
 			default:
