@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007-2008 Michael Oehlhof <typo3@oehlhof.de>
+* (c) 2007-2009 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -37,14 +37,14 @@
 
 // In case we're on the back end, PATH_tslib isn't defined yet.
 if (!defined('PATH_tslib')) {
-	define('PATH_tslib', t3lib_extMgm::extPath('cms').'tslib/');
+	define('PATH_tslib', t3lib_extMgm::extPath('cms') . 'tslib/');
 }
 
 // If we are in the back end, we include the extension's locallang.xml.
 if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_dbplugin.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'class.tx_wseevents_dbplugin.php');
 
 /**
  * Class 'tx_wseevents_speakers' for the 'wse_events' extension.
@@ -87,22 +87,29 @@ class tx_wseevents_speakers extends tx_wseevents_dbplugin {
 	 * @return	void		...
 	 * @access protected
 	 */
-	function getTCAspeakerlist($PA,$fobj) {
+	function getTCAspeakerlist($PA, $fobj) {
 		global $TCA;
 #		debug ($PA);
 #		debug ($fobj);
 
+		// Check for saveAfterNew (pid is negative)
+		$parentpid = $PA['row']['pid'];
+		if (0 > $parentpid) {
+			$lastrecord = t3lib_BEfunc::getRecord($PA['table'], abs($PA['row']['pid']));
+			$parentpid = $lastrecord['pid'];
+		}
+		
 		// Get list of common pids
-		$thispage = t3lib_BEfunc::getRecord('pages', $PA['row']['pid']);
-		$this->selectedPids = $this->getCommonPids($PA['row']['pid'], $thispage['pid']);
+		$thispage = t3lib_BEfunc::getRecord('pages', $parentpid);
+		$this->selectedPids = $this->getCommonPids($parentpid, $thispage['pid']);
 
 		// --------------------- Get the list of speakers ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_speakers';
-		$queryWhere = $TCA[$tableName]['ctrl']['languageField'].'=0'.
-			' AND pid in('.$this->selectedPids.')'.
-			t3lib_BEfunc::BEenableFields($tableName).
-			t3lib_BEfunc::versioningPlaceholderClause($tableName);
+		$queryWhere = $TCA[$tableName]['ctrl']['languageField'] . '=0'
+			. ' AND pid in(' . $this->selectedPids . ')'
+			. t3lib_BEfunc::BEenableFields($tableName)
+			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name,firstname';
@@ -124,7 +131,7 @@ class tx_wseevents_speakers extends tx_wseevents_dbplugin {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				// Add the name and id to the itemlist
 				$entry = array();
-				$entry[0] = $row['name'].', '.$row['firstname'];
+				$entry[0] = $row['name'] . ', ' . $row['firstname'];
 				$entry[1] = $row['uid'];
 				$entry[2] = '';
 				$PA['items'][] = $entry;
