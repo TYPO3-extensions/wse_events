@@ -28,10 +28,10 @@
 ***************************************************************/
 
 require_once('conf.php');
-require_once($BACK_PATH.'init.php');
-require_once($BACK_PATH.'template.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backendlist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
+require_once($BACK_PATH . 'init.php');
+require_once($BACK_PATH . 'template.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_backendlist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'class.tx_wseevents_events.php');
 
 
 /**
@@ -65,8 +65,8 @@ class tx_wseevents_sessionplanning extends tx_wseevents_backendlist{
 		global $BACK_PATH, $TCA, $LANG, $BE_USER;
 
 		// Define initial comment
-		$initcomment = LF.TAB.'<!-- WSE_EVENTS session planning -->'.LF;
-		
+		$initcomment = LF . TAB . '<!-- WSE_EVENTS session planning -->' . LF;
+
 		// Initialize the variable for the HTML source code.
 		$content = $initcomment;
 
@@ -76,17 +76,17 @@ class tx_wseevents_sessionplanning extends tx_wseevents_backendlist{
 		);
 
 		# Get date format for selected language
-		if (!$conf[$index.'.']['fmtDate']){
+		if (!$conf[$index . '.']['fmtDate']){
 			$conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
+			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
 		}
 
 		$content .= '<div align=center><strong>Working on implementation yet ...</strong></div>';
 
-		
-		
-		
+
+
+
 		return $content;
 	}
 }

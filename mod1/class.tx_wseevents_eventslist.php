@@ -28,9 +28,9 @@
 ***************************************************************/
 
 require_once('conf.php');
-require_once($BACK_PATH.'init.php');
-require_once($BACK_PATH.'template.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backendlist.php');
+require_once($BACK_PATH . 'init.php');
+require_once($BACK_PATH . 'template.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_backendlist.php');
 
 
 /**
@@ -72,36 +72,36 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		$begin = ($row['begin'])?strftime($this->conf['strftime'], $row['begin']):'';
 		// Add the result row to the table array.
 		$table[] = array(
-			TAB.TAB.TAB.TAB.TAB
-				.t3lib_div::fixed_lgd_cs(
+			TAB . TAB . TAB . TAB . TAB
+				. t3lib_div::fixed_lgd_cs(
 					$row['name'],
 					$BE_USER->uc['titleLen']
-				).LF,
-			TAB.TAB.TAB.TAB.TAB
-				.$begin.LF,
-			TAB.TAB.TAB.TAB.TAB
-				.$row['length'].LF,
-			TAB.TAB.TAB.TAB.TAB
-				.$row['timebegin'].LF,
-			TAB.TAB.TAB.TAB.TAB
-				.$row['timeend'].LF,
-			TAB.TAB.TAB.TAB.TAB
-				.$imglang.LF,
-			TAB.TAB.TAB.TAB.TAB
-				.$imgtrans.LF,
-			TAB.TAB.TAB.TAB.TAB
-				.$this->getEditIcon($uid).LF
-				.TAB.TAB.TAB.TAB.TAB
-				.$this->getDeleteIcon($uid).LF
-				.TAB.TAB.TAB.TAB.TAB
-				.$this->getHideUnhideIcon(
+				) . LF,
+			TAB . TAB . TAB . TAB . TAB
+				. $begin . LF,
+			TAB . TAB . TAB . TAB . TAB
+				. $row['length'] . LF,
+			TAB . TAB . TAB . TAB . TAB
+				. $row['timebegin'] . LF,
+			TAB . TAB . TAB . TAB . TAB
+				. $row['timeend'] . LF,
+			TAB . TAB . TAB . TAB . TAB
+				. $imglang . LF,
+			TAB . TAB . TAB . TAB . TAB
+				. $imgtrans . LF,
+			TAB . TAB . TAB . TAB . TAB
+				. $this->getEditIcon($uid) . LF
+				. TAB . TAB . TAB . TAB . TAB
+				. $this->getDeleteIcon($uid) . LF
+				. TAB . TAB . TAB . TAB . TAB
+				. $this->getHideUnhideIcon(
 					$uid,
 					$hidden
-				).LF,
+				) . LF,
 		);
 	}
-	
-	
+
+
 	/**
 	 * Generates and prints out an event list.
 	 *
@@ -117,45 +117,45 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		// Set the table layout of the event list.
 		$tableLayout = array(
 			'table' => array(
-				TAB.TAB.'<table cellpadding="0" cellspacing="0" class="typo3-dblist">'.LF,
-				TAB.TAB.'</table>'.LF
+				TAB . TAB . '<table cellpadding="0" cellspacing="0" class="typo3-dblist">' . LF,
+				TAB . TAB . '</table>' . LF
 			),
 			array(
 				'tr' => array(
-					TAB.TAB.TAB.'<thead>'.LF
-						.TAB.TAB.TAB.TAB.'<tr>'.LF,
-					TAB.TAB.TAB.TAB.'</tr>'.LF
-						.TAB.TAB.TAB.'</thead>'.LF
+					TAB . TAB . TAB . '<thead>' . LF
+						. TAB . TAB . TAB . TAB . '<tr>' . LF,
+					TAB . TAB . TAB . TAB . '</tr>' . LF
+						. TAB . TAB . TAB . '</thead>' . LF
 				),
 				'defCol' => array(
-					TAB.TAB.TAB.TAB.TAB.'<td class="c-headLineTable">'.LF,
-					TAB.TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . TAB . '<td class="c-headLineTable">' . LF,
+					TAB . TAB . TAB . TAB . TAB . '</td>' . LF
 				)
 			),
 			'defRow' => array(
 				'tr' => array(
-					TAB.TAB.TAB.'<tr>'.LF,
-					TAB.TAB.TAB.'</tr>'.LF
+					TAB . TAB . TAB . '<tr>' . LF,
+					TAB . TAB . TAB . '</tr>' . LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				),
 				'defCol' => array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				)
 			)
 		);
@@ -163,27 +163,27 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		// Fill the first row of the table array with the header.
 		$tableHdr = array(
 			array(
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.name').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.begin').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.length').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.timebegin').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('events.timeend').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('language').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('translate').'</span>'.LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('events.name') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('events.begin') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('events.length') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('events.timebegin') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('events.timeend') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('language') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('translate') . '</span>' . LF,
 				'',
 			)
 		);
@@ -194,13 +194,13 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		);
 
 		# Get date format for selected language
-		if (!$this->conf[$index.'.']['fmtDate']){
+		if (!$this->conf[$index . '.']['fmtDate']){
 			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$this->conf['strftime'] = $this->conf[$index.'.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$index . '.']['fmtDate'];
 		}
 
-		// Get list of pid 
+		// Get list of pid
 		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
 		// Check if sub pages available and remove main page from list
 		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
@@ -217,7 +217,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		// Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
 		// Get the where clause
-		$wherePid = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids).')';
+		$wherePid = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids) . ')';
 
 		// Add icon for new record
 		if (!empty($eventPids)) {
@@ -226,16 +226,16 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 
 		foreach (explode(',',$eventPids) as $eventPid) {
 			// Show name of page
-			$content .= '<span style="font-size:1.2em"><b>'.$this->selectedPidsTitle[$eventPid].'</b></span>';
-//			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
+			$content .= '<span style="font-size:1.2em"><b>' . $this->selectedPidsTitle[$eventPid] . '</b></span>';
+//			$content .= '&nbsp;' . $this->getNewIcon($event['pid'],0) . '<br />';
 
 			// Initialize languages
 			$this->initializeLanguages($eventPid);
 
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$eventPid.t3lib_BEfunc::deleteClause($this->tableName).
-				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+			$queryWhere = 'pid=' . $eventPid . t3lib_BEfunc::deleteClause($this->tableName)
+				. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
+				. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'name';
@@ -260,10 +260,10 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 					$this->addRowToTable($table, $row);
 
 					// Check for translations.
-					$queryWhere = $wherePid.' AND l18n_parent='.$row['uid'].
-						t3lib_BEfunc::deleteClause($this->tableName).
-						' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-						t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+					$queryWhere = $wherePid . ' AND l18n_parent=' . $row['uid']
+						. t3lib_BEfunc::deleteClause($this->tableName)
+						. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
+						. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 					$additionalTables = '';
 					$groupBy = '';
 					$orderBy = 'sys_language_uid';
@@ -290,9 +290,9 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 				if ($found) {
 					// Output the table array using the tableLayout array with the template
 					// class.
-					$content .= $this->page->doc->table($table, $tableLayout).'<br />'.LF;
+					$content .= $this->page->doc->table($table, $tableLayout) . '<br />' . LF;
 				} else {
-					$content .= '<br />'.$LANG->getLL('norecords').'<br /><br />'.LF;
+					$content .= '<br />' . $LANG->getLL('norecords') . '<br /><br />' . LF;
 				}
 			}
 		}
@@ -317,25 +317,25 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 		if ($BE_USER->check('tables_modify', $this->tableName)
 			&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)) {
 			if ($hidden) {
-				$params = '&data['.$this->tableName.']['.$uid.'][hidden]=0';
+				$params = '&data[' . $this->tableName . '][' . $uid . '][hidden]=0';
 				$icon = 'gfx/button_unhide.gif';
 				$langHide = $LANG->getLL('unHide');
 			} else {
-				$params = '&data['.$this->tableName.']['.$uid.'][hidden]=1';
+				$params = '&data[' . $this->tableName . '][' . $uid . '][hidden]=1';
 				$icon = 'gfx/button_hide.gif';
 				$langHide = $LANG->getLL('hide');
 			}
 
 			$result = '<a href="'
-				.htmlspecialchars($this->page->doc->issueCommand($params)).'">'
-				.'<img'
-				.t3lib_iconWorks::skinImg(
+				. htmlspecialchars($this->page->doc->issueCommand($params)) . '">'
+				. '<img'
+				. t3lib_iconWorks::skinImg(
 					$BACK_PATH,
 					$icon,
 					'width="11" height="12"'
 				)
-				.' title="'.$langHide.'" alt="'.$langHide.'" class="hideicon" />'
-				.'</a>';
+				. ' title="' . $langHide . '" alt="' . $langHide . '" class="hideicon" />'
+				. '</a>';
 		}
 
 		return $result;

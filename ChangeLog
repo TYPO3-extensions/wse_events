@@ -1,3 +1,13 @@
+2009-08-11
+	* Many changes to fit the TYPO3 coding guide lines.
+
+2009-08-09
+	* BE: Fixed missing field values when add new speaker restriction after saving
+	  a speaker restriction using the saveDocNew button.
+
+2009-08-08
+	* Update documentation with new layout template.
+
 2008-11-23
 	* Version 1.1.17
 	* FE: When the event is in the past and no presentation handouts are available

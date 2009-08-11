@@ -116,7 +116,7 @@ class tx_wseevents_timeslots {
 	 */
 	function getSlotName($slotid) {
 		global $TCA;
-		
+
 		$slotname = '';
 		$where = 'uid='.$slotid.
 			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
@@ -169,7 +169,7 @@ class tx_wseevents_timeslots {
 			$eventid = $row['uid'];
 			$location = $row['location'];
 		}
-		
+
 		if ($eventid>0) {
 			// Get list of room ids and numbers
 			$rooms = array();
@@ -195,7 +195,7 @@ class tx_wseevents_timeslots {
 					$rooms[$row['uid']] = $row['number'];
 				}
 			}
-#debug($rooms,'$rooms');			
+#debug($rooms,'$rooms');
 			// Get list of all time slots for the event
 			$tableName = 'tx_wseevents_timeslots';
 			t3lib_div::loadTCA($tableName);
@@ -219,7 +219,7 @@ class tx_wseevents_timeslots {
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 					$slotlist[] = $row;
 				}
-#debug($slotlist,'$slotlist');			
+#debug($slotlist,'$slotlist');
 
 				// Get list of speakers of the session
 				$sp1 = $PA['row']['speaker'];

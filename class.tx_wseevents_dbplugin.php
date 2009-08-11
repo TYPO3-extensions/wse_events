@@ -5,7 +5,7 @@
 * (c) 2007 Niels Pardon (mail@niels-pardon.de)
 * All rights reserved
 *
-* Adapted and modified 2007-2008 for use by the 'wse_events' 
+* Adapted and modified 2007-2008 for use by the 'wse_events'
 * extension from Michael Oehlhof <typo3@oehlhof.de>
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -45,18 +45,18 @@
  */
 
 // the UTF-8 representation of an en dash
-DEFINE(UTF8_EN_DASH, chr(0xE2).chr(0x80).chr(0x93));
+DEFINE(UTF8_EN_DASH, chr(0xE2) . chr(0x80) . chr(0x93));
 // a CR-LF combination (the default Unix line ending)
-DEFINE(CRLF, chr(0x0D).chr(0x0A));
+DEFINE(CRLF, chr(0x0D) . chr(0x0A));
 
-require_once(PATH_t3lib.'class.t3lib_tstemplate.php');
-require_once(PATH_t3lib.'class.t3lib_page.php');
+require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
+require_once(PATH_t3lib . 'class.t3lib_page.php');
 
 // In case we're on the back end, PATH_tslib isn't defined yet.
 if (!defined('PATH_tslib')) {
-	define('PATH_tslib', t3lib_extMgm::extPath('cms').'tslib/');
+	define('PATH_tslib', t3lib_extMgm::extPath('cms') . 'tslib/');
 }
-require_once(PATH_tslib.'class.tslib_pibase.php');
+require_once(PATH_tslib . 'class.tslib_pibase.php');
 
 // If we are in the back end, we include the extension's locallang.xml.
 if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
@@ -102,7 +102,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	var $script = 'db_list.php';			// Current script name
 
 	var $backPath = '';
-	
+
 	/**
 	 * Dummy constructor: Does nothing.
 	 *
@@ -130,7 +130,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 */
 	function init($conf = null) {
 		global $BACK_PATH;
-		
+
 		static $cachedConfigs = array();
 
 		if (!$this->isInitialized) {
@@ -139,7 +139,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 			}
 
 			$this->backPath = $BACK_PATH;
-			
+
 			// call the base classe's constructor manually as this isn't done automatically
 			parent::tslib_pibase();
 
@@ -169,12 +169,12 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 						$template->runThroughTemplates($rootline, 0);
 						$template->generateConfig();
 
-						$this->conf =& $template->setup['plugin.']['tx_'.$this->extKey.'.'];
+						$this->conf =& $template->setup['plugin.']['tx_' . $this->extKey . '.'];
 						$cachedConfigs[$pageId] =& $this->conf;
 					}
 				} else {
 					// On the front end, we can use the provided template setup.
-					$this->conf =& $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_'.$this->extKey.'.'];
+					$this->conf =& $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_' . $this->extKey . '.'];
 				}
 			}
 
@@ -201,7 +201,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @return	string		the list of pids
 	 * @access public
 	 */
-	function getRecursiveUidList($parentUid,$depth){
+	function getRecursiveUidList($parentUid, $depth){
 		global $TCA;
 
 		if($depth != -1) {
@@ -211,19 +211,19 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'uid',
 			'pages',
-			'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($parentUid).') '.
-				t3lib_BEfunc::deleteClause('pages').
-				t3lib_BEfunc::versioningPlaceholderClause('pages')
+			'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($parentUid) . ') '
+				. t3lib_BEfunc::deleteClause('pages')
+				. t3lib_BEfunc::versioningPlaceholderClause('pages')
 			);
 		if($depth > 0){
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$parentUid .= ','.$this->getRecursiveUidList($row['uid'],$depth);
+				$parentUid .= ',' . $this->getRecursiveUidList($row['uid'], $depth);
 			}
 		}
 		return $parentUid;
 	}
 
-	
+
 	/**
 	 * Removes all pages which have common content from pid list.
 	 *
@@ -235,11 +235,11 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		global $TCA;
 
 		$resultList = $pageList;
-		foreach (explode(',',$pageList) as $thisPage) {
+		foreach (explode(',', $pageList) as $thisPage) {
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableLocations).
-				' AND '.$TCA[$this->tableLocations]['ctrl']['languageField'].'=0'.
-				t3lib_BEfunc::versioningPlaceholderClause($this->tableLocations);
+			$queryWhere = 'pid=' . $thisPage . t3lib_BEfunc::deleteClause($this->tableLocations)
+				. ' AND ' . $TCA[$this->tableLocations]['ctrl']['languageField'] . '=0'
+				. t3lib_BEfunc::versioningPlaceholderClause($this->tableLocations);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'uid';
@@ -255,14 +255,14 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 			if ($res) {
 				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 				if ($row['count(*)']>0) {
-					$resultList = t3lib_div::rmFromList($thisPage,$resultList);
+					$resultList = t3lib_div::rmFromList($thisPage, $resultList);
 				}
 			}
 		}
 		return $resultList;
 	}
-	
-	
+
+
 	/**
 	 * Removes all pages which have event content from pid list.
 	 *
@@ -272,13 +272,13 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 */
 	function removeEventPages($pageList){
 		global $TCA;
-		
+
 		$resultList = $pageList;
-		foreach (explode(',',$pageList) as $thisPage) {
+		foreach (explode(',', $pageList) as $thisPage) {
 			// Initialize variables for the database query.
-			$queryWhere = 'pid='.$thisPage.t3lib_BEfunc::deleteClause($this->tableEvents).
-//				' AND '.$TCA[$this->tableEvents]['ctrl']['languageField'].'=0'.
-				t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
+			$queryWhere = 'pid=' . $thisPage . t3lib_BEfunc::deleteClause($this->tableEvents)
+//				. ' AND ' . $TCA[$this->tableEvents]['ctrl']['languageField'] . '=0'
+				. t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = '';
@@ -294,7 +294,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 			if ($res) {
 				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 				if ($row['count(*)']>0) {
-					$resultList = t3lib_div::rmFromList($thisPage,$resultList);
+					$resultList = t3lib_div::rmFromList($thisPage, $resultList);
 				}
 			}
 		}
@@ -312,48 +312,48 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	function getCommonPids($pageUid, $pagePid){
 		// Check for root page
 		if ($pageUid<>0) {
-			// Get list of pid 
-			$selectedPids = $this->getRecursiveUidList($pageUid,2);
+			// Get list of pid
+			$selectedPids = $this->getRecursiveUidList($pageUid, 2);
 			// Check if sub pages available and remove main page from list
 			if ($selectedPids<>$pageUid) {
-				$selectedPids = t3lib_div::rmFromList($pageUid,$selectedPids);
+				$selectedPids = t3lib_div::rmFromList($pageUid, $selectedPids);
 			} else {
 				// Get id of parent page
-				
+
 				// if no sub pages and parent page is not root, get one level up
 				if ($pagePid<>0) {
-					$selectedPids = $this->getRecursiveUidList($pagePid,2);
+					$selectedPids = $this->getRecursiveUidList($pagePid, 2);
 					// remove up level page
-					$selectedPids = t3lib_div::rmFromList($pagePid,$selectedPids);
+					$selectedPids = t3lib_div::rmFromList($pagePid, $selectedPids);
 					// remove other event pages
 					$selectedPids = $this->removeEventPages($selectedPids);
 					// add this page to the list
-					$selectedPids .= $selectedPids?','.$pageUid:$pageUid;
+					$selectedPids .= $selectedPids?',' . $pageUid:$pageUid;
 				}
 			}
 		}
 		return $GLOBALS['TYPO3_DB']->cleanIntList($selectedPids);
 	}
-		
-	
+
+
 	/**
 	 * Sets the table names.
 	 *
 	 * @return	void		...
-	 * @access	protected
+	 * @access protected
 	 */
 	function setTableNames() {
 		global $TCA;
-		$dbPrefix = 'tx_'.$this->extKey.'_';
+		$dbPrefix = 'tx_' . $this->extKey . '_';
 
-		$this->tableLocations         = $dbPrefix.'locations';
-		$this->tableRooms             = $dbPrefix.'rooms';
-		$this->tableSpeakers          = $dbPrefix.'speakers';
-		$this->tableCategories        = $dbPrefix.'categories';
-		$this->tableEvents            = $dbPrefix.'events';
-		$this->tableSpeakerRestrictions = $dbPrefix.'speakerrestrictions';
-		$this->tableSessions          = $dbPrefix.'sessions';
-		$this->tableTimeslots         = $dbPrefix.'timeslots';
+		$this->tableLocations           = $dbPrefix . 'locations';
+		$this->tableRooms               = $dbPrefix . 'rooms';
+		$this->tableSpeakers            = $dbPrefix . 'speakers';
+		$this->tableCategories          = $dbPrefix . 'categories';
+		$this->tableEvents              = $dbPrefix . 'events';
+		$this->tableSpeakerRestrictions = $dbPrefix . 'speakerrestrictions';
+		$this->tableSessions            = $dbPrefix . 'sessions';
+		$this->tableTimeslots           = $dbPrefix . 'timeslots';
 
 		// Loading all TCA details for this table:
 		t3lib_div::loadTCA($this->tableLocations);
@@ -372,7 +372,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * Sets the record types.
 	 *
 	 * @return	void		...
-	 * @access	private
+	 * @access private
 	 */
 	function setRecordTypes() {
 		$this->recordTypeComplete	= 0;
@@ -429,10 +429,10 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 */
 	function addPathToFileName($fileName, $path = '') {
 		if (empty($path)) {
-			$path = 'uploads/tx_'.$this->extKey.'/';
+			$path = 'uploads/tx_' . $this->extKey . '/';
 		}
 
-		return $path.$fileName;
+		return $path . $fileName;
 	}
 
 	/**
@@ -547,7 +547,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * If no user is logged in, $this->feuser will be null.
 	 *
 	 * @return	void		...
-	 * @access	private
+	 * @access private
 	 */
 	function retrieveFEUser() {
 		$this->feuser = $this->isLoggedIn() ? $GLOBALS['TSFE']->fe_user->user : null;
@@ -588,7 +588,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 			'*',
 			$tableName,
 				$queryParameter
-				.$this->enableFields($tableName),
+				. $this->enableFields($tableName),
 			'',
 			'title',
 			'');
@@ -607,7 +607,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 				}
 
 				$items[$uid] = array(
-					'caption'	=> $title.$titlePostfix,
+					'caption'	=> $title . $titlePostfix,
 					'value'		=> $uid
 				);
 			}
@@ -671,18 +671,19 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/**
 	 * Initializes page languages and icons
 	 *
+	 * @param	integer		$pageId: Page to look up for page overlays
 	 * @return	void
 	 */
 	function initializeLanguages($pageId)	{
-		global $TCA,$LANG,$BACK_PATH;
-		
+		global $TCA, $LANG, $BACK_PATH;
+
 			// Look up page overlays:
 		$this->pageOverlays = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'*',
 			'pages_language_overlay',
-			'pid='.intval($pageId).
-				t3lib_BEfunc::deleteClause('pages_language_overlay').
-				t3lib_BEfunc::versioningPlaceholderClause('pages_language_overlay'),
+			'pid=' . intval($pageId)
+				. t3lib_BEfunc::deleteClause('pages_language_overlay')
+				. t3lib_BEfunc::versioningPlaceholderClause('pages_language_overlay'),
 			'',
 			'',
 			'',
@@ -700,8 +701,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @return	string		Language icon
 	 */
 	function languageFlag($sys_language_uid)	{
-		return ($this->languageIconTitles[$sys_language_uid]['flagIcon'] ? '<img src="'.$this->languageIconTitles[$sys_language_uid]['flagIcon'].'" class="absmiddle" alt="" />&nbsp;' : '').
-				htmlspecialchars($this->languageIconTitles[$sys_language_uid]['title']);
+		return ($this->languageIconTitles[$sys_language_uid]['flagIcon'] ? '<img src="' . $this->languageIconTitles[$sys_language_uid]['flagIcon'] . '" class="absmiddle" alt="" />&nbsp;' : '')
+			. htmlspecialchars($this->languageIconTitles[$sys_language_uid]['title']);
 	}
 
 	/**
@@ -711,8 +712,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @return	string		URL
 	 */
 	function listURL($altId='')	{
-		return $this->script.
-			'?id='.(strcmp($altId,'')?$altId:$this->id);
+		return $this->script . '?id=' . (strcmp($altId, '')?$altId:$this->id);
 	}
 
 	/**
@@ -722,18 +722,18 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @param	array		The record for which to make the localization panel.
 	 * @return	array		Array with key 0/1 with content for column 1 and 2
 	 */
-	function makeLocalizationPanel($table,$row)	{
+	function makeLocalizationPanel($table, $row)	{
 		global $TCA, $LANG, $BE_USER, $BACK_PATH;
 
-#debug($TCA[$table],'TCA['.$table.']');
+#debug($TCA[$table], 'TCA[' . $table . ']');
 
 		$out = array(
 			0 => '',
 			1 => '',
 		);
-		
+
 		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
-		$translations = $t8Tools->translationInfo($table,$row['uid']);
+		$translations = $t8Tools->translationInfo($table, $row['uid']);
 
 			// Language title and icon:
 		$out[0] = $this->languageFlag($row[$TCA[$table]['ctrl']['languageField']]);
@@ -742,34 +742,34 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 
 #			if ($BE_USER->check('tables_modify', $table)
 #				&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $row['pid']), 16)) {
-#				$params = '&edit['.$table.']['.$uid.']=edit';
-#				$returnUrl = 'returnUrl='.rawurlencode(t3lib_div::getIndpEnv('REQUEST_URI'));
-#				$editOnClick = 'alt_doc.php?'.$returnUrl.$params;
+#				$params = '&edit[' . $table . '][' . $uid . ']=edit';
+#				$returnUrl = 'returnUrl=' . rawurlencode(t3lib_div::getIndpEnv('REQUEST_URI'));
+#				$editOnClick = 'alt_doc.php?' . $returnUrl . $params;
 #			}
-		
+
 			// Traverse page translations and add icon for each language that does NOT yet exist:
 			$lNew = '';
 			foreach($this->pageOverlays as $lUid_OnPage => $lsysRec)	{
 				if (!isset($translations['translations'][$lUid_OnPage]) && $GLOBALS['BE_USER']->checkLanguageAccess($lUid_OnPage))	{
 					$href = $GLOBALS['TBE_TEMPLATE']->issueCommand(
-						'&cmd['.$table.']['.$row['uid'].'][localize]='.$lUid_OnPage //,
+						'&cmd[' . $table . '][' . $row['uid'] . '][localize]=' . $lUid_OnPage //,
 #						$editOnClick
-#						$this->listURL().'&justLocalized='.rawurlencode($table.':'.$row['uid'].':'.$lUid_OnPage)
-#						.'&returnUrl='.t3lib_div::getIndpEnv('REQUEST_URI')
+#						$this->listURL() . '&justLocalized=' . rawurlencode($table . ':' . $row['uid'] . ':' . $lUid_OnPage)
+#						. '&returnUrl=' . t3lib_div::getIndpEnv('REQUEST_URI')
 					);
 
-					$lC = ($this->languageIconTitles[$lUid_OnPage]['flagIcon'] ? '<img src="'.$this->languageIconTitles[$lUid_OnPage]['flagIcon'].'" class="absmiddle" alt="" />' : $this->languageIconTitles[$lUid_OnPage]['title']);
-					$lC = '<a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'typo3/'.htmlspecialchars($href).'">'.$lC.'</a> ';
+					$lC = ($this->languageIconTitles[$lUid_OnPage]['flagIcon'] ? '<img src="' . $this->languageIconTitles[$lUid_OnPage]['flagIcon'] . '" class="absmiddle" alt="" />' : $this->languageIconTitles[$lUid_OnPage]['title']);
+					$lC = '<a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/' . htmlspecialchars($href) . '">' . $lC . '</a> ';
 
-					$lNew.=$lC;
+					$lNew .= $lC;
 				}
 			}
-			
-			if ($lNew)	$out[1].= $lNew;
+
+			if ($lNew) $out[1] .= $lNew;
 		} else {
-			$out[0] = '&nbsp;&nbsp;&nbsp;&nbsp;'.$out[0];
+			$out[0] = '&nbsp;&nbsp;&nbsp;&nbsp;' . $out[0];
 		}
-		
+
 
 		return $out;
 	}

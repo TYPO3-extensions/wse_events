@@ -37,14 +37,14 @@
 
 // In case we're on the back end, PATH_tslib isn't defined yet.
 if (!defined('PATH_tslib')) {
-	define('PATH_tslib', t3lib_extMgm::extPath('cms').'tslib/');
+	define('PATH_tslib', t3lib_extMgm::extPath('cms') . 'tslib/');
 }
 
 // If we are in the back end, we include the extension's locallang.xml.
 if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_dbplugin.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'class.tx_wseevents_dbplugin.php');
 
 /**
  * Class 'tx_wseevents_locations' for the 'wse_events' extension.
@@ -87,7 +87,7 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 	 * @return	void		...
 	 * @access protected
 	 */
-	function getTCAlocationlist($PA,$fobj) {
+	function getTCAlocationlist($PA, $fobj) {
 		global $TCA;
 #		debug ($PA);
 #		debug ($fobj);
@@ -99,11 +99,11 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 		// --------------------- Get the rooms of the location of the selected event ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_locations';
-		$queryWhere = 'pid in('.$this->selectedPids.')'.
-			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
-			t3lib_BEfunc::BEenableFields($tableName).
-			t3lib_BEfunc::deleteClause($tableName).
-			t3lib_BEfunc::versioningPlaceholderClause($tableName);
+		$queryWhere = 'pid in(' . $this->selectedPids . ')'
+			. ' AND ' . $TCA[$tableName]['ctrl']['languageField'] . '=0'
+			. t3lib_BEfunc::BEenableFields($tableName)
+			. t3lib_BEfunc::deleteClause($tableName)
+			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';

@@ -30,21 +30,21 @@
 // initialization of the module
 unset($MCONF);
 require_once('conf.php');
-require_once($BACK_PATH.'init.php');
-require_once($BACK_PATH.'template.php');
+require_once($BACK_PATH . 'init.php');
+require_once($BACK_PATH . 'template.php');
 
-require_once(PATH_t3lib.'class.t3lib_scbase.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_sessionslist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_timeslotslist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerrestrictionslist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_eventslist.php');
+require_once(PATH_t3lib . 'class.t3lib_scbase.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_sessionslist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_timeslotslist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_speakerrestrictionslist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_eventslist.php');
 
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_speakerslist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_locationslist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_roomslist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_categorieslist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_speakerslist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_locationslist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_roomslist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_categorieslist.php');
 
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_sessionplanning.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_sessionplanning.php');
 
 $LANG->includeLLFile('EXT:lang/locallang_show_rechis.xml');
 $LANG->includeLLFile('EXT:lang/locallang_mod_web_list.xml');
@@ -102,7 +102,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 
 		/*
 		if (t3lib_div::_GP('clear_all_cache'))	{
-			$this->include_once[] = PATH_t3lib.'class.t3lib_tcemain.php';
+			$this->include_once[] = PATH_t3lib . 'class.t3lib_tcemain.php';
 		}
 		*/
 	}
@@ -116,9 +116,9 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		global $LANG;
 		$this->MOD_MENU = Array (
 			'function' => Array (
-				'1' => $LANG->getLL('function1'),
-				'2' => $LANG->getLL('function2'),
-				'3' => $LANG->getLL('function3'),
+				'1' => $LANG->getLL('function1'),  // Event data
+				'2' => $LANG->getLL('function2'),  // Common data
+				'3' => $LANG->getLL('function3'),  // Session planning
 			)
 		);
 		parent::menuConfig();
@@ -142,7 +142,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 
 			// Get session data
 			$this->my_vars = $GLOBALS["BE_USER"]->getSessionData("tx_wseevents");
-			
+
 			// Draw the header.
 			$this->doc = t3lib_div::makeInstance('bigDoc');
 			$this->doc->backPath = $BACK_PATH;
@@ -164,13 +164,13 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				</script>
 			';
 
-			$headerSection = $this->doc->getHeader('pages',$this->pageInfo,$this->pageInfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.t3lib_div::fixed_lgd_pre($this->pageInfo['_thePath'],50);
+			$headerSection = $this->doc->getHeader('pages',$this->pageInfo,$this->pageInfo['_thePath']) . '<br />' . $LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path') . ': ' . t3lib_div::fixed_lgd_pre($this->pageInfo['_thePath'],50);
 
-			$this->content.=$this->doc->startPage($LANG->getLL('title'));
-			$this->content.=$this->doc->header($LANG->getLL('title'));
-			$this->content.=$this->doc->spacer(5);
-			$this->content.=$this->doc->section('',$this->doc->funcMenu($headerSection,t3lib_BEfunc::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'])));
-			$this->content.=$this->doc->divider(5);
+			$this->content .= $this->doc->startPage($LANG->getLL('title'));
+			$this->content .= $this->doc->header($LANG->getLL('title'));
+			$this->content .= $this->doc->spacer(5);
+			$this->content .= $this->doc->section('',$this->doc->funcMenu($headerSection,t3lib_BEfunc::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'])));
+			$this->content .= $this->doc->divider(5);
 
 
 			// Render content:
@@ -178,31 +178,31 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 
 			// For debuging purpose only
 			$debugline = '<br /><br /><hr />
-						<br />### DEBUG ###<br />This is the GET/POST vars sent to the script:<br /><br />'.
-						'GET:'.t3lib_div::view_array($_GET).'<br />'.
-						'POST:'.t3lib_div::view_array($_POST).'<br />'.
-#						'pageInfo:'.t3lib_div::view_array($this->pageInfo).'<br />'.
-#						debug($_GET,'GET:').
-						'';
-						
+						<br />### DEBUG ###<br />This is the GET/POST vars sent to the script:<br /><br />' 
+						. 'GET:' . t3lib_div::view_array($_GET) . '<br />' 
+						. 'POST:' . t3lib_div::view_array($_POST) . '<br />' 
+#						. 'pageInfo:' . t3lib_div::view_array($this->pageInfo) . '<br />'
+#						. debug($_GET,'GET:')
+						. '';
+
 #			$this->content .= $debugline;
 
 			// ShortCut
 			if ($BE_USER->mayMakeShortcut())	{
-				$this->content.=$this->doc->spacer(20).$this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
+				$this->content .= $this->doc->spacer(20) . $this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
 			}
 
-			$this->content.=$this->doc->spacer(10);
+			$this->content .= $this->doc->spacer(10);
 		} else {
 			// If no access or if ID == zero
 
 			$this->doc = t3lib_div::makeInstance('mediumDoc');
 			$this->doc->backPath = $BACK_PATH;
 
-			$this->content.=$this->doc->startPage($LANG->getLL('title'));
-			$this->content.=$this->doc->header($LANG->getLL('title'));
-			$this->content.=$this->doc->spacer(5);
-			$this->content.=$this->doc->spacer(10);
+			$this->content .= $this->doc->startPage($LANG->getLL('title'));
+			$this->content .= $this->doc->header($LANG->getLL('title'));
+			$this->content .= $this->doc->spacer(5);
+			$this->content .= $this->doc->spacer(10);
 			if ($this->id==0) {
 				$this->content .= $LANG->getLL('notOnRootpage');
 			}
@@ -215,7 +215,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function printContent()	{
-		$this->content.=$this->doc->endPage();
+		$this->content .= $this->doc->endPage();
 		echo $this->content;
 	}
 

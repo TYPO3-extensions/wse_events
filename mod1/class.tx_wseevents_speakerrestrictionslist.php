@@ -28,10 +28,10 @@
 ***************************************************************/
 
 require_once('conf.php');
-require_once($BACK_PATH.'init.php');
-require_once($BACK_PATH.'template.php');
-require_once(t3lib_extMgm::extPath('wse_events').'mod1/class.tx_wseevents_backendlist.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
+require_once($BACK_PATH . 'init.php');
+require_once($BACK_PATH . 'template.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_backendlist.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'class.tx_wseevents_events.php');
 
 
 /**
@@ -75,8 +75,8 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		t3lib_div::loadTCA($this->tableSpeakers);
 		t3lib_div::loadTCA($this->tableEvents);
 		t3lib_div::loadTCA($this->tableName);
-		
-		
+
+
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -84,41 +84,41 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		// Set the table layout of the speaker restrictions list.
 		$tableLayout = array(
 			'table' => array(
-				TAB.TAB.'<table cellpadding="0" cellspacing="0" class="typo3-dblist">'.LF,
-				TAB.TAB.'</table>'.LF
+				TAB . TAB . '<table cellpadding="0" cellspacing="0" class="typo3-dblist">' . LF,
+				TAB . TAB . '</table>' . LF
 			),
 			array(
 				'tr' => array(
-					TAB.TAB.TAB.'<thead>'.LF
-						.TAB.TAB.TAB.TAB.'<tr>'.LF,
-					TAB.TAB.TAB.TAB.'</tr>'.LF
-						.TAB.TAB.TAB.'</thead>'.LF
+					TAB . TAB . TAB . '<thead>' . LF
+						. TAB . TAB . TAB . TAB . '<tr>' . LF,
+					TAB . TAB . TAB . TAB . '</tr>' . LF
+						. TAB . TAB . TAB . '</thead>' . LF
 				),
 				'defCol' => array(
-					TAB.TAB.TAB.TAB.TAB.'<td class="c-headLineTable">'.LF,
-					TAB.TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . TAB . '<td class="c-headLineTable">' . LF,
+					TAB . TAB . TAB . TAB . TAB . '</td>' . LF
 				)
 			),
 			'defRow' => array(
 				'tr' => array(
-					TAB.TAB.TAB.'<tr>'.LF,
-					TAB.TAB.TAB.'</tr>'.LF
+					TAB . TAB . TAB . '<tr>' . LF,
+					TAB . TAB . TAB . '</tr>' . LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				),
 				array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				),
 				'defCol' => array(
-					TAB.TAB.TAB.TAB.'<td>'.LF,
-					TAB.TAB.TAB.TAB.'</td>'.LF
+					TAB . TAB . TAB . TAB . '<td>' . LF,
+					TAB . TAB . TAB . TAB . '</td>' . LF
 				)
 			)
 		);
@@ -126,18 +126,18 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		// Fill the first row of the table array with the header.
 		$table = array(
 			array(
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('speakers.speaker').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('speakers.eventday').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('speakers.begin').'</span>'.LF,
-				TAB.TAB.TAB.TAB.TAB.TAB
-					.'<span style="color: #ffffff; font-weight: bold;">'
-					.$LANG->getLL('speakers.end').'</span>'.LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('speakers.speaker') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('speakers.eventday') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('speakers.begin') . '</span>' . LF,
+				TAB . TAB . TAB . TAB . TAB . TAB
+					. '<span style="color: #ffffff; font-weight: bold;">'
+					. $LANG->getLL('speakers.end') . '</span>' . LF,
 				'',
 			)
 		);
@@ -148,14 +148,14 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		);
 
 		# Get date format for selected language
-		if (!$conf[$index.'.']['fmtDate']){
+		if (!$conf[$index . '.']['fmtDate']){
 			$conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index.'.']['fmtDate'];
+			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
 		}
 		$secofday = 60*60*24;
 
-		// Get list of pid 
+		// Get list of pid
 		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
 		// Check if sub pages available and remove main page from list
 		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
@@ -169,7 +169,7 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 				// remove other event pages
 				$this->selectedPids = $this->removeEventPages($this->selectedPids);
 				// add this page to the list
-				$this->selectedPids .= $this->selectedPids?','.$this->page->pageInfo['uid']:$this->page->pageInfo['uid'];
+				$this->selectedPids .= $this->selectedPids?',' . $this->page->pageInfo['uid']:$this->page->pageInfo['uid'];
 			}
 		}
 		// Remove duplicate entries
@@ -183,7 +183,7 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		// Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
 		// Get the where clause
-		$wherePid = 'pid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids).')';
+		$wherePid = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids) . ')';
 
 		// Add icon for new record
 		if (!empty($eventPids)) {
@@ -192,9 +192,9 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 
 		// -------------------- Get list of speakers --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableSpeakers).
-			' AND '.$TCA[$this->tableSpeakers]['ctrl']['languageField'].'=0'.
-			t3lib_BEfunc::versioningPlaceholderClause($this->tableSpeakers);
+		$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableSpeakers)
+			. ' AND ' . $TCA[$this->tableSpeakers]['ctrl']['languageField'] . '=0'
+			. t3lib_BEfunc::versioningPlaceholderClause($this->tableSpeakers);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'uid';
@@ -212,15 +212,15 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		$speakers = array();
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$speakers[$row['uid']] = $row['name'].', '.$row['firstname'];
+				$speakers[$row['uid']] = $row['name'] . ', ' . $row['firstname'];
 			}
 		}
-		
+
 		// -------------------- Get list of events --------------------
 		// Initialize variables for the database query.
-		$queryWhere = $wherePid.t3lib_BEfunc::deleteClause($this->tableEvents).
-			' AND '.$TCA[$this->tableEvents]['ctrl']['languageField'].'=0'.
-			t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
+		$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableEvents)
+			. ' AND ' . $TCA[$this->tableEvents]['ctrl']['languageField'] . '=0'
+			. t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
 		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
@@ -245,23 +245,23 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 				$events[] = $event;
 			}
 		}
-		
+
 		// Add box for event selection
-		
-		
+
+
 		// Get list of sessions for an event
 		foreach ($events as $event) {
 			// Show name of event
-			$content .= '<span style="font-size:1.2em"><b>'.$LANG->getLL('event').' '.$event['name'].'</b></span>';
-//			$content .= '&nbsp;'.$this->getNewIcon($event['pid'],0).'<br />';
+			$content .= '<span style="font-size:1.2em"><b>' . $LANG->getLL('event') . ' ' . $event['name'] . '</b></span>';
+//			$content .= '&nbsp;' . $this->getNewIcon($event['pid'],0) . '<br />';
 
 			// Get list of timeslots for the event
 			$slots = tx_wseevents_events::getEventSlotlist($event['uid']);
 
 			// Initialize variables for the database query.
-			$queryWhere = $wherePid.' AND event='.$event['uid'].
-				t3lib_BEfunc::deleteClause($this->tableName).
-				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+			$queryWhere = $wherePid . ' AND event='.$event['uid']
+				. t3lib_BEfunc::deleteClause($this->tableName)
+				. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'speaker,eventday';
@@ -287,31 +287,31 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 					$eventdate = strftime($conf['strftime'], ($event['begin']+($eventday-1)*$secofday));
 					// Add the result row to the table array.
 					$table[] = array(
-						TAB.TAB.TAB.TAB.TAB
-							.$speakers[$row['speaker']].LF,
-						TAB.TAB.TAB.TAB.TAB
-							.$eventdate.LF,
-						TAB.TAB.TAB.TAB.TAB
-							.$slots[$row['begin']].LF,
-						TAB.TAB.TAB.TAB.TAB
-							.$slots[$row['end']].LF,
-						TAB.TAB.TAB.TAB.TAB
-							.$this->getEditIcon($uid).LF
-							.TAB.TAB.TAB.TAB.TAB
-							.$this->getDeleteIcon($uid).LF
-							.TAB.TAB.TAB.TAB.TAB
-							.$this->getHideUnhideIcon(
+						TAB . TAB . TAB . TAB . TAB
+							. $speakers[$row['speaker']] . LF,
+						TAB . TAB . TAB . TAB . TAB
+							. $eventdate . LF,
+						TAB . TAB . TAB . TAB . TAB
+							. $slots[$row['begin']] . LF,
+						TAB . TAB . TAB . TAB . TAB
+							. $slots[$row['end']] . LF,
+						TAB . TAB . TAB . TAB . TAB
+							. $this->getEditIcon($uid) . LF
+							. TAB . TAB . TAB . TAB . TAB
+							. $this->getDeleteIcon($uid) . LF
+							. TAB . TAB . TAB . TAB . TAB
+							. $this->getHideUnhideIcon(
 								$uid,
 								$hidden
-							).LF,
+							) . LF,
 					);
 				}
 				if ($found) {
 					// Output the table array using the tableLayout array with the template
 					// class.
-					$content .= $this->page->doc->table($table, $tableLayout).'<br />'.LF;
+					$content .= $this->page->doc->table($table, $tableLayout) . '<br />' . LF;
 				} else {
-					$content .= '<br />'.$LANG->getLL('norecords').'<br /><br />'.LF;
+					$content .= '<br />' . $LANG->getLL('norecords') . '<br /><br />' . LF;
 				}
 			}
 		}
@@ -337,25 +337,25 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		if ($BE_USER->check('tables_modify', $this->tableName)
 			&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)) {
 			if ($hidden) {
-				$params = '&data['.$this->tableName.']['.$uid.'][hidden]=0';
+				$params = '&data[' . $this->tableName . '][' . $uid . '][hidden]=0';
 				$icon = 'gfx/button_unhide.gif';
 				$langHide = $LANG->getLL('unHide');
 			} else {
-				$params = '&data['.$this->tableName.']['.$uid.'][hidden]=1';
+				$params = '&data[' . $this->tableName . '][' . $uid . '][hidden]=1';
 				$icon = 'gfx/button_hide.gif';
 				$langHide = $LANG->getLL('hide');
 			}
 
 			$result = '<a href="'
-				.htmlspecialchars($this->page->doc->issueCommand($params)).'">'
-				.'<img'
-				.t3lib_iconWorks::skinImg(
+				. htmlspecialchars($this->page->doc->issueCommand($params)) . '">'
+				. '<img'
+				. t3lib_iconWorks::skinImg(
 					$BACK_PATH,
 					$icon,
 					'width="11" height="12"'
 				)
-				.' title="'.$langHide.'" alt="'.$langHide.'" class="hideicon" />'
-				.'</a>';
+				. ' title="' . $langHide . '" alt="' . $langHide . '" class="hideicon" />'
+				. '</a>';
 		}
 
 		return $result;

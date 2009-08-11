@@ -1,11 +1,8 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_rooms.php');
+//require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_rooms.php');
 
-t3lib_extMgm::addUserTSConfig('
-	options.saveDocNew.tx_wseevents_speakers=1
-');
 t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_wseevents_speakers=1
 ');

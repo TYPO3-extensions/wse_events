@@ -1,0 +1,123 @@
+- processDatamap_preProcessFieldArray
+- processDatamap_postProcessFieldArray
+- processDatamap_afterDatabaseOperations
+
+
+Einen wichtigen Punkt habe ich noch bezgl. der Vortragstitel. Ich 
+glaube, es ist keine gute Idee, diese zu übersetzen, bzwl in den 
+übersetzten Seiten das Original nicht zu nennen. Ich stell emir vor, man 
+  könnte mit einem Ausdruck auf z.B. Franszösisch auf der Veranstaltung 
+herumlaufen, und mit den Vortragslisten an den Räumen während der 
+Veranstaltung nicht so einfach abgleichen können. Ok, wir haben noch die 
+Session ID, aber geschickter wäre schon, den englischen Titel und 
+Kurztext (!) immer - als gemeinsamen Nenner - anzuzeigen, und in den 
+Session Details die Übersetzung mit anzuzeigen.
+
+Ginge das ? Ich habe jetzt extra nichts per Hand gemacht, weil es ggfs. 
+einfacher mit zwei zusätzlichen Variablen und einer Erweiterung des 
+Templates zu programieren geht.
+
+
+
+
+Backend
+
+1) im Session-Formular
+OK im Feld Referent den Vornamen anzeigen
+OK Für Feld "Vortragszeiten - Objekte"
+OK Name der Slotdefinitionen aus Tag, Zeitraum und Ramname bilden
+
+2) In den Definitionen für Kategorien ein Feld einfügen, in dem man die
+Farbe definieren kann (Session saus der von mir neu definierten 
+Kategorie Internet werden derzeit ohne Hintergrundfarbe angezeigt, dto. 
+die Lunch-und Registrierungs-Slots)
+
+Frontend
+
+3) im Stundenplan (Presentation titmetable)
+OK - Kacheln für Pausen ohne Hyperlink anzeigen
+- optional nur den Namen der Session anzeigen, nicht Titel
+- bei Anzeigen des Titels ggf. nach n Zeichen mit "..." abschneiden ?
+
+4) in Session details und Speaker Details
+OK mit den Titeln der Vorträge auch die IDs anzeigen (mit der Farbe der 
+Kategorie unterlegen)
+OK Zeiten der Sessions mit anzeigen
+
+5) in Presentations list
+OK - Beschreibung des Vortrags anzeigen (nicht Kurztext)
+OK die session ID mit der Farbe der Kategorie unterlegen
+
+6) auf der Speakers-Seite
+OK werden die Referenten nicht sortiert, ich würde nach Nachname sortieren
+OK mit den Titeln der Vorträge auch die IDs anzeigen (mit der Farbe der 
+Kategorie unterlegen)
+OK Einträge ohne Fotos sollten den vertikalen Trennstrich ebenfalls so 
+setzen, als ob ein Foto da wäre
+
+OK wird eine Session nicht angezeigt: INT01 - Sa 12:00-12:45 Kersop
+    (das ändert sich, wenn INT03 nicht mehr versteckt ist...)
+- Zeitskala so ändern, dass je Slot nur Anfangs- und Endzeit angezeigt 
+werden
+- Bei Anzeige nur der Session ID den Text horizontal und vertikal zentrieren
+OK Anzeige der Session IDs in schwarz
+
+8) bei Aktivierung des Presentation timetable für den end user den Link 
+oberhalb der Wishlist platzieren
+OK
+
+
+
+
+
+
+
+Hi,
+
+hier nochmal die Variablenübersicht:
+
+- in SPEAKERLIST und SPEAKERVIEW:
+ - SESSIONNUMBER (wie bereits beschrieben) zu Anzeige der Session ID -
+SESSIONTIMESLOTS zum Anzeigen der Slots in SPEAKERLIST
+- in SLOTSALL
+ - SLOTSPEAKER zum Anzeigen der Sprecher im title (also: im
+Mouseover-Text)
+
+Was noch aus dem Stundenplan wegkönnte:
+- Literal "not assigned/nicht zugewiesen" (ist momentan durch
+Farbgleichheit versteckt)
+- Literal "Time" (wird m.E. nicht benötigt)
+
+Die Breitenberechnung für die Session-Spalten pro Tag im Stundenplan
+würden wir berechnen (möglicher Name z.B. SLOTWIDTH) (analog dazu könnte
+SLOTSIZE vielleicht besser SLOTLEN oder SLOTHEIGHT heissen, weil SIZE
+nicht eindeutig die horizontale bzw vertikale Länge benennt).
+
+-------
+
+Zum Zusammenfassen der Zeitkacheln ist mir folgendes eingefallen:
+
+es müsste eine Funktion geben, die pro Zeitscheibe prüft, ob diese der
+Beginn irgendeines Slots (an allen Tagen) ist.
+
+     Wenn ja, muss die Funktion die früheste Endezeit irgendeines (!)
+Slots berechnen,der an irgendeinem Tag von dieser Zeitscheibe einen
+Anteil hält.
+Damit steht auch die Anzahl der zusammengefassten Zeitscheiben, also
+Zeilen fest (ROWSPAN).
+
+     Wenn nein, darf in der Zeitspalte nichts ausgegeben werden
+
+So ungefähr jedenfalls. Damit sollte man überlappende Slots eigentlich
+hinbekommen. Ich habe mal zur Veranschaulichung ein Sheet mit einem
+Beispiel angehängt, in dem die grosse Nachmittagspause am ersten Tag um 15
+Uhr und an den beiden nächsten um 16 Uhr ist. Dabei habe ich für
+Zeitscheiben, die keinem Slot angehören, die Zeitangabe ganz weggelassen -
+das steigert IMHO nochmal die Übersicht.
+
+In der ersten Tabelle ist nur eine Zeitspalte enthalten. Nur an den
+Stellen mit überlappenden Slots "franst" die Zeitskala ein wenig aus,
+sonst (also am Vormittag) ist es sehr übersichtlich.
+
+Wenn sich die Verschiebungen aber über einen ganzen Tag hinziehen, ist der
+Ansatz mit mehreren Zeitspalten ggf. besser, siehe die zweite Tabelle.

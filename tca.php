@@ -15,7 +15,7 @@ $TCA['tx_wseevents_events'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_events']['feInterface'],
 	'columns' => Array (
-		'sys_language_uid' => Array (		
+		'sys_language_uid' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
 			'config' => Array (
@@ -28,7 +28,7 @@ $TCA['tx_wseevents_events'] = Array (
 				)
 			)
 		),
-		'l18n_parent' => Array (		
+		'l18n_parent' => Array (
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
@@ -41,12 +41,12 @@ $TCA['tx_wseevents_events'] = Array (
 				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid IN (-1,0)',
 			)
 		),
-		'l18n_diffsource' => Array (		
+		'l18n_diffsource' => Array (
 			'config' => Array (
 				'type' => 'passthrough'
 			)
 		),
-		'hidden' => Array (		
+		'hidden' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
 			'config' => Array (
@@ -54,40 +54,40 @@ $TCA['tx_wseevents_events'] = Array (
 				'default' => '0'
 			)
 		),
-		'name' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.name',		
+		'name' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.name',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'required',
 			)
 		),
-		'comment' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',		
+		'comment' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
-		'location' => Array (		
-			'exclude' => 1,		
+		'location' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.location',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.location',
 			'config' => Array (
-				'type' => 'select',	
+				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_locations->getTCAlocationlist',
-				'foreign_table' => 'tx_wseevents_locations',	
-				'foreign_table_where' => 'ORDER BY tx_wseevents_locations.name',	
-				'size' => 1,	
+				'foreign_table' => 'tx_wseevents_locations',
+				'foreign_table_where' => 'ORDER BY tx_wseevents_locations.name',
+				'size' => 1,
 				'minitems' => 0,
-				'maxitems' => 1,	
+				'maxitems' => 1,
 			)
 		),
-		'begin' => Array (		
-			'exclude' => 1,		
+		'begin' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.begin',
 			'config' => Array (
@@ -99,8 +99,8 @@ $TCA['tx_wseevents_events'] = Array (
 				'default' => '0'
 			)
 		),
-		'length' => Array (		
-			'exclude' => 1,		
+		'length' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.length',
 			'config' => Array (
@@ -116,27 +116,27 @@ $TCA['tx_wseevents_events'] = Array (
 			)
 		),
 		'timebegin' => Array (
-			'exclude' => 1,		
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.timebegin',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '5',	
+				'type' => 'input',
+				'size' => '5',
 				'max' => '5',
 			)
 		),
 		'timeend' => Array (
-			'exclude' => 1,		
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.timeend',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '5',	
+				'type' => 'input',
+				'size' => '5',
 				'max' => '5',
 			)
 		),
-		'slotsize' => Array (		
-			'exclude' => 1,		
+		'slotsize' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.slotsize',
 			'config' => Array (
@@ -151,8 +151,8 @@ $TCA['tx_wseevents_events'] = Array (
 				'default' => 1
 			)
 		),
-		'maxslot' => Array (		
-			'exclude' => 1,		
+		'maxslot' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.maxslot',
 			'config' => Array (
@@ -167,8 +167,8 @@ $TCA['tx_wseevents_events'] = Array (
 				'default' => 1
 			)
 		),
-		'defslotcount' => Array (		
-			'exclude' => 1,		
+		'defslotcount' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.defslotcount',
 			'config' => Array (
@@ -201,7 +201,7 @@ $TCA['tx_wseevents_locations'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_locations']['feInterface'],
 	'columns' => Array (
-		'sys_language_uid' => Array (		
+		'sys_language_uid' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
 			'config' => Array (
@@ -214,7 +214,7 @@ $TCA['tx_wseevents_locations'] = Array (
 				)
 			)
 		),
-		'l18n_parent' => Array (		
+		'l18n_parent' => Array (
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
@@ -227,12 +227,12 @@ $TCA['tx_wseevents_locations'] = Array (
 				'foreign_table_where' => 'AND tx_wseevents_locations.pid=###CURRENT_PID### AND tx_wseevents_locations.sys_language_uid IN (-1,0)',
 			)
 		),
-		'l18n_diffsource' => Array (		
+		'l18n_diffsource' => Array (
 			'config' => Array (
 				'type' => 'passthrough'
 			)
 		),
-		'hidden' => Array (		
+		'hidden' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
 			'config' => Array (
@@ -240,20 +240,20 @@ $TCA['tx_wseevents_locations'] = Array (
 				'default' => '0'
 			)
 		),
-		'name' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_locations.name',		
+		'name' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_locations.name',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'required',
 			)
 		),
-		'website' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_locations.website',		
+		'website' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_locations.website',
 			'config' => Array (
-				'type' => 'input',	
+				'type' => 'input',
 				'size' => '30',
 				'wizards' => Array(
 					'link' => Array(
@@ -266,12 +266,12 @@ $TCA['tx_wseevents_locations'] = Array (
 				),
 			)
 		),
-		'comment' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',		
+		'comment' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
@@ -293,7 +293,7 @@ $TCA['tx_wseevents_rooms'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_rooms']['feInterface'],
 	'columns' => Array (
-		'sys_language_uid' => Array (		
+		'sys_language_uid' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
 			'config' => Array (
@@ -306,7 +306,7 @@ $TCA['tx_wseevents_rooms'] = Array (
 				)
 			)
 		),
-		'l18n_parent' => Array (		
+		'l18n_parent' => Array (
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
@@ -319,12 +319,12 @@ $TCA['tx_wseevents_rooms'] = Array (
 				'foreign_table_where' => 'AND tx_wseevents_rooms.pid=###CURRENT_PID### AND tx_wseevents_rooms.sys_language_uid IN (-1,0)',
 			)
 		),
-		'l18n_diffsource' => Array (		
+		'l18n_diffsource' => Array (
 			'config' => Array (
 				'type' => 'passthrough'
 			)
 		),
-		'hidden' => Array (		
+		'hidden' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
 			'config' => Array (
@@ -332,27 +332,27 @@ $TCA['tx_wseevents_rooms'] = Array (
 				'default' => '0'
 			)
 		),
-		'name' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.name',		
+		'name' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.name',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'required',
 			)
 		),
-		'comment' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',		
+		'comment' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
-		'number' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.number',		
+		'number' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.number',
 			'config' => Array (
 				'type' => 'input',
 				'size' => '4',
@@ -365,9 +365,9 @@ $TCA['tx_wseevents_rooms'] = Array (
 				'default' => 0
 			)
 		),
-		'seats' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.seats',		
+		'seats' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.seats',
 			'config' => Array (
 				'type' => 'input',
 				'size' => '4',
@@ -381,16 +381,16 @@ $TCA['tx_wseevents_rooms'] = Array (
 				'default' => 0
 			)
 		),
-		'location' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.location',		
+		'location' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_rooms.location',
 			'config' => Array (
-				'type' => 'select',	
-				'foreign_table' => 'tx_wseevents_locations',	
-				'foreign_table_where' => 'AND tx_wseevents_locations.pid=###CURRENT_PID### ORDER BY tx_wseevents_locations.name',	
-				'size' => 1,	
+				'type' => 'select',
+				'foreign_table' => 'tx_wseevents_locations',
+				'foreign_table_where' => 'AND tx_wseevents_locations.pid=###CURRENT_PID### ORDER BY tx_wseevents_locations.name',
+				'size' => 1,
 				'minitems' => 0,
-				'maxitems' => 1,	
+				'maxitems' => 1,
 			)
 		),
 	),
@@ -412,7 +412,7 @@ $TCA['tx_wseevents_timeslots'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_timeslots']['feInterface'],
 	'columns' => Array (
-		'hidden' => Array (		
+		'hidden' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
 			'config' => Array (
@@ -420,38 +420,38 @@ $TCA['tx_wseevents_timeslots'] = Array (
 				'default' => '0'
 			)
 		),
-		'name' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.name',		
+		'name' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.name',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 			)
 		),
-		'comment' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',		
+		'comment' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
-		'event' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.event',		
+		'event' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.event',
 			'config' => Array (
-				'type' => 'select',	
-				'foreign_table' => 'tx_wseevents_events',	
-				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',	
-				'size' => 1,	
+				'type' => 'select',
+				'foreign_table' => 'tx_wseevents_events',
+				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',
+				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
 			)
 		),
-		'eventday' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.eventday',		
+		'eventday' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.eventday',
 			'config' => Array (
 				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_events->getTCAeventDays',
@@ -467,23 +467,23 @@ $TCA['tx_wseevents_timeslots'] = Array (
 				'default' => 1
 			)
 		),
-		'room' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.room',		
+		'room' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.room',
 			'config' => Array (
 				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_rooms->getTCAroomlist',
 				'foreign_table' => 'tx_wseevents_rooms',
-				'foreign_table_where' => 'ORDER BY tx_wseevents_rooms.name', //AND tx_wseevents_events.uid=###REC_FIELDS_event AND tx_wseevents_events.location=tx_wseevents_rooms.location 
+				'foreign_table_where' => 'ORDER BY tx_wseevents_rooms.name', //AND tx_wseevents_events.uid=###REC_FIELDS_event AND tx_wseevents_events.location=tx_wseevents_rooms.location
 //				'additional_foreign_table' => 'tx_wseevents_events',
-				'size' => 1,	
+				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
 			)
 		),
-		'begin' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.begin',		
+		'begin' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.begin',
 			'config' => Array (
 				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_events->getTCAslotList',
@@ -497,9 +497,9 @@ $TCA['tx_wseevents_timeslots'] = Array (
 				'default' => 1
 			)
 		),
-		'length' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.length',		
+		'length' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_timeslots.length',
 			'config' => Array (
 				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_events->getTCAsessionLength',
@@ -530,7 +530,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_sessions']['feInterface'],
 	'columns' => Array (
-		'sys_language_uid' => Array (		
+		'sys_language_uid' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
 			'config' => Array (
@@ -543,7 +543,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 				)
 			)
 		),
-		'l18n_parent' => Array (		
+		'l18n_parent' => Array (
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
@@ -556,12 +556,12 @@ $TCA['tx_wseevents_sessions'] = Array (
 				'foreign_table_where' => 'AND tx_wseevents_sessions.pid=###CURRENT_PID### AND tx_wseevents_sessions.sys_language_uid IN (-1,0)',
 			)
 		),
-		'l18n_diffsource' => Array (		
+		'l18n_diffsource' => Array (
 			'config' => Array (
 				'type' => 'passthrough'
 			)
 		),
-		'hidden' => Array (		
+		'hidden' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
 			'config' => Array (
@@ -577,84 +577,84 @@ $TCA['tx_wseevents_sessions'] = Array (
 				'cols' => 27
 			)
 		),
-		'event' => Array (		
+		'event' => Array (
 			'exclude' => 1,
 			'l10n_mode' => 'exclude',
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.event',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.event',
 			'config' => Array (
-				'type' => 'select',	
-				'foreign_table' => 'tx_wseevents_events',	
-				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',	
-				'size' => 1,	
+				'type' => 'select',
+				'foreign_table' => 'tx_wseevents_events',
+				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',
+				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
 			)
 		),
-		'name' => Array (		
-			'exclude' => 1,		
+		'name' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'prefixLangTitle',
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.name',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.name',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '48',	
+				'type' => 'input',
+				'size' => '48',
 				'eval' => 'required',
 			)
 		),
-		'comment' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',		
+		'comment' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
-		'speaker' => Array (		
-			'exclude' => 1,		
+		'speaker' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.speaker',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.speaker',
 			'config' => Array (
-				'type' => 'select',	
+				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_speakers->getTCAspeakerlist',
-				'foreign_table' => 'tx_wseevents_speakers',	
-#				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.uid',	
-				'size' => 6,	
+				'foreign_table' => 'tx_wseevents_speakers',
+#				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.uid',
+				'size' => 6,
 				'minitems' => 0,
 				'maxitems' => 4,
 			)
 		),
-		'timeslots' => Array (		
-			'exclude' => 1,		
+		'timeslots' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.timeslots',
 			'config' => Array (
-				'type' => 'select',	
+				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_timeslots->getTCAavailableSlots',
-				'foreign_table' => 'tx_wseevents_timeslots',	
-				'foreign_table_where' => 'ORDER BY tx_wseevents_timeslots.name',	
-				'size' => 6,	
+				'foreign_table' => 'tx_wseevents_timeslots',
+				'foreign_table_where' => 'ORDER BY tx_wseevents_timeslots.name',
+				'size' => 6,
 				'minitems' => 0,
 				'maxitems' => 3,
 			)
 		),
-		'category' => Array (		
-			'exclude' => 1,		
+		'category' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.category',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.category',
 			'config' => Array (
-				'type' => 'select',	
+				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_categories->getTCAcategorylist',
-				'foreign_table' => 'tx_wseevents_categories',	
+				'foreign_table' => 'tx_wseevents_categories',
 #				'foreign_table_where' => 'ORDER BY tx_wseevents_categories.name',
-				'size' => 1,	
+				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
 			)
 		),
-		'number' => Array (		
-			'exclude' => 1,		
+		'number' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.number',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.number',
 			'config' => Array (
 				'type' => 'input',
 				'size' => '4',
@@ -668,20 +668,20 @@ $TCA['tx_wseevents_sessions'] = Array (
 				'default' => 0
 			)
 		),
-		'teaser' => Array (		
-			'exclude' => 1,		
+		'teaser' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'prefixLangTitle',
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.teaser',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.teaser',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '40',	
+				'cols' => '40',
 				'rows' => '4s',
 			)
 		),
-		'description' => Array (		
-			'exclude' => 1,		
+		'description' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'prefixLangTitle',
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.description',		
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.description',
 			'config' => Array (
 				'type' => 'text',
 				'cols' => '30',
@@ -699,18 +699,18 @@ $TCA['tx_wseevents_sessions'] = Array (
 				),
 			)
 		),
-		'documents' => Array (		
-			'exclude' => 1,		
+		'documents' => Array (
+			'exclude' => 1,
 			'l10n_mode' => 'exclude',
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_sessions.documents',
 			'config' => Array (
 	            'type' => 'group',
 	            'internal_type' => 'file',
-	            'allowed' => '',    
-	            'disallowed' => 'php,php3',    
-	            'max_size' => 10000,    
+	            'allowed' => '',
+	            'disallowed' => 'php,php3',
+	            'max_size' => 10000,
 	            'uploadfolder' => 'uploads/tx_wseevents',
-				'size' => 6,	
+				'size' => 6,
 				'minitems' => 0,
 				'maxitems' => 99,
 			)
@@ -735,7 +735,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_speakers']['feInterface'],
 	'columns' => Array (
-		'sys_language_uid' => Array (		
+		'sys_language_uid' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
 			'config' => Array (
@@ -748,7 +748,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 				)
 			)
 		),
-		'l18n_parent' => Array (		
+		'l18n_parent' => Array (
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
@@ -761,12 +761,12 @@ $TCA['tx_wseevents_speakers'] = Array (
 				'foreign_table_where' => 'AND tx_wseevents_speakers.pid=###CURRENT_PID### AND tx_wseevents_speakers.sys_language_uid IN (-1,0)',
 			)
 		),
-		'l18n_diffsource' => Array (		
+		'l18n_diffsource' => Array (
 			'config' => Array (
 				'type' => 'passthrough'
 			)
 		),
-		'hidden' => Array (		
+		'hidden' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
 			'config' => Array (
@@ -782,46 +782,46 @@ $TCA['tx_wseevents_speakers'] = Array (
 				'cols' => 27
 			)
 		),
-		'fullname' => Array (		
-			'exclude' => 1,		
+		'fullname' => Array (
+			'exclude' => 1,
 			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.fullname',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'required',
 			)
 		),
-		'name' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.name',		
+		'name' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.name',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'required',
 			)
 		),
-		'firstname' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.firstname',		
+		'firstname' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.firstname',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 			)
 		),
-		'comment' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',		
+		'comment' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
 		'country' => Array (
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.country',		
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.country',
 			'config' => Array (
-				'type' => 'select',	
+				'type' => 'select',
 				'foreign_table' => 'static_countries',
 				'foreign_table_where' => 'ORDER BY cn_short_en',
 				'size' => 1,
@@ -829,11 +829,11 @@ $TCA['tx_wseevents_speakers'] = Array (
 				'maxitems' => 1,
 			)
 		),
-		'email' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.email',		
+		'email' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.email',
 			'config' => Array (
-				'type' => 'input',	
+				'type' => 'input',
 				'size' => '30',
 				'eval' => 'trim',
 				'wizards' => Array(
@@ -847,19 +847,19 @@ $TCA['tx_wseevents_speakers'] = Array (
 				),
 			)
 		),
-		'company' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.company',		
+		'company' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.company',
 			'config' => Array (
-				'type' => 'input',	
+				'type' => 'input',
 				'size' => '30',
 			)
 		),
-		'companylink' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.companylink',		
+		'companylink' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.companylink',
 			'config' => Array (
-				'type' => 'input',	
+				'type' => 'input',
 				'size' => '30',
 				'eval' => 'trim',
 				'wizards' => Array(
@@ -873,9 +873,9 @@ $TCA['tx_wseevents_speakers'] = Array (
 				),
 			)
 		),
-		'info' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.info',		
+		'info' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakers.info',
 			'config' => Array (
 				'type' => 'text',
 				'cols' => '30',
@@ -927,7 +927,7 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_speakerrestrictions']['feInterface'],
 	'columns' => Array (
-		'hidden' => Array (		
+		'hidden' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
 			'config' => Array (
@@ -935,43 +935,42 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 				'default' => '0'
 			)
 		),
-		'speaker' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.speaker',		
+		'speaker' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.speaker',
 			'config' => Array (
-				'type' => 'select',	
-				'itemsProcFunc' => 'tx_wseevents_speakers->getTCAspeakerlist',
-				'foreign_table' => 'tx_wseevents_speakers',	
-#				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.uid',	
-				'size' => 1,	
+				'type' => 'select',
+				'foreign_table' => 'tx_wseevents_speakers',
+				'foreign_table_where' => 'ORDER BY tx_wseevents_speakers.name,tx_wseevents_speakers.firstname',
+				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
 			)
 		),
-		'comment' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.comment',		
+		'comment' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.comment',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
-		'event' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.event',		
+		'event' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.event',
 			'config' => Array (
-				'type' => 'select',	
-				'foreign_table' => 'tx_wseevents_events',	
-				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',	
-				'size' => 1,	
+				'type' => 'select',
+				'foreign_table' => 'tx_wseevents_events',
+				'foreign_table_where' => 'AND tx_wseevents_events.pid=###CURRENT_PID### AND tx_wseevents_events.sys_language_uid=0 ORDER BY tx_wseevents_events.name',
+				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
 			)
 		),
-		'eventday' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.eventday',		
+		'eventday' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.eventday',
 			'config' => Array (
 				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_events->getTCAeventDays',
@@ -987,9 +986,9 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 				'default' => 1
 			)
 		),
-		'begin' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.begin',		
+		'begin' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.begin',
 			'config' => Array (
 				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_events->getTCAslotList',
@@ -1003,9 +1002,9 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 				'default' => 1
 			)
 		),
-		'end' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.end',		
+		'end' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_speakerrestrictions.end',
 			'config' => Array (
 				'type' => 'select',
 				'itemsProcFunc' => 'tx_wseevents_events->getTCAslotList',
@@ -1036,7 +1035,7 @@ $TCA['tx_wseevents_categories'] = Array (
 	),
 	'feInterface' => $TCA['tx_wseevents_categories']['feInterface'],
 	'columns' => Array (
-		'sys_language_uid' => Array (		
+		'sys_language_uid' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
 			'config' => Array (
@@ -1049,7 +1048,7 @@ $TCA['tx_wseevents_categories'] = Array (
 				)
 			)
 		),
-		'l18n_parent' => Array (		
+		'l18n_parent' => Array (
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
@@ -1062,12 +1061,12 @@ $TCA['tx_wseevents_categories'] = Array (
 				'foreign_table_where' => 'AND tx_wseevents_categories.pid=###CURRENT_PID### AND tx_wseevents_categories.sys_language_uid IN (-1,0)',
 			)
 		),
-		'l18n_diffsource' => Array (		
+		'l18n_diffsource' => Array (
 			'config' => Array (
 				'type' => 'passthrough'
 			)
 		),
-		'hidden' => Array (		
+		'hidden' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
 			'config' => Array (
@@ -1075,40 +1074,40 @@ $TCA['tx_wseevents_categories'] = Array (
 				'default' => '0'
 			)
 		),
-		'name' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories.name',		
+		'name' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories.name',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'required',
 			)
 		),
-		'comment' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',		
+		'comment' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_events.comment',
 			'config' => Array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
-		'shortkey' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories.shortkey',		
+		'shortkey' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories.shortkey',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '5',	
-				'max' => '3',	
+				'type' => 'input',
+				'size' => '5',
+				'max' => '3',
 				'eval' => 'required,upper,nospace',
 			)
 		),
-		'color' => Array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories.color',		
+		'color' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:wse_events/locallang_db.php:tx_wseevents_categories.color',
 			'config' => Array (
-				'type' => 'input',	
-				'size' => '10',	
+				'type' => 'input',
+				'size' => '10',
 				'wizards' => array(
 					'colorpick' => array(
 						'type' => 'colorbox',

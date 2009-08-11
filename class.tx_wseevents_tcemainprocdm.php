@@ -38,7 +38,7 @@ class tx_wseevents_tcemainprocdm {
 	/**
 	 * Post processiong of field array
 	 *
-	 * @param	string		$status: edit status 
+	 * @param	string		$status: edit status
 	 * @param	string		$table: table name
 	 * @param	integer		$id: record id
 	 * @param	array		$incomingFieldArray: record data
@@ -77,7 +77,7 @@ class tx_wseevents_tcemainprocdm {
 			if (!empty($fieldArray['begin']))		$row['begin'] = $fieldArray['begin'];
 			if (!empty($fieldArray['length']))		$row['length'] = $fieldArray['length'];
 			if (!empty($fieldArray['room']))		$row['room'] = $fieldArray['room'];
-			
+
 			$fieldArray['name'] = tx_wseevents_timeslots::formatSlotName($row);
 		}
         if ($table == 'tx_wseevents_speakerrestrictions') {
