@@ -52,7 +52,7 @@ $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 
 
 // This checks permissions and exits if the users has no permission for entry.
-$BE_USER->modAccess($MCONF,1);
+$BE_USER->modAccess($MCONF, 1);
 
 
 
@@ -74,6 +74,9 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 
 	/** Variable for session data */
 	var $my_vars;
+	
+	/** Variable for selected menu function */
+	var $selectedFunction;
 
 	/**
 	 * Initializes the Module
@@ -81,7 +84,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function init()	{
-#		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+#		global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
 
 		/*
 		 * This is a workaround for the wrong generated links. The workaround is needed to
@@ -131,11 +134,11 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * @return	void		...
 	 */
 	function main()	{
-		global $BE_USER,$LANG,$BACK_PATH; //,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+		global $BE_USER, $LANG, $BACK_PATH; //, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
 
 		// Access check!
 		// The page will show only if there is a valid page and if this page may be viewed by the user
-		$this->pageInfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
+		$this->pageInfo = t3lib_BEfunc::readPageAccess($this->id, $this->perms_clause);
 		$access = is_array($this->pageInfo) ? 1 : 0;
 
 		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id) && ($this->id>0))	{
@@ -164,14 +167,47 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 				</script>
 			';
 
-			$headerSection = $this->doc->getHeader('pages',$this->pageInfo,$this->pageInfo['_thePath']) . '<br />' . $LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path') . ': ' . t3lib_div::fixed_lgd_pre($this->pageInfo['_thePath'],50);
+			$headerSection = $this->doc->getHeader('pages', $this->pageInfo, $this->pageInfo['_thePath']) . '<br />' . $LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path') . ': ' . t3lib_div::fixed_lgd_pre($this->pageInfo['_thePath'], 50);
 
 			$this->content .= $this->doc->startPage($LANG->getLL('title'));
 			$this->content .= $this->doc->header($LANG->getLL('title'));
 			$this->content .= $this->doc->spacer(5);
-			$this->content .= $this->doc->section('',$this->doc->funcMenu($headerSection,t3lib_BEfunc::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'])));
+			
+			// Check if function setting for this page is set in session data
+			if ($this->my_vars['pid' . $this->id]['function']) {
+				$this->selectedFunction = $this->my_vars['pid' . $this->id]['function'];
+			} else {
+				$this->selectedFunction = $this->MOD_SETTINGS['function'];
+			}
+			// Check if sub module setting for this page is set in session data
+			if ($this->my_vars['pid' . $this->id]['submodule']) {
+				$this->subModule = $this->my_vars['pid' . $this->id]['submodule'];
+			} else {
+				$this->subModule = intval(t3lib_div::_GP('subModule'));
+			}
+			
+			// Write function setting to session data if menu function was selected
+			$setParams = t3lib_div::_GP('SET');
+			if ($setParams['function']) {
+				$this->selectedFunction = intval($setParams['function']);
+				$this->my_vars['pid' . $this->id]['function'] = $this->selectedFunction;
+				$GLOBALS["BE_USER"]->setAndSaveSessionData ('tx_wseevents', $this->my_vars);
+			}
+			// Write sub module setting to session data if sub module tab was selected
+			if (t3lib_div::_GP('subModule')) {
+				$this->subModule = intval(t3lib_div::_GP('subModule'));
+				$this->my_vars['pid' . $this->id]['submodule'] = $this->subModule;
+				$GLOBALS["BE_USER"]->setAndSaveSessionData ('tx_wseevents', $this->my_vars);
+			}
+			
+			// menu output
+			$this->content .= $this->doc->section('', 
+							$this->doc->funcMenu($headerSection, 
+									t3lib_BEfunc::getFuncMenu($this->id, 
+											'SET[function]', 
+											$this->selectedFunction, 
+											$this->MOD_MENU['function'])));
 			$this->content .= $this->doc->divider(5);
-
 
 			// Render content:
 			$this->moduleContent();
@@ -182,14 +218,14 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 						. 'GET:' . t3lib_div::view_array($_GET) . '<br />' 
 						. 'POST:' . t3lib_div::view_array($_POST) . '<br />' 
 #						. 'pageInfo:' . t3lib_div::view_array($this->pageInfo) . '<br />'
-#						. debug($_GET,'GET:')
+#						. debug($_GET, 'GET:')
 						. '';
 
 #			$this->content .= $debugline;
 
 			// ShortCut
 			if ($BE_USER->mayMakeShortcut())	{
-				$this->content .= $this->doc->spacer(20) . $this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
+				$this->content .= $this->doc->spacer(20) . $this->doc->section('', $this->doc->makeShortcutIcon('id', implode(',', array_keys($this->MOD_MENU)), $this->MCONF['name']));
 			}
 
 			$this->content .= $this->doc->spacer(10);
@@ -203,7 +239,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 			$this->content .= $this->doc->header($LANG->getLL('title'));
 			$this->content .= $this->doc->spacer(5);
 			$this->content .= $this->doc->spacer(10);
-			if ($this->id==0) {
+			if (0 == $this->id) {
 				$this->content .= $LANG->getLL('notOnRootpage');
 			}
 		}
@@ -225,7 +261,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function moduleContent()	{
-		switch((string)$this->MOD_SETTINGS['function'])	{
+		switch((string)$this->selectedFunction)	{
 			case 1:
 				$this->moduleEventContent();
 			break;
@@ -244,7 +280,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function moduleEventContent()	{
-		global $BE_USER,$LANG;
+		global $BE_USER, $LANG;
 
 		// define the sub modules that should be available in the tabmenu
 		$this->availableSubModules = array();
@@ -264,7 +300,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		}
 
 		// Read the selected sub module (from the tab menu) and make it available within this class.
-		$this->subModule = intval(t3lib_div::_GET('subModule'));
+//		$this->subModule = intval(t3lib_div::_GET('subModule'));
 
 		// If $this->subModule is not a key of $this->availableSubModules,
 		// set it to the key of the first element in $this->availableSubModules
@@ -320,7 +356,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function moduleCommonContent()	{
-		global $BE_USER,$LANG;
+		global $BE_USER, $LANG;
 
 		// define the sub modules that should be available in the tabmenu
 		$this->availableSubModules = array();
@@ -340,7 +376,7 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 		}
 
 		// Read the selected sub module (from the tab menu) and make it available within this class.
-		$this->subModule = intval(t3lib_div::_GET('subModule'));
+//		$this->subModule = intval(t3lib_div::_GET('subModule'));
 
 		// If $this->subModule is not a key of $this->availableSubModules,
 		// set it to the key of the first element in $this->availableSubModules

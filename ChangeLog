@@ -1,3 +1,9 @@
+2009-08-12
+	* BE: Remember the selected function and sub module for each page seperate.
+	  Now you don't have to select the function "Event data" or "Common data"
+	  according to the content of the selected page when you switch between pages.
+	  The last selection is restored when you select a page.
+
 2009-08-11
 	* Many changes to fit the TYPO3 coding guide lines.
 
