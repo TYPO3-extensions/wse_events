@@ -1003,7 +1003,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTLINK###'] = $sessionlink;
 								$markerArray['###SLOTLINKNAME###'] = $sessionlinkname;
 								$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
-								# Cut teaser if longer than max teaser width
+								// Cut teaser if longer than max teaser width
 								if (0 < $teaserwidth) {
 #									$markerArray['###SLOTTEASER###'] = substr($sessiondata['teaser'], 0, $teaserwidth) . '...';
 									$markerArray['###SLOTTEASER###'] = $GLOBALS['TSFE']->csConvObj->crop(
@@ -1013,7 +1013,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								} else {
 									$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
 								}
-								# Get speaker list of session
+								// ToDo: Ticket #11
+								// Get speaker list of session
 								$markerArray['###SLOTSPEAKER###'] = $this->getSpeakerNames($sessiondata['speaker']);
 							} else {
 								$markerArray = array();
@@ -1612,6 +1613,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 			case 'documents':
 				foreach (explode(',', $this->internal['currentRow'][$fN]) as $k){
+					// ToDo: Ticket #15, #17
 				    $documentsname = '<a href="uploads/tx_wseevents/' . $k . '" ' . $this->documentsTarget . '>' . $k . '</a>';
 					if (isset($doccontent)) {
 						$doccontent .= $this->internal['documentsdelimiter'] . $documentsname;
