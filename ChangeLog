@@ -4,6 +4,8 @@
 	  according to the content of the selected page when you switch between pages.
 	  The last selection is restored when you select a page.
 	* Caching is now on per default and can be disabled via TS setting.
+	* Fixed SQL errors when showing plugin with detail view without an uid given
+	  in the URL.
 
 2009-08-11
 	* Many changes to fit the TYPO3 coding guide lines.

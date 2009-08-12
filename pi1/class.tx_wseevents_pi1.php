@@ -1464,6 +1464,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	string		field content
 	 */
 	function getFieldContent($fN)	{
+		if (0 <= intval($this->internal['currentRow'])) {
+			return '';
+		]
 		switch($fN) {
 			case 'uid':
 				return $this->pi_list_linkSingle($this->internal['currentRow'][$fN], $this->internal['currentRow']['uid'], 1);	// The "1" means that the display of single items is CACHED! Set to zero to disable caching.
