@@ -4,7 +4,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 //include_once(t3lib_extMgm::extPath($_EXTKEY).'class.tx_wseevents_addFieldsToFlexForm.php');
 include_once(t3lib_extMgm::extPath($_EXTKEY).'class.tx_wseevents_events.php');
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_events');
+//t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_events');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_events');
 
@@ -32,7 +32,7 @@ $TCA['tx_wseevents_events'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_locations');
+//t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_locations');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_locations');
 
@@ -60,7 +60,7 @@ $TCA['tx_wseevents_locations'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_rooms');
+//t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_rooms');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_rooms');
 
@@ -89,7 +89,7 @@ $TCA['tx_wseevents_rooms'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_timeslots');
+//t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_timeslots');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_timeslots');
 
@@ -115,7 +115,7 @@ $TCA['tx_wseevents_timeslots'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_sessions');
+//t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_sessions');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_sessions');
 
@@ -149,7 +149,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_speakers');
+//t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_speakers');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_speakers');
 
@@ -183,7 +183,7 @@ $TCA['tx_wseevents_speakers'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_speakerrestrictions');
+//t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_speakerrestrictions');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_speakerrestrictions');
 
@@ -209,7 +209,7 @@ $TCA['tx_wseevents_speakerrestrictions'] = Array (
 );
 
 
-t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_categories');
+//t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_categories');
 
 t3lib_extMgm::addToInsertRecords('tx_wseevents_categories');
 
