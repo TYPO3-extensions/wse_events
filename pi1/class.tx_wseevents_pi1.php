@@ -72,6 +72,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	var $extKey = 'wse_events';
 	
 	var $pi_checkCHash = TRUE;
+	
+	// Flag for using the cache
+	var $use_cache = 1;
 
 	/**
 	 * Main function, decides in which form the data is displayed
@@ -115,6 +118,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$this->internal['sessiondelimiter'] = $conf['sessiondelimiter'];
 		}
+		# Check if caching should be disabled
+		if (isset($conf['no_cache']) && (1 == $conf['no_cache'])) {
+			$this->use_cache = 0;
+		} 
 
 		$flexFormValuesArray['dynListType'] = $this->pi_getFFvalue($piFlexForm, 'dynListType', 'display', $lDef[0]);
 		$conf['pidListEvents'] = $this->pi_getFFvalue($piFlexForm, 'pages', 'sDEF');
@@ -383,7 +390,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					    $overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
 					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 					    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
-					    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+						$this->setCache();
+					    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 					} else {
 						$sessionname = $this->getFieldContent('name');
 					}
@@ -515,7 +523,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$subpartArray['###HEADER###']       = $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray0);
 
 		$switch_row = 0;
-		$content = '';
+//		$content = '';
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$this->internal['currentRow'] = $row;
@@ -532,7 +540,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					    $overrulePIvars = array('showSpeakerUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
 					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 					    $altPageId=$this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
-					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+						$this->setCache();
+					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 					} else {
 						$speakername = $this->getFieldContent('name');
 					}
@@ -581,7 +590,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$overrulePIvars = array('showSessionUid' => $k, 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
 							$clearAnyway=1;    // the current values of piVars will NOT be preserved
 							$altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
-							$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+							$this->setCache();
+							$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 						} else {
 							$sessionname = $label;
 						}
@@ -988,13 +998,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							    $overrulePIvars = array('showSessionUid' => $sessiondata['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'back2list' => '1');
 							    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 							    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+								$this->setCache();
 								if (!t3lib_div::inList($hidecat, $sessiondata['catkey'])) {
-									$sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+									$sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 								} else {
 									$sessionlink = '';
 								}
 							    $label = $sessiondata['name'];  // the link text
-							    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+							    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 								$markerArray = array();
 								$markerArray['###SLOTNAME###'] = $sessiondata['name'];
 								$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
@@ -1009,7 +1020,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 									$markerArray['###SLOTTEASER###'] = $GLOBALS['TSFE']->csConvObj->crop(
 																		$GLOBALS['TSFE']->renderCharset,
 																		$sessiondata['teaser'],
-																		$teaserwidth, '...';
+																		$teaserwidth, '...');
 								} else {
 									$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
 								}
@@ -1273,7 +1284,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 		$clearAnyway = 1;    // the current values of piVars will NOT be preserved
 		$altPageId = $this->piVars['backUid'];      // ID of the view page
-		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+		$this->setCache();
+		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 
 		$markerArray['###TITLE###'] = $this->getFieldContent('name');
 		$markerArray['###SESSIONNUMBER###'] = $this->getFieldContent('number');
@@ -1355,7 +1367,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 		$clearAnyway = 1;    // the current values of piVars will NOT be preserved
 		$altPageId = $this->piVars['backUid'];      // ID of the view page
-		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+		$this->setCache();
+		$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 
 		# Check if the speaker has a session on this event
 		$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid'], $this->conf['pidListEvents']);
@@ -1400,7 +1413,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$overrulePIvars = array('showSessionUid' => $k, 'backUid' => $GLOBALS['TSFE']->id, 'showSpeakerUid' => $this->piVars['showSpeakerUid']);
 				$clearAnyway = 1;    // the current values of piVars will NOT be preserved
 				$altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
-				$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+				$this->setCache();
+				$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 			} else {
 				$sessionname = $label;
 			}
@@ -1470,7 +1484,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					break;
 					case 'tx_wseevents_speakers':
 						if (!empty($this->internal['currentRow']['firstname'])) {
-							if ((isset($this->conf['lastnameFirst'])) && 1 == $this->conf['lastnameFirst'])) {
+							if ((isset($this->conf['lastnameFirst'])) && (1 == $this->conf['lastnameFirst'])) {
 								return $this->internal['currentRow']['name'] . ', ' . $this->internal['currentRow']['firstname'];
 							} else {
 								return $this->internal['currentRow']['firstname'] . ' ' . $this->internal['currentRow']['name'];
@@ -1532,7 +1546,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					    $overrulePIvars = array('showSpeakerUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id, 'showSessionUid' => $this->internal['currentRow']['uid']);
 					    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
 					    $altPageId = $this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
-					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+						$this->setCache();
+					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 						if (empty($label)) {
 							$speakername = '';
 						}
@@ -1561,7 +1576,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					    $overrulePIvars = array('showSessionUid' => $data['uid'], 'backUid' => $GLOBALS['TSFE']->id);
 					    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
 					    $altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
-					    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $cache, $clearAnyway, $altPageId);
+						$this->setCache();
+					    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 					} else {
 					    $sessionname = $label;
 					}
@@ -1926,6 +1942,19 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$content = $this->pi_getLL('tx_wseevents_sessions.nospeakers', '[no speaker assigned]');
 		}
 		return $content;
+	}
+	
+	/**
+	 * Set the pi_USER_INT_obj variable depending on cache use
+	 *
+	 * @return	void
+	 */
+	function setCache() {
+		if (1 == $this->use_cache) {
+			$this->pi_USER_INT_obj = 0;
+		} else {
+			$this->pi_USER_INT_obj = 1;
+		}
 	}
 
 }
