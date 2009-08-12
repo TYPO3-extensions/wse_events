@@ -1279,8 +1279,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$label = $this->pi_getLL('back', 'Back');  // the link text
 		if ($this->piVars['back2list'] <> 1) {
 			# Back to single view
-			$overrulePIvars = array ('showSessionUid' => $this->piVars['showSessionUid'],
-									'showSpeakerUid' => $this->piVars['showSpeakerUid']);
+			$overrulePIvars = array ('showSpeakerUid' => $this->piVars['showSpeakerUid']);
 		}
 		$clearAnyway = 1;    // the current values of piVars will NOT be preserved
 		$altPageId = $this->piVars['backUid'];      // ID of the view page
@@ -1362,8 +1361,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$label = $this->pi_getLL('back', 'Back');  // the link text
 		if ($this->piVars['back2list'] <> 1) {
 			# Back to single view
-			$overrulePIvars = array ('showSessionUid' => $this->piVars['showSessionUid'],
-									'showSpeakerUid' => $this->piVars['showSpeakerUid']);
+			$overrulePIvars = array ('showSessionUid' => $this->piVars['showSessionUid']);
 		}
 		$clearAnyway = 1;    // the current values of piVars will NOT be preserved
 		$altPageId = $this->piVars['backUid'];      // ID of the view page
