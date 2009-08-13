@@ -173,7 +173,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $this->pi_wrapInBaseClass($this->listTimeslotView($content, $conf));
 			break;
 			default:
-				return $this->pi_wrapInBaseClass('Not implemented: [' . (string)$flexFormValuesArray['dynListType'] . ']<br>Index=[' . $index . ']<br>');
+				return $this->pi_wrapInBaseClass('Not implemented: [' 
+				  . (string)$flexFormValuesArray['dynListType'] . ']<br>Index=[' . $index . ']<br>');
 			break;
 		}
 	}
@@ -200,10 +201,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		$lConf = $this->conf['listView.'];	// Local settings for the listView function
 
-		// Set table to session table
+		# Set table to session table
 		$this->internal['currentTable'] = 'tx_wseevents_sessions';
 
-		// Loading all TCA details for this table:
+		# Loading all TCA details for this table:
 		t3lib_div::loadTCA($this->internal['currentTable']);
 
 		if (!isset($this->piVars['pointer'])) $this->piVars['pointer']=0;
@@ -248,12 +249,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Initializing the query parameters:
 		$sorting = $this->conf['sorting'];
-//		list($this->internal['orderBy'], $this->internal['descFlag']) = explode(':', $sorting);
-		$this->internal['results_at_a_time']=t3lib_div::intInRange($lConf['results_at_a_time'], 0, 1000, 100);		// Number of results to show in a listing.
-		$this->internal['maxPages']=t3lib_div::intInRange($lConf['maxPages'], 0, 1000, 2);;		// The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
-		$this->internal['searchFieldList']='uid, name, category, number, speaker, room, timeslots, teaser';
-		$this->internal['orderByList']='category, number, name';
-	    $where = ' AND ' . $this->internal['currentTable'] . '.' . $TCA[$this->internal['currentTable']]['ctrl']['languageField'] . '=0';
+		# Number of results to show in a listing.
+		$this->internal['results_at_a_time'] = t3lib_div::intInRange($lConf['results_at_a_time'], 0, 1000, 100);
+		# The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
+		$this->internal['maxPages'] = t3lib_div::intInRange($lConf['maxPages'], 0, 1000, 2);
+		$this->internal['searchFieldList'] = 'uid, name, category, number, speaker, room, timeslots, teaser';
+		$this->internal['orderByList'] = 'category, number, name';
+	    $where = ' AND ' . $this->internal['currentTable'] . '.' 
+			. $TCA[$this->internal['currentTable']]['ctrl']['languageField'] . '=0';
 
 		# Check for catagory selection
 		$showcat = $this->piVars['showCategory'];
@@ -329,7 +332,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$where .= ' AND event=' . $showevent;
 		}
 
-		// Get date of event
+		# Get date of event
 		$this->eventrecord = $this->pi_getRecord('tx_wseevents_events', $showevent);
 
 		# Create template data for category combobox
@@ -343,9 +346,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$select_item .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
 		}
 
-		// Get list of categories
-		// Make query, pass query to SQL database:
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wseevents_categories', 'sys_language_uid=0' . $this->cObj->enableFields('tx_wseevents_categories'), '', 'shortkey');
+		# Get list of categories
+		# Make query, pass query to SQL database:
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wseevents_categories', 'sys_language_uid=0' 
+			. $this->cObj->enableFields('tx_wseevents_categories'), '', 'shortkey');
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				if (!t3lib_div::inList($hidecat, $row['uid'])) {
@@ -365,7 +369,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$subpartArray1['###SELECT###'] = $select_item;
 		# Set label for selection box
 		$markerArray1['###LABEL###'] = $this->pi_getLL('tx_wseevents_sessions.choosecategory', '[Choose category]');
-		//$markerArray1['###FORMACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->page['uid']);
 		$markerArray1['###FORMSELECT###'] = $this->prefixId . '[showCategory]';
 		$markerArray1['###FORMSEND###'] = htmlspecialchars($this->pi_getLL('tx_wseevents_sessions.showselection', '[Show selection]'));
 		$subpartArray['###CATEGORYSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['catsection'], $markerArray1, $subpartArray1);
@@ -375,7 +378,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$res = $this->pi_exec_query($this->internal['currentTable'], 1, $where, '', '', 'category, number, name');
 		list($this->internal['res_count']) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
 
-		// Make listing query, pass query to SQL database:
+		# Make listing query, pass query to SQL database:
 		$res = $this->pi_exec_query($this->internal['currentTable'], 0, $where, '', '', 'category, number, name');
 
 		# Get the column names
@@ -397,7 +400,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				if (!t3lib_div::inList($hidecat, $row['category'])) {
 					if (!empty($this->conf['singleSession'])) {
 					    $label = $this->getFieldContent('name');  // the link text
-//					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 					    $overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
 					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
 					    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
@@ -466,33 +468,34 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		$lConf = $this->conf['listView.'];	// Local settings for the listView function
 
-		// Set table to session table
+		# Set table to session table
 		$this->internal['currentTable'] = 'tx_wseevents_speakers';
 
 		if (!isset($this->piVars['pointer']))	$this->piVars['pointer'] = 0;
 		if (!isset($this->piVars['mode']))	$this->piVars['mode'] = 1;
 
-		// Initializing the query parameters:
+		# Initializing the query parameters:
 		$sorting = $this->conf['sorting'];
-//		list($this->internal['orderBy'], $this->internal['descFlag']) = explode(':', $sorting);
-		$this->internal['results_at_a_time'] = t3lib_div::intInRange($lConf['results_at_a_time'], 0, 1000, 100);		// Number of results to show in a listing.
-		$this->internal['maxPages'] = t3lib_div::intInRange($lConf['maxPages'], 0, 1000, 2);;		// The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
+		# Number of results to show in a listing.
+		$this->internal['results_at_a_time'] = t3lib_div::intInRange($lConf['results_at_a_time'], 0, 1000, 100);
+		# The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
+		$this->internal['maxPages'] = t3lib_div::intInRange($lConf['maxPages'], 0, 1000, 2);
 		$this->internal['searchFieldList'] = 'name, firstname, email, info, uid';
 		$this->internal['orderByList'] = 'name, firstname, email, info, uid';
 		$this->internal['orderBy'] = 'name, firstname';
 		$this->internal['descFlag'] = 0;
-		// Check for setting sort order via TypoScript
+		# Check for setting sort order via TypoScript
 		if (isset($this->conf['sortSpeakerlist'])) {
 			list($this->internal['orderBy'], $this->internal['descFlag']) = explode(':', $this->conf['sortSpeakerlist']);
 		}
 
 	    $where = ' AND ' . $this->internal['currentTable'] . '.sys_language_uid = 0';
 
-		// Get number of records:
+		# Get number of records:
 		$res = $this->pi_exec_query($this->internal['currentTable'], 1, $where, '', '', 'name');
 		list($this->internal['res_count']) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
 
-		// Make listing query, pass query to SQL database:
+		# Make listing query, pass query to SQL database:
 		$res = $this->pi_exec_query($this->internal['currentTable'], 0, $where);
 
 		# Check if upload directory is set, if not use the default directory
@@ -519,7 +522,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['row_alt']    = $this->cObj->getSubpart($template['singlerow'], '###ITEM_ALT###');
 		$template['sessionrow'] = $this->cObj->getSubpart($template['singlerow'], '###SESSIONROW###');
 
-		// Put the whole list together:
+		# Put the whole list together:
 		$content_item = '';	// Clear var;
 
 		# Get the column names
@@ -534,13 +537,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$subpartArray['###HEADER###']       = $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray0);
 
 		$switch_row = 0;
-//		$content = '';
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$this->internal['currentRow'] = $row;
 				# Check if the speaker has a session on this event
 				$sessionids = $this->getSpeakerSessionList($this->internal['currentRow']['uid'], $this->conf['pidListEvents']);
-#$content .= '<br>SessionIDs=[' . $sessionids . ']';
 
 				# display only speaker with sessions
 				if (!empty($sessionids)) {
@@ -557,7 +558,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$speakername = $this->getFieldContent('name');
 					}
 
-					// remember sessionids for getFieldContent
+					# remember sessionids for getFieldContent
 					$this->internal['speakersessions'] = $sessionids;
 
 					# Build content from template + array
@@ -618,7 +619,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];
 						$markerArray1['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
 						$markerArray1['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
-						// Get time slot info
+						# Get time slot info
 						$tscontent = '';
 						if (0 == $this->internal['hideTimeslots']) {
 							foreach (explode(',', $sessdata['timeslots']) as $ts){
@@ -675,7 +676,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		$lConf = $this->conf['listView.'];	// Local settings for the listView function
 
-		// Set table to session table
+		# Set table to session table
 		$this->internal['currentTable'] = 'tx_wseevents_sessions';
 
 		if (!isset($this->piVars['pointer'])) $this->piVars['pointer']=0;
@@ -950,7 +951,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray['###ROOMCOUNT###'] = $roomcount;
 				$markerArray['###TITLEDAY###'] = $dayname[$d];
 				$markerArray['###TITLEWEEKDAY###'] = $weekdays[$d];
-				// Add column width if enabled
+				# Add column width if enabled
 				if (0 < $timecolwidth) {
 					$markerArray['###COLUMNWIDTH###']  = ($slotcolwidth * $roomcount) . '%';
 				}
@@ -1027,7 +1028,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTLINK###'] = $sessionlink;
 								$markerArray['###SLOTLINKNAME###'] = $sessionlinkname;
 								$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
-								// Cut teaser if longer than max teaser width
+								# Cut teaser if longer than max teaser width
 								if (0 < $teaserwidth) {
 #									$markerArray['###SLOTTEASER###'] = substr($sessiondata['teaser'], 0, $teaserwidth) . '...';
 									$markerArray['###SLOTTEASER###'] = $GLOBALS['TSFE']->csConvObj->crop(
@@ -1037,8 +1038,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								} else {
 									$markerArray['###SLOTTEASER###'] = $sessiondata['teaser'];
 								}
-								// ToDo: Ticket #11
-								// Get speaker list of session
+								# ToDo: Ticket #11
+								# Get speaker list of session
 								$markerArray['###SLOTSPEAKER###'] = $this->getSpeakerNames($sessiondata['speaker']);
 							} else {
 								$markerArray = array();
@@ -1071,7 +1072,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$slotwidth = 1;
 							}
 							$markerArray['###SLOTWIDTH###'] = $slotwidth;
-							// Add column width if enabled
+							# Add column width if enabled
 							if (0 < $timecolwidth) {
 								$markerArray['###COLUMNWIDTH###']  = ($slotcolwidth * $slotwidth) . '%';
 							}
@@ -1143,7 +1144,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			}
 			$subpartArray1['###SLOTCOLUMN###'] = $content_slotrow;
 			$subpartArray1['###SLOTCOLUMNEMPTY###'] = '';
-			// Column with Start and end time
+			# Column with Start and end time
 			$markerArray = array();
 			$content_timecol = '';
 			$content_timecolfree = '';
@@ -1151,7 +1152,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
 				$markerArray['###SLOTEND###']   = $slotbegin[$s+1];
 				$markerArray['###SLOTSIZE###']  = 1;
-				// Add column width if enabled
+				# Add column width if enabled
 				if (0 < $timecolwidth) {
 					$markerArray['###COLUMNWIDTH###']  = $timecolwidth . '%';
 				}
@@ -1172,7 +1173,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
 						$markerArray['###SLOTEND###']   = $slotbegin[$s+$slot_len];
 						$markerArray['###SLOTSIZE###']  = $slot_len;
-						// Add column width if enabled
+						# Add column width if enabled
 						if (0 < $timecolwidth) {
 							$markerArray['###COLUMNWIDTH###']  = $timecolwidth . '%';
 						}
@@ -1182,14 +1183,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###SLOTBEGIN###'] = $slotbegin[$s];
 					$markerArray['###SLOTEND###']   = $slotbegin[$s+1];
 					$markerArray['###SLOTSIZE###']  = 1;
-					// Add column width if enabled
+					# Add column width if enabled
 					if (0 < $timecolwidth) {
 						$markerArray['###COLUMNWIDTH###']  = $timecolwidth . '%';
 					}
 					$content_timecolfree = $this->cObj->substituteMarkerArrayCached($template['timecolfree'], $markerArray);
 				}
 			}
-			// Add debug output if enabled
+			# Add debug output if enabled
 			if (0 < $showdebug) {
 				$content_timecol = LF . '<!-- s=' . $s . ' d=' . $d . ' timecol -->' . $content_timecol;
 				$content_timecolfree = LF . '<!-- s=' . $s . ' d=' . $d . ' timecolfree -->' . $content_timecolfree;
@@ -1212,7 +1213,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$markerArray['###HEADERBEGIN###'] = '';
 		}
-		// Add column width if enabled
+		# Add column width if enabled
 		if (0 < $timecolwidth) {
 			$markerArray['###COLUMNWIDTH###']  = $timecolwidth . '%';
 		}
@@ -1222,7 +1223,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$subpartArray1['###SELECT###'] = $content_select;
 		$markerArray = array();
 		$markerArray['###TITLEBEGIN###'] = '';
-		// Add column width if enabled
+		# Add column width if enabled
 		if (0 < $timecolwidth) {
 			$markerArray['###COLUMNWIDTH###']  = $timecolwidth . '%';
 		}
@@ -1275,7 +1276,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		# Get the parts out of the template
 		$template['total'] = $this->cObj->getSubpart($this->templateCode, '###SESSIONVIEW###');
 
-		// This sets the title of the page for use in indexed search results:
+		# This sets the title of the page for use in indexed search results:
 		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
 
 		# Check if target for documents link is set, if not use the default target
@@ -1291,7 +1292,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$this->internal['documentsdelimiter'] = $conf['documentsdelimiter'];
 		}
 
-		// Link for back to list view
+		# Link for back to list view
 		$label = $this->pi_getLL('back', 'Back');  // the link text
 		$overrulePIvars = array ();
 		$clearAnyway = 1;    // the current values of piVars will NOT be preserved
@@ -1374,10 +1375,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['total'] = $this->cObj->getSubpart($this->templateCode, '###SPEAKERVIEW###');
 		$template['sessionrow'] = $this->cObj->getSubpart($template['total'], '###SESSIONROW###');
 
-		// This sets the title of the page for use in indexed search results:
+		# This sets the title of the page for use in indexed search results:
 		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
 
-		// Link for back to list view
+		# Link for back to list view
 		$label = $this->pi_getLL('back', 'Back');  // the link text
 		$overrulePIvars = array ();
 		$clearAnyway = 1;    // the current values of piVars will NOT be preserved
@@ -1455,7 +1456,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];
 				$markerArray1['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
 				$markerArray1['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
-				// Get time slot info
+				# Get time slot info
 				$tscontent = '';
 				foreach (explode(',', $sessdata['timeslots']) as $ts){
 					$tsdata = $this->pi_getRecord('tx_wseevents_timeslots', $ts);
@@ -1559,7 +1560,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			case 'speaker':
 				foreach (explode(',', $this->internal['currentRow'][$fN]) as $k){
 					$data = $this->pi_getRecord('tx_wseevents_speakers', $k);
-					// Get the name and firstname
+					# Get the name and firstname
 					if (!empty($data['firstname'])) {
 						if (((isset($this->conf['lastnameFirst']))) && (1 == $this->conf['lastnameFirst'])) {
 							$label =  $data['name'] . ', ' . $data['firstname'];
@@ -1625,7 +1626,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$content = $sessionname;
 					}
 					if (!empty($this->conf['singleSessionSlot'])) {
-						// ToDo: Here the timeslots must be read and added to the content
+						# ToDo: Here the timeslots must be read and added to the content
 					}
 				}
 				return $content;
@@ -1669,7 +1670,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 			case 'documents':
 				foreach (explode(',', $this->internal['currentRow'][$fN]) as $k){
-					// ToDo: Ticket #15, #17
+					# ToDo: Ticket #15, #17
 				    $documentsname = '<a href="uploads/tx_wseevents/' . $k . '" ' . $this->documentsTarget . '>' . $k . '</a>';
 					if (isset($doccontent)) {
 						$doccontent .= $this->internal['documentsdelimiter'] . $documentsname;
@@ -1677,9 +1678,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$doccontent = $documentsname;
 					}
 				}
-				// Check if any presentation handouts are available
+				# Check if any presentation handouts are available
 				if (empty($this->internal['currentRow'][$fN])) {
-					// if not then check for the date and get back a message if event is in the past
+					# if not then check for the date and get back a message if event is in the past
 					$eventdate = date('Ymd', $this->eventrecord['begin']);
 					$thisdate = date('Ymd');
 					if ($thisdate>=$eventdate) {
@@ -1717,7 +1718,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$fUid = $this->internal['currentRow']['uid'];
 		}
 		if ($index <> 0) {
-			// for the name of a session, check if a translation is there
+			# for the name of a session, check if a translation is there
 			$where = 'l18n_parent=' . $fUid . ' AND sys_language_uid=' . $index . $this->cObj->enableFields($dbname);
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($fN, $dbname, $where);
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -1725,7 +1726,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			if (!empty($datacount)) {
 				return $datacount;
 			} else {
-				// no translation get the field content from the default record
+				# no translation get the field content from the default record
 				$where = 'uid=' . $fUid . $this->cObj->enableFields($dbname);
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($fN, $dbname, $where);
 				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -1733,7 +1734,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $datacount;
 			}
 		} else {
-			//show default language
+			#show default language
 //			return $this->internal['currentRow'][$fN];
 			$where = 'uid=' . $fUid . $this->cObj->enableFields($dbname);
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($fN, $dbname, $where);
@@ -1762,7 +1763,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	function getTranslatedCategory($dbname, $rowuid, $fN) {
 		$index = $GLOBALS['TSFE']->sys_language_uid;
 		if (0 <> $index) {
-			// for the name of a session, check if a translation is there
+			# for the name of a session, check if a translation is there
 			$where = 'l18n_parent=' . $rowuid . ' AND sys_language_uid=' . $index . $this->cObj->enableFields('tx_wseevents_categories');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('name', 'tx_wseevents_categories', $where);
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -1773,7 +1774,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $fN;
 			}
 		} else {
-			//show default language
+			# show default language
 			return $fN;
 		}
 	}
@@ -1962,7 +1963,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	function getSpeakerNames($speakerlist) {
 		foreach (explode(',', $speakerlist) as $k){
 			$data = $this->pi_getRecord('tx_wseevents_speakers', $k);
-			// Get the name and firstname
+			# Get the name and firstname
 			if (!empty($data['firstname'])) {
 				if (((isset($this->conf['lastnameFirst']))) && (1 == $this->conf['lastnameFirst'])) {
 					$speakername =  $data['name'] . ', ' . $data['firstname'];
