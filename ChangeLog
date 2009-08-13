@@ -2,6 +2,7 @@
 	* FE: Make links to detail views simpler for RealURL usage.
 	  The "Back" link now is only shown when going to detail view from list view.
 	  There is no "Back" link when going from detail view to another detail view.
+	* Cleanup code: Changed method for getting language overlay records.
 
 2009-08-12
 	* BE: Remember the selected function and sub module for each page seperate.
