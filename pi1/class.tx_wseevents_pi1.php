@@ -80,6 +80,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	
 	// Flag for displaying lists, used for Backlink creation
 	var $listview = 1;
+	
+	// Internal configuration
+	var $internal = array();
 
 	/**
 	 * Main function, decides in which form the data is displayed
@@ -102,8 +105,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->staticInfo = t3lib_div::makeInstance('tx_staticinfotables_pi1');
 		$this->staticInfo->init();
 
-
-		# Read TypoScript settings
+		# Read TypoScript settings and initialize internal variables
 
 		# Check if delimiter for speaker is set, if not use the default value
 		if (!isset($conf['speakerdelimiter'])) {
@@ -122,6 +124,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$this->internal['sessiondelimiter'] = '<br />';
 		} else {
 			$this->internal['sessiondelimiter'] = $conf['sessiondelimiter'];
+		}
+		# Check for hiding the time slots
+		if (!isset($conf['hideTimeslots'])) {
+			$this->internal['hideTimeslots'] = 0;
+		} else {
+			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
 		}
 		# Check if caching should be disabled
 		if (isset($conf['no_cache']) && (1 == $conf['no_cache'])) {
@@ -272,13 +280,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	    $where1 = ' AND sys_language_uid = 0';
 		$res = $this->pi_exec_query('tx_wseevents_events', 1, $where1, '', '', 'name, uid');
 		list($eventcount) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
-
-		# Check for hiding the time slots
-		if (!isset($conf['hideTimeslots'])) {
-			$this->internal['hideTimeslots'] = 0;
-		} else {
-			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
-		}
 
 		# Create template data for event combobox
 		$event_item = '';	// Clear var;
@@ -501,13 +502,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$uploadDirectory = $conf['uploadDirectory'];
 		}
 
-		# Check for hiding the time slots
-		if (!isset($conf['hideTimeslots'])) {
-			$this->internal['hideTimeslots'] = 0;
-		} else {
-			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
-		}
-
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -626,13 +620,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$markerArray1['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
 						// Get time slot info
 						$tscontent = '';
-						foreach (explode(',', $sessdata['timeslots']) as $ts){
-							$tsdata = $this->pi_getRecord('tx_wseevents_timeslots', $ts);
-						    $timeslotname = tx_wseevents_timeslots::formatSlotName($tsdata);
-							if (!empty($tscontent)) {
-								$tscontent .= $this->internal['slotdelimiter'] . $timeslotname;
-							} else {
-								$tscontent = $timeslotname;
+						if (0 == $this->internal['hideTimeslots']) {
+							foreach (explode(',', $sessdata['timeslots']) as $ts){
+								$tsdata = $this->pi_getRecord('tx_wseevents_timeslots', $ts);
+								$timeslotname = tx_wseevents_timeslots::formatSlotName($tsdata);
+								if (!empty($tscontent)) {
+									$tscontent .= $this->internal['slotdelimiter'] . $timeslotname;
+								} else {
+									$tscontent = $timeslotname;
+								}
 							}
 						}
 						$markerArray1['###SESSIONSLOTS###'] = $tscontent;
@@ -1294,12 +1290,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$this->internal['documentsdelimiter'] = $conf['documentsdelimiter'];
 		}
-		# Check for hiding the time slots
-		if (!isset($conf['hideTimeslots'])) {
-			$this->internal['hideTimeslots'] = 0;
-		} else {
-			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
-		}
 
 		// Link for back to list view
 		$label = $this->pi_getLL('back', 'Back');  // the link text
@@ -1404,13 +1394,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid'], $this->conf['pidListEvents']);
 		}
 
-		# Check for hiding the time slots
-		if (!isset($conf['hideTimeslots'])) {
-			$this->internal['hideTimeslots'] = 0;
-		} else {
-			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
-		}
-		
 		$markerArray['###NAME###'] = $this->getFieldContent('name');
 		$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
 		$markerArray['###EMAILDATA###'] = $this->getFieldContent('email');
