@@ -1333,8 +1333,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 
-		$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'], $this->piVars['showSpeakerUid']);
-#ToDo: t3lib_pageSelect::getRecordOverlay
+		if (isset($this->piVars['showSpeakerUid'])) {
+			$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'], 
+				$this->piVars['showSpeakerUid']);
+			#ToDo: t3lib_pageSelect::getRecordOverlay
+		}
 
 		# Check if upload directory is set, if not use the default directory
 		if (!isset($conf['uploadDirectory'])) {
@@ -1372,7 +1375,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 
 		# Check if the speaker has a session on this event
-		$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid'], $this->conf['pidListEvents']);
+		if (isset($this->piVars['showSpeakerUid'])) {
+			$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid'], $this->conf['pidListEvents']);
+		}
 
 		$markerArray['###NAME###'] = $this->getFieldContent('name');
 		$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
@@ -1407,47 +1412,49 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###BACKLINK###'] = $backlink;
 
 		# For every session get information
-		foreach (explode(',', $sessionids) as $k){
-			$label = $this->getTranslatedField('tx_wseevents_sessions', 'name', $k);
-			if (!empty($this->conf['singleSession'])) {
-				if (1 == $this->listview) {
-					$overrulePIvars = array('showSessionUid' => $k, 'backUid' => $GLOBALS['TSFE']->id);
+		if ($sessionids) {
+			foreach (explode(',', $sessionids) as $k){
+				$label = $this->getTranslatedField('tx_wseevents_sessions', 'name', $k);
+				if (!empty($this->conf['singleSession'])) {
+					if (1 == $this->listview) {
+						$overrulePIvars = array('showSessionUid' => $k, 'backUid' => $GLOBALS['TSFE']->id);
+					} else {
+						$overrulePIvars = array('showSessionUid' => $k);
+					}
+					$clearAnyway = 1;    // the current values of piVars will NOT be preserved
+					$altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
+					$this->setCache();
+					$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 				} else {
-					$overrulePIvars = array('showSessionUid' => $k);
+					$sessionname = $label;
 				}
-				$clearAnyway = 1;    // the current values of piVars will NOT be preserved
-				$altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
-				$this->setCache();
-				$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
-			} else {
-				$sessionname = $label;
-			}
 
-			# Build content from template + array
-			$markerarray1 = array();
-			$markerArray1['###SESSIONNAME###'] = $sessionname;
-			$markerArray1['###SESSIONTEASER###'] = $this->getTranslatedField('tx_wseevents_sessions', 'teaser', $k);//$data['teaser'];
-			$markerArray1['###SESSIONDESCRIPTION###'] = $this->getTranslatedField('tx_wseevents_sessions', 'description', $k);//$data['description'];
-			$sessdata = $this->pi_getRecord('tx_wseevents_sessions', $k);
-			$datacat  = $this->pi_getRecord('tx_wseevents_categories', $sessdata['category']);
-			$markerArray1['###SESSIONNUMBER###'] = $datacat['shortkey'] . sprintf('%02d', $sessdata['number']);
-			$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];
-			$markerArray1['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
-			$markerArray1['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
-			// Get time slot info
-			$tscontent = '';
-			foreach (explode(',', $sessdata['timeslots']) as $ts){
-				$tsdata = $this->pi_getRecord('tx_wseevents_timeslots', $ts);
-				$timeslotname = tx_wseevents_timeslots::formatSlotName($tsdata);
-				if (!empty($tscontent)) {
-					$tscontent .= $this->internal['slotdelimiter'] . $timeslotname;
-				} else {
-					$tscontent = $timeslotname;
+				# Build content from template + array
+				$markerarray1 = array();
+				$markerArray1['###SESSIONNAME###'] = $sessionname;
+				$markerArray1['###SESSIONTEASER###'] = $this->getTranslatedField('tx_wseevents_sessions', 'teaser', $k);//$data['teaser'];
+				$markerArray1['###SESSIONDESCRIPTION###'] = $this->getTranslatedField('tx_wseevents_sessions', 'description', $k);//$data['description'];
+				$sessdata = $this->pi_getRecord('tx_wseevents_sessions', $k);
+				$datacat  = $this->pi_getRecord('tx_wseevents_categories', $sessdata['category']);
+				$markerArray1['###SESSIONNUMBER###'] = $datacat['shortkey'] . sprintf('%02d', $sessdata['number']);
+				$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];
+				$markerArray1['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
+				$markerArray1['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
+				// Get time slot info
+				$tscontent = '';
+				foreach (explode(',', $sessdata['timeslots']) as $ts){
+					$tsdata = $this->pi_getRecord('tx_wseevents_timeslots', $ts);
+					$timeslotname = tx_wseevents_timeslots::formatSlotName($tsdata);
+					if (!empty($tscontent)) {
+						$tscontent .= $this->internal['slotdelimiter'] . $timeslotname;
+					} else {
+						$tscontent = $timeslotname;
+					}
 				}
-			}
-			$markerArray1['###SESSIONSLOTS###'] = $tscontent;
+				$markerArray1['###SESSIONSLOTS###'] = $tscontent;
 
-			$content_item .= $this->cObj->substituteMarkerArrayCached($template['sessionrow'], $markerArray1);
+				$content_item .= $this->cObj->substituteMarkerArrayCached($template['sessionrow'], $markerArray1);
+			}
 		}
 
 #		$this->pi_getEditPanel();
