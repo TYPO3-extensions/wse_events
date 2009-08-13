@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2008 Michael Oehlhof <typo3@oehlhof.de>
+*  (c) 2007-2009 Michael Oehlhof <typo3@oehlhof.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -23,8 +23,10 @@
 ***************************************************************/
 
 /**
- * Plugin 'WSE Events' for the 'wse_events' extension.
+ * FE Plugin 'WSE Events' for the 'wse_events' extension.
  * Displays session data as list and detail view
+ * Displays speaker data as list and detail view
+ * Displays time slot view
  *
  * @author	Michael Oehlhof <typo3@oehlhof.de>
  */
@@ -271,6 +273,13 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$res = $this->pi_exec_query('tx_wseevents_events', 1, $where1, '', '', 'name, uid');
 		list($eventcount) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
 
+		# Check for hiding the time slots
+		if (!isset($conf['hideTimeslots'])) {
+			$this->internal['hideTimeslots'] = 0;
+		} else {
+			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
+		}
+
 		# Create template data for event combobox
 		$event_item = '';	// Clear var;
 		$markerArray = array();
@@ -490,6 +499,13 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$uploadDirectory = 'uploads/tx_wseevents';
 		} else {
 			$uploadDirectory = $conf['uploadDirectory'];
+		}
+
+		# Check for hiding the time slots
+		if (!isset($conf['hideTimeslots'])) {
+			$this->internal['hideTimeslots'] = 0;
+		} else {
+			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
 		}
 
 		# Check if template file is set, if not use the default template
@@ -1246,7 +1262,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 
-		$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'], $this->piVars['showSessionUid']);
+		if (isset($this->piVars['showSessionUid'])) {
+			$this->internal['currentRow'] = $this->pi_getRecord($this->internal['currentTable'], 
+				$this->piVars['showSessionUid']);
+		}
 
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
@@ -1274,6 +1293,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$this->internal['documentsdelimiter'] = '<br />';
 		} else {
 			$this->internal['documentsdelimiter'] = $conf['documentsdelimiter'];
+		}
+		# Check for hiding the time slots
+		if (!isset($conf['hideTimeslots'])) {
+			$this->internal['hideTimeslots'] = 0;
+		} else {
+			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
 		}
 
 		// Link for back to list view
@@ -1379,6 +1404,13 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid'], $this->conf['pidListEvents']);
 		}
 
+		# Check for hiding the time slots
+		if (!isset($conf['hideTimeslots'])) {
+			$this->internal['hideTimeslots'] = 0;
+		} else {
+			$this->internal['hideTimeslots'] = intval($conf['hideTimeslots']);
+		}
+		
 		$markerArray['###NAME###'] = $this->getFieldContent('name');
 		$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
 		$markerArray['###EMAILDATA###'] = $this->getFieldContent('email');
@@ -1617,13 +1649,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			break;
 
 			case 'timeslots':
-				foreach (explode(',', $this->internal['currentRow'][$fN]) as $k){
-					$data = $this->pi_getRecord('tx_wseevents_timeslots', $k);
-				    $timeslotname = tx_wseevents_timeslots::formatSlotName($data);
-					if (isset($content)) {
-						$content .= $this->internal['slotdelimiter'] . $timeslotname;
-					} else {
-						$content = $timeslotname;
+				if (0 == $this->internal['hideTimeslots']) {
+					foreach (explode(',', $this->internal['currentRow'][$fN]) as $k){
+						$data = $this->pi_getRecord('tx_wseevents_timeslots', $k);
+						$timeslotname = tx_wseevents_timeslots::formatSlotName($data);
+						if (isset($content)) {
+							$content .= $this->internal['slotdelimiter'] . $timeslotname;
+						} else {
+							$content = $timeslotname;
+						}
 					}
 				}
 				if (empty($content)) {
