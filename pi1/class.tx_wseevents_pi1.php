@@ -411,19 +411,20 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				if (!t3lib_div::inList($hidecat, $row['category'])) {
 					if (!empty($this->conf['singleSession'])) {
 					    $label = $this->getFieldContent('name');  // the link text
-					    $overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
-					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
-					    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+					    $overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'], 
+							'backUid' => $GLOBALS['TSFE']->id);
+					    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
+					    $altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
 						$this->setCache();
-					    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
+					    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, 
+							$this->use_cache, $clearAnyway, $altPageId);
 					} else {
 						$sessionname = $this->getFieldContent('name');
 					}
 
 					# Build content from template + array
 					$markerArray = array();
-					$markerArray['###NUMBER###'] = $this->getFieldContent('number');	// ToDo: To be removed from here before release
-					$markerArray['###TEASERNAME##'] = $this->getFieldHeader('teaser');
+					$markerArray['###TEASERNAME###'] = $this->getFieldHeader('teaser');
 					$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
 					$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
 					$markerArray['###DESCRIPTIONDATA###'] = $this->cObj->stdWrap($this->getFieldContent('description'), 
@@ -436,6 +437,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###TIMESLOTS###'] = $this->getFieldContent('timeslots');
 
 					$markerArray['###SESSIONNUMBER###'] = $this->getFieldContent('number');
+					// Get the data for the category of the session
 					$datacat  = $this->pi_getRecord('tx_wseevents_categories', $this->getFieldContent('category'));
 					$markerArray['###SESSIONCATEGORY###'] = $this->getFieldContent('category');
 					$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
@@ -562,8 +564,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					    $label = $this->getFieldContent('name');  // the link text
 					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 					    $overrulePIvars = array('showSpeakerUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
-					    $clearAnyway=1;    // the current values of piVars will NOT be preserved
-					    $altPageId=$this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
+					    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
+					    $altPageId = $this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
 						$this->setCache();
 					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 					} else {
@@ -621,10 +623,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						if (!empty($this->conf['singleSession'])) {
 							$overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 							$overrulePIvars = array('showSessionUid' => $k, 'backUid' => $GLOBALS['TSFE']->id);
-							$clearAnyway=1;    // the current values of piVars will NOT be preserved
-							$altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+							$clearAnyway = 1;    // the current values of piVars will NOT be preserved
+							$altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
 							$this->setCache();
-							$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
+							$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, 
+								$this->use_cache, $clearAnyway, $altPageId);
 						} else {
 							$sessionname = $label;
 						}
@@ -1037,16 +1040,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							    $label = $sessiondata['catnum'];  // the link text
 							    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 							    $overrulePIvars = array('showSessionUid' => $sessiondata['uid'], 'backUid' => $GLOBALS['TSFE']->id);
-							    $clearAnyway=1;    // the current values of piVars will NOT be preserved
-							    $altPageId=$this->conf['singleSession'];      // ID of the target page, if not on the same page
+							    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
+							    $altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
 								$this->setCache();
 								if (!t3lib_div::inList($hidecat, $sessiondata['catkey'])) {
-									$sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
+									$sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, 
+										$this->use_cache, $clearAnyway, $altPageId);
 								} else {
 									$sessionlink = '';
 								}
 							    $label = $sessiondata['name'];  // the link text
-							    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
+							    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, 
+									$this->use_cache, $clearAnyway, $altPageId);
 								$markerArray = array();
 								$markerArray['###SLOTNAME###'] = $sessiondata['name'];
 								$markerArray['###SLOTCATEGORY###'] = $sessiondata['category'];
@@ -1483,7 +1488,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$markerarray1 = array();
 				$markerArray1['###SESSIONNAME###'] = $sessionname;
 				$markerArray1['###SESSIONTEASER###'] = $sessdata['teaser'];
-				$markerArray1['###SESSIONDESCRIPTION###'] = $sessdata['description'];
+				$markerArray1['###SESSIONDESCRIPTION###'] = $this->cObj->stdWrap($sessdata['description'], 
+					$this->conf['sessiondescription_stdWrap.']);
 				$sessdata = $this->pi_getRecord('tx_wseevents_sessions', $k);
 				$datacat  = $this->pi_getRecord('tx_wseevents_categories', $sessdata['category']);
 				$markerArray1['###SESSIONNUMBER###'] = $datacat['shortkey'] . sprintf('%02d', $sessdata['number']);
