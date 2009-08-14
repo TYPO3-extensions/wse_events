@@ -426,7 +426,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###TEASERNAME##'] = $this->getFieldHeader('teaser');
 					$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
 					$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
-					$markerArray['###DESCRIPTIONDATA###'] = $this->getFieldContent('description');
+					$markerArray['###DESCRIPTIONDATA###'] = $this->cObj->stdWrap($this->getFieldContent('description'), 
+						$this->conf['sessiondescription_stdWrap.']);
+
 					$markerArray['###DOCUMENTSNAME###'] = $this->getFieldHeader('documents');
 					$markerArray['###DOCUMENTSDATA###'] = $this->getFieldContent('documents');
 					$markerArray['###NAME###'] = $sessionname;
@@ -631,7 +633,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$markerarray1 = array();
 						$markerArray1['###SESSIONNAME###'] = $sessionname;
 						$markerArray1['###SESSIONTEASER###'] = $sessdata['teaser'];
-						$markerArray1['###SESSIONDESCRIPTION###'] = $sessdata['description'];
+						$markerArray1['###SESSIONDESCRIPTION###'] = $this->cObj->stdWrap($sessdata['description'], 
+							$this->conf['sessiondescription_stdWrap.']);
 						$datacat  = $this->pi_getRecord('tx_wseevents_categories', $sessdata['category']);
 						$markerArray1['###SESSIONNUMBER###'] = $datacat['shortkey'] . sprintf('%02d', $sessdata['number']);
 						$markerArray1['###SESSIONCATEGORY###'] = $sessdata['category'];

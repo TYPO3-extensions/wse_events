@@ -1,4 +1,8 @@
 2009-08-13
+	* FE: The output of the session description text in session and speaker
+	  list view, now can be wrapped with standard TS stdWrap settings.
+	
+2009-08-13
 	* FE: Make links to detail views simpler for RealURL usage.
 	  The "Back" link now is only shown when going to detail view from list view.
 	  There is no "Back" link when going from detail view to another detail view.
