@@ -424,10 +424,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$content_item = '';	// Clear var;
 		$markerArray = array();
 		$markerArray['###SESSIONNUMBER###'] = $this->getFieldHeader('number');
-		$markerArray['###NAME###'] = $this->getFieldHeader('name');
+		$markerArray['###SESSIONNAME###'] = $this->getFieldHeader('name');
 		$markerArray['###SPEAKER###'] = $this->getFieldHeader('speaker');
 		$markerArray['###TIMESLOTS###'] = $this->getFieldHeader('timeslots');
-		$markerArray['###DOCUMENTSNAME###'] = $this->getFieldHeader('documents');
+		$markerArray['###SESSIONDOCUMENTSNAME###'] = $this->getFieldHeader('documents');
+		// For compatibility to old versions
+		// ToDo: Remove after template changes at warpstock.eu
+		$markerArray['###NAME###'] = $markerArray['###SESSIONNAME###'];
+		$markerArray['###DOCUMENTSNAME###'] = $markerArray['###SESSIONDOCUMENTSNAME###'];
+
 		$content_item .= $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray);
 
 		$switch_row = 0;
@@ -450,15 +455,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 					# Build content from template + array
 					$markerArray = array();
-					$markerArray['###TEASERNAME###'] = $this->getFieldHeader('teaser');
-					$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
-					$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
-					$markerArray['###DESCRIPTIONDATA###'] = $this->cObj->stdWrap($this->getFieldContent('description'),
+					$markerArray['###SESSIONTEASERNAME###'] = $this->getFieldHeader('teaser');
+					$markerArray['###SESSIONTEASER###'] = $this->getFieldContent('teaser');
+					$markerArray['###SESSIONDESCRIPTIONNAME###'] = $this->getFieldHeader('description');
+					$markerArray['###SESSIONDESCRIPTION###'] = $this->cObj->stdWrap($this->getFieldContent('description'),
 						$this->conf['sessiondescription_stdWrap.']);
 
-					$markerArray['###DOCUMENTSNAME###'] = $this->getFieldHeader('documents');
-					$markerArray['###DOCUMENTSDATA###'] = $this->getFieldContent('documents');
-					$markerArray['###NAME###'] = $sessionname;
+					$markerArray['###SESSIONDOCUMENTSNAME###'] = $this->getFieldHeader('documents');
+					$markerArray['###SESSIONDOCUMENTS###'] = $this->getFieldContent('documents');
+					$markerArray['###SESSIONNAME###'] = $sessionname;
 					$markerArray['###SPEAKER###'] = $this->getFieldContent('speaker');
 					$markerArray['###TIMESLOTS###'] = $this->getFieldContent('timeslots');
 
@@ -469,6 +474,16 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
 					$markerArray['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
 
+					// For compatibility to old versions
+					// ToDo: Remove after template changes at warpstock.eu
+					$markerArray['###DESCRIPTIONNAME###'] = $markerArray['###SESSIONDESCRIPTIONNAME###'];
+					$markerArray['###DESCRIPTIONDATA###'] = $markerArray['###SESSIONDESCRIPTION###'];
+					$markerArray['###NAME###'] = $markerArray['###SESSIONNAME###'];
+					$markerArray['###TEASERNAME###'] = $markerArray['###SESSIONTEASERNAME###'];
+					$markerArray['###TEASERDATA###'] = $markerArray['###SESSIONTEASER###'];
+					$markerArray['###DOCUMENTSNAME###'] = $markerArray['###SESSIONDOCUMENTSNAME###'];
+					$markerArray['###DOCUMENTSDATA###'] = $markerArray['###SESSIONDOCUMENTS###'];
+					
 					$switch_row = $switch_row ^ 1;
 					if($switch_row) {
 						$content_item .= $this->cObj->substituteMarkerArrayCached($template['row'], $markerArray);
@@ -567,13 +582,17 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Get the column names
 		$markerArray0 = Array();
-		$markerArray0['###NAME###']         = $this->getFieldHeader('name');
+		$markerArray0['###SPEAKERNAME###']  = $this->getFieldHeader('name');
 		$markerArray0['###EMAILNAME###']    = $this->getFieldHeader('email');
 		$markerArray0['###COUNTRYNAME###']  = $this->getFieldHeader('country');
 		$markerArray0['###COMPANYNAME###']  = $this->getFieldHeader('company');
 		$markerArray0['###INFONAME###']     = $this->getFieldHeader('info');
 		$markerArray0['###IMAGENAME###']    = $this->getFieldHeader('image');
 		$markerArray0['###SESSIONSNAME###'] = $this->getFieldHeader('speakersessions');
+		// For compatibility to old versions
+		// ToDo: Remove after template changes at warpstock.eu
+		$markerArray['###NAME###'] = $markerArray['###SPEAKERNAME###'];
+
 		$subpartArray['###HEADER###']       = $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray0);
 
 		$switch_row = 0;
@@ -603,7 +622,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 					# Build content from template + array
 					$markerArray = Array();
-					$markerArray['###NAME###'] = $speakername;
+					$markerArray['###SPEAKERNAME###'] = $speakername;
 					$markerArray['###IMAGENAME###'] = $this->getFieldContent('name');
 					$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
 					$markerArray['###EMAILDATA###'] = $this->getFieldContent('email');
@@ -617,6 +636,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
 					$markerArray['###INFODATA###'] = $this->getFieldContent('info');
 					$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
+
+					// For compatibility to old versions
+					// ToDo: Remove after template changes at warpstock.eu
+					$markerArray['###NAME###'] = $markerArray['###SPEAKERNAME###'];
+
 					$image = trim($this->getFieldContent('image'));
 					if (!empty($image)) {
 						$img = $this->conf['image.'];
@@ -1368,7 +1392,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$backlink = '';
 		}
 
-		$markerArray['###TITLE###'] = $this->getFieldContent('name');
+		$markerArray['###SESSIONNAME###'] = $this->getFieldContent('name');
 		$markerArray['###SESSIONNUMBER###'] = $this->getFieldContent('number');
 
 		$datacat = $this->pi_getRecord('tx_wseevents_categories', $this->internal['currentRow']['category']);
@@ -1376,17 +1400,27 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
 		$markerArray['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
 
-		$markerArray['###TEASERNAME###'] = $this->getFieldHeader('teaser');
-		$markerArray['###TEASERDATA###'] = $this->getFieldContent('teaser');
+		$markerArray['###SESSIONTEASERNAME###'] = $this->getFieldHeader('teaser');
+		$markerArray['###SESSIONTEASER###'] = $this->getFieldContent('teaser');
 		$markerArray['###SPEAKERNAME###'] = $this->getFieldHeader('speaker');
 		$markerArray['###SPEAKERDATA###'] = $this->getFieldContent('speaker');
 		$markerArray['###TIMESLOTSNAME###'] = $this->getFieldHeader('timeslots');
 		$markerArray['###TIMESLOTSDATA###'] = $this->getFieldContent('timeslots');
-		$markerArray['###DESCRIPTIONNAME###'] = $this->getFieldHeader('description');
-		$markerArray['###DESCRIPTIONDATA###'] = $this->getFieldContent('description');
-		$markerArray['###DOCUMENTSNAME###'] = $this->getFieldHeader('documents');
-		$markerArray['###DOCUMENTSDATA###'] = $this->getFieldContent('documents');
+		$markerArray['###SESSIONDESCRIPTIONNAME###'] = $this->getFieldHeader('description');
+		$markerArray['###SESSIONDESCRIPTION###'] = $this->getFieldContent('description');
+		$markerArray['###SESSIONDOCUMENTSNAME###'] = $this->getFieldHeader('documents');
+		$markerArray['###SESSIONDOCUMENTS###'] = $this->getFieldContent('documents');
 		$markerArray['###BACKLINK###'] = $backlink;
+
+		// For compatibility to old versions
+		// ToDo: Remove after template changes at warpstock.eu
+		$markerArray['###DESCRIPTIONNAME###'] = $markerArray['###SESSIONDESCRIPTIONNAME###'];
+		$markerArray['###DESCRIPTIONDATA###'] = $markerArray['###SESSIONDESCRIPTION###'];
+		$markerArray['###TITLE###'] = $markerArray['###SESSIONNAME###'];
+		$markerArray['###TEASERNAME###'] = $markerArray['###SESSIONTEASERNAME###'];
+		$markerArray['###TEASERDATA###'] = $markerArray['###SESSIONTEASER###'];
+		$markerArray['###DOCUMENTSNAME###'] = $markerArray['###SESSIONDOCUMENTSNAME###'];
+		$markerArray['###DOCUMENTSDATA###'] = $markerArray['###SESSIONDOCUMENTS###'];
 
 #		$this->pi_getEditPanel();
 
@@ -1459,17 +1493,21 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$sessionids = $this->getSpeakerSessionList($this->piVars['showSpeakerUid'], $this->conf['pidListEvents']);
 		}
 
-		$markerArray['###NAME###'] = $this->getFieldContent('name');
-		$markerArray['###EMAILNAME###'] = $this->getFieldHeader('email');
-		$markerArray['###EMAILDATA###'] = $this->getFieldContent('email');
+		$markerArray['###SPEAKERNAME###'] = $this->getFieldContent('name');
+		$markerArray['###EMAILNAME###']   = $this->getFieldHeader('email');
+		$markerArray['###EMAILDATA###']   = $this->getFieldContent('email');
 		$markerArray['###COUNTRYNAME###'] = $this->getFieldHeader('country');
 		$markerArray['###COUNTRYDATA###'] = $this->getFieldContent('country');
 		$markerArray['###COMPANYNAME###'] = $this->getFieldHeader('company');
 		$markerArray['###COMPANYDATA###'] = $this->getFieldContent('company');
 		$markerArray['###COMPANYLINK###'] = 'http://' . $this->getFieldContent('companylink');
-		$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
-		$markerArray['###INFODATA###'] = $this->getFieldContent('info');
-		$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
+		$markerArray['###INFONAME###']    = $this->getFieldHeader('info');
+		$markerArray['###INFODATA###']    = $this->getFieldContent('info');
+		$markerArray['###IMAGENAME###']  = $this->getFieldHeader('image');
+		// For compatibility to old versions
+		// ToDo: Remove after template changes at warpstock.eu
+		$markerArray['###NAME###'] = $markerArray['###SPEAKERNAME###'];
+
 		$image = trim($this->getFieldContent('image'));
 		if (!empty($image)) {
 			$img = $this->conf['image.'];

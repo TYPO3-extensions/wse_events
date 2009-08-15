@@ -46,23 +46,23 @@
 			<!-- ###SINGLEROW### begin -->
 				<!-- ###HEADER### -->
 				<tr class="tx-wseevents-pi1-listrow-header">
-					<td valign="top"><p>###SESSIONNUMBER###</p></td><td valign="top"><p>###NAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###TIMESLOTS###</p></td><td valign="top"><p>###DOCUMENTSNAME###</p></td>
+					<td valign="top"><p>###SESSIONNUMBER###</p></td><td valign="top"><p>###SESSIONNAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###TIMESLOTS###</p></td><td valign="top"><p>###SESSIONDOCUMENTSNAME###</p></td>
 				</tr>
 				<!-- ###HEADER### -->
 				<!-- ###ITEM### -->
 				<tr class="tx-wseevents-pi1-listrow-even">
-					<td valign="top"><p>###SESSIONNUMBER###</p></td><td valign="top" title="###TEASERDATA###"><p>###NAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###TIMESLOTS###</p></td><td valign="top"><p>###DOCUMENTSDATA###</p></td>
+					<td valign="top"><p>###SESSIONNUMBER###</p></td><td valign="top" title="###SESSIONTEASER###"><p>###SESSIONNAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###TIMESLOTS###</p></td><td valign="top"><p>###SESSIONDOCUMENTS###</p></td>
 				</tr>
 				<tr class="tx-wseevents-pi1-listrow-even">
-				<td valign="top"></td><td valign="top" colspan="3"><p>###DESCRIPTIONDATA###</p></td>
+				<td valign="top"></td><td valign="top" colspan="3"><p>###SESSIONDESCRIPTION###</p></td>
 				</tr>
 				<!-- ###ITEM### -->
 				<!-- ###ITEM_ALT### -->
 				<tr class="tx-wseevents-pi1-listrow-odd">
-					<td valign="top"><p>###SESSIONNUMBER###</p></td><td valign="top" title="###TEASERDATA###"><p>###NAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###TIMESLOTS###</p></td><td valign="top"><p>###DOCUMENTSDATA###</p></td>
+					<td valign="top"><p>###SESSIONNUMBER###</p></td><td valign="top" title="###SESSIONTEASER###"><p>###SESSIONNAME###</p></td><td valign="top"><p>###SPEAKER###</p></td><td valign="top"><p>###TIMESLOTS###</p></td><td valign="top"><p>###SESSIONDOCUMENTS###</p></td>
 				</tr>
 				<tr class="tx-wseevents-pi1-listrow-odd">
-				<td valign="top"></td><td valign="top" colspan="3"><p>###DESCRIPTIONDATA###</p></td>
+				<td valign="top"></td><td valign="top" colspan="3"><p>###SESSIONDESCRIPTION###</p></td>
 				</tr>
 				<!-- ###ITEM_ALT### -->
 			<!-- ###SINGLEROW### end -->
@@ -78,14 +78,14 @@
 			<COLGROUP><COL width="200"><COL width="*">
 				<!-- ###HEADER### -->
 				<tr class="tx-wseevents-pi1-listrow-header">
-					<td valign="top"><p>###NAME###<br>(###COUNTRYNAME###)</p></td><td></td>
+					<td valign="top"><p>###SPEAKERNAME###<br>(###COUNTRYNAME###)</p></td><td></td>
 				</tr>
 				<!-- ###HEADER### -->
 			<!-- ###SINGLEROW### begin -->
 				<!-- ###ITEM### -->
 				<tr><td><hr></td><td><hr></td></tr>
 				<tr class="tx-wseevents-pi1-listrow-even">
-					<td valign="top"><p>###NAME###<br>(###COUNTRYDATA###)</p><br>###IMAGEFILE###</td><td valign="top"><p>###SESSIONSNAME###</p></td>
+					<td valign="top"><p>###SPEAKERNAME###<br>(###COUNTRYDATA###)</p><br>###IMAGEFILE###</td><td valign="top"><p>###SESSIONSNAME###</p></td>
 				</tr>
 				<!-- ###SESSIONROW### -->
 				<tr class="tx-wseevents-pi1-listrow-header">
@@ -108,7 +108,7 @@
 <!-- ###SESSIONVIEW### begin -->
 		<!-- wse_events default template: session view begin -->
 		<div class="tx-wseevents-pi1-singleView">
-			<H2>###SESSIONNUMBER### - ###TITLE###</H2>
+			<H2>###SESSIONNUMBER### - ###SESSIONNAME###</H2>
 			<table>
 				<tr>
 					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###SPEAKERNAME###:</p></td>
@@ -119,12 +119,12 @@
 					<td valign="top"><p>###TIMESLOTSDATA###</p></td>
 				</tr>
 				<tr>
-					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###DOCUMENTSNAME###:</p></td>
-					<td valign="top"><p>###DOCUMENTSDATA###</p></td>
+					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###SESSIONDOCUMENTSNAME###:</p></td>
+					<td valign="top"><p>###SESSIONDOCUMENTS###</p></td>
 				</tr>
 				<tr>
-					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###DESCRIPTIONNAME###:</p></td>
-					<td valign="top">###DESCRIPTIONDATA###</td>
+					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###SESSIONDESCRIPTIONNAME###:</p></td>
+					<td valign="top">###SESSIONDESCRIPTION###</td>
 				</tr>
 
 			</table>
@@ -135,7 +135,7 @@
 <!-- ###SPEAKERVIEW### begin -->
 		<!-- wse_events default template: speaker view begin -->
 		<div class="tx-wseevents-pi1-singleView">
-			<H2>###NAME###</H2>
+			<H2>###SPEAKERNAME###</H2>
 			<table>
 				<tr>
 					<td nowrap valign="top" class="tx-wseevents-pi1-singleView-HCell"><p>###EMAILNAME###:</p></td>
