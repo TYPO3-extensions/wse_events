@@ -1,3 +1,7 @@
+2009-08-19
+	* FE: The output of the speaker info text in speaker list view, 
+	  now can be wrapped with standard TS stdWrap settings.
+
 2009-08-13
 	* FE: The output of the session description text in session and speaker
 	  list view, now can be wrapped with standard TS stdWrap settings.

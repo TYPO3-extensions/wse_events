@@ -634,7 +634,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###SESSIONSNAME###'] = $this->getFieldHeader('speakersessions');
 					$markerArray['###SESSIONS###'] = $this->getFieldContent('speakersessions');
 					$markerArray['###INFONAME###'] = $this->getFieldHeader('info');
-					$markerArray['###INFODATA###'] = $this->getFieldContent('info');
+					$markerArray['###INFODATA###'] = $this->cObj->stdWrap($this->getFieldContent('info'),
+						$this->conf['infodata_stdWrap.']);
 					$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
 
 					// For compatibility to old versions
@@ -1503,7 +1504,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###COMPANYLINK###'] = 'http://' . $this->getFieldContent('companylink');
 		$markerArray['###INFONAME###']    = $this->getFieldHeader('info');
 		$markerArray['###INFODATA###']    = $this->getFieldContent('info');
-		$markerArray['###IMAGENAME###']  = $this->getFieldHeader('image');
+		$markerArray['###IMAGENAME###']   = $this->getFieldHeader('image');
 		// For compatibility to old versions
 		// ToDo: Remove after template changes at warpstock.eu
 		$markerArray['###NAME###'] = $markerArray['###SPEAKERNAME###'];
