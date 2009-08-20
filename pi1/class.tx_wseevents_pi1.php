@@ -312,18 +312,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		list($eventcount) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
 
 		# Create template data for event combobox
-		$event_item = '';	// Clear var;
+		$event_item = '';	# Clear var;
 		$markerArray = array();
-		// Make listing query, pass query to SQL database:
+		# Make listing query, pass query to SQL database:
 		$res = $this->pi_exec_query('tx_wseevents_events', 0, $where1);
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				# Get overload workspace record
-#				$row = $GLOBALS['TSFE']->sys_page->versionOL('tx_wseevents_events', $row);
-#				# get workspaces Overlay
-#				$GLOBALS['TSFE']->sys_page->versionOL('tt_news', $row);
-#				# fix pid for record from workspace
-#				$GLOBALS['TSFE']->sys_page->fixVersioningPid('tt_news', $row);
 				# Get overload language record
 				if ($GLOBALS['TSFE']->sys_language_content) {
 					$row = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tx_wseevents_events',
@@ -360,10 +354,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$subpartArray['###EVENTSELECT###'] = '';
 		}
-		# show only sessions of selected event
-#		if (0 < $showevent) {
-#			$where .= ' AND event=' . $showevent;
-#		}
 
 		# Get date of event
 		$this->eventrecord = $this->pi_getRecord('tx_wseevents_events', $showevent);
@@ -421,7 +411,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$res = $this->pi_exec_query($this->internal['currentTable'], 0, $where, '', '', 'category, number, name');
 
 		# Get the column names
-		$content_item = '';	// Clear var;
+		$content_item = '';	# Clear var;
 		$markerArray = array();
 		$markerArray['###SESSIONNUMBER###'] = $this->getFieldHeader('number');
 		$markerArray['###SESSIONNAME###'] = $this->getFieldHeader('name');
@@ -454,11 +444,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$this->internal['currentRow'] = $row;
 					if (!t3lib_div::inList($hidecat, $row['category'])) {
 						if (!empty($this->conf['singleSession'])) {
-							$label = $this->getFieldContent('name');  // the link text
+							$label = $this->getFieldContent('name');  # the link text
 							$overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'],
 								'backUid' => $GLOBALS['TSFE']->id);
-							$clearAnyway = 1;    // the current values of piVars will NOT be preserved
-							$altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
+							$clearAnyway = 1;    # the current values of piVars will NOT be preserved
+							$altPageId = $this->conf['singleSession'];      # ID of the target page, if not on the same page
 							$this->setCache();
 							$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
 								$this->use_cache, $clearAnyway, $altPageId);
@@ -481,7 +471,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						$markerArray['###TIMESLOTS###'] = $this->getFieldContent('timeslots');
 
 						$markerArray['###SESSIONNUMBER###'] = $this->getFieldContent('number');
-						// Get the data for the category of the session
+						# Get the data for the category of the session
 						$datacat  = $this->pi_getRecord('tx_wseevents_categories', $this->getFieldContent('category'));
 						$markerArray['###SESSIONCATEGORY###'] = $this->getFieldContent('category');
 						$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
@@ -520,12 +510,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	string		Content for output on the web site
 	 */
 	function listSpeakerView($content, $conf)	{
-		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
+		$this->conf=$conf;		# Setting the TypoScript passed to this function in $this->conf
 		$this->pi_setPiVarDefaults();
-		$this->pi_loadLL();		// Loading the LOCAL_LANG values
+		$this->pi_loadLL();		# Loading the LOCAL_LANG values
 		$index = $GLOBALS['TSFE']->sys_language_uid;
 
-		$lConf = $this->conf['listView.'];	// Local settings for the listView function
+		$lConf = $this->conf['listView.'];	# Local settings for the listView function
 
 		# Set table to session table
 		$this->internal['currentTable'] = 'tx_wseevents_speakers';
@@ -582,7 +572,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['sessionrow'] = $this->cObj->getSubpart($template['singlerow'], '###SESSIONROW###');
 
 		# Put the whole list together:
-		$content_item = '';	// Clear var;
+		$content_item = '';	# Clear var;
 
 		# Get the column names
 		$markerArray0 = Array();
@@ -617,11 +607,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				if (!empty($sessionids)) {
 					# Check if link to detail view is set
 					if (!empty($this->conf['singleSpeaker'])) {
-					    $label = $this->getFieldContent('name');  // the link text
+					    $label = $this->getFieldContent('name');  # the link text
 					    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 					    $overrulePIvars = array('showSpeakerUid' => $this->internal['currentRow']['uid'], 'backUid' => $GLOBALS['TSFE']->id);
-					    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
-					    $altPageId = $this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
+					    $clearAnyway = 1;    # the current values of piVars will NOT be preserved
+					    $altPageId = $this->conf['singleSpeaker'];      # ID of the target page, if not on the same page
 						$this->setCache();
 					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
 					} else {
@@ -681,8 +671,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						if (!empty($this->conf['singleSession'])) {
 							$overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 							$overrulePIvars = array('showSessionUid' => $k, 'backUid' => $GLOBALS['TSFE']->id);
-							$clearAnyway = 1;    // the current values of piVars will NOT be preserved
-							$altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
+							$clearAnyway = 1;    # the current values of piVars will NOT be preserved
+							$altPageId = $this->conf['singleSession'];      # ID of the target page, if not on the same page
 							$this->setCache();
 							$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
 								$this->use_cache, $clearAnyway, $altPageId);
@@ -751,12 +741,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	string		Content for output on the web site
 	 */
 	function listTimeslotView($content, $conf)	{
-		$this->conf=$conf;		// Setting the TypoScript passed to this function in $this->conf
+		$this->conf=$conf;		# Setting the TypoScript passed to this function in $this->conf
 		$this->pi_setPiVarDefaults();
-		$this->pi_loadLL();		// Loading the LOCAL_LANG values
+		$this->pi_loadLL();		# Loading the LOCAL_LANG values
 		$index = $GLOBALS['TSFE']->sys_language_uid;
 
-		$lConf = $this->conf['listView.'];	// Local settings for the listView function
+		$lConf = $this->conf['listView.'];	# Local settings for the listView function
 
 		# Set table to session table
 		$this->internal['currentTable'] = 'tx_wseevents_sessions';
@@ -886,9 +876,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		list($eventcount) = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
 
 		# Create template data for event combobox
-		$event_item = '';	// Clear var;
+		$event_item = '';	# Clear var;
 		$markerArray = array();
-		// Make listing query, pass query to SQL database:
+		# Make listing query, pass query to SQL database:
 		if (1 == $showdebugsql) { echo 'SQL2:' . $where1 . '<br>'; };
 		$res = $this->pi_exec_query('tx_wseevents_events', 0, $where1);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
@@ -937,7 +927,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$event = $this->getEventInfo($showevent);
 
 		# Create template data for eventday combobox
-		$content_select = '';	// Clear var;
+		$content_select = '';	# Clear var;
 		$markerArray['###VALUE###'] = 0;
 		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.choosealldays', '[-All-]');
 		if (0 == $showday) {
@@ -961,7 +951,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$daycount = $event['length'];
 		for ( $d = 1; $d <= $daycount; $d++ ) {
 			$thisday = $event['begin']+($d-1)*$secofday;
-#ToDo: Mit TYPO3 den Wochentag ermitteln und das Datum formatieren
+#ToDo: Determine the weekday and format the Date with TYPO3 functions
 #			setlocale(LC_TIME, 'de_DE');
 
 			$dayname[$d] = strftime($conf['strftime'], $thisday);
@@ -1053,7 +1043,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				for ( $r = 1; $r <= $roomcount; $r++ ) {
 					$markerArray = array();
 					$markerArray['###HEADERROOM###'] = $roomname[$r];
-					// Add column width if enabled
+					# Add column width if enabled
 					if ($timecolwidth>0) {
 						$markerArray['###COLUMNWIDTH###']  = $slotcolwidth . '%';
 					}
@@ -1087,7 +1077,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						if (1 == $showdebugsql) { echo '<br>getSlot:' . $showevent . ', ' . $d . ', ' . $rooms[$r]['uid'] . ', ' . $s . '<br>'; };
 						$slot_id = $this->getSlot($showevent, $d, $rooms[$r]['uid'], $s, $showdebugsql);
 						if (1 == $r && empty($slot_id) && !$allrooms) {
-							// Check if a slot is assigned for all rooms
+							# Check if a slot is assigned for all rooms
 							if (1 == $showdebugsql) { echo 'getSlot:' . $showevent . ', ' . $d . ', 0, ' . $s . '<br>'; };
 							$slot_id = $this->getSlot($showevent, $d, 0, $s, $showdebugsql);
 							$allrooms = true;
@@ -1099,11 +1089,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$sessiondata = $this->getSlotSession($slot_id);
 							if (1 == $showdebugsql) { echo 'sessiondata:' . $sessiondata . '<br>'; };
 							if (!empty($sessiondata)) {
-							    $label = $sessiondata['catnum'];  // the link text
+							    $label = $sessiondata['catnum'];  # the link text
 							    $overrulePIvars = '';//array('session' => $this->getFieldContent('uid'));
 							    $overrulePIvars = array('showSessionUid' => $sessiondata['uid'], 'backUid' => $GLOBALS['TSFE']->id);
-							    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
-							    $altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
+							    $clearAnyway = 1;    # the current values of piVars will NOT be preserved
+							    $altPageId = $this->conf['singleSession'];      # ID of the target page, if not on the same page
 								$this->setCache();
 								if (!t3lib_div::inList($hidecat, $sessiondata['catkey'])) {
 									$sessionlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
@@ -1111,7 +1101,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								} else {
 									$sessionlink = '';
 								}
-							    $label = $sessiondata['name'];  // the link text
+							    $label = $sessiondata['name'];  # the link text
 							    $sessionlinkname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
 									$this->use_cache, $clearAnyway, $altPageId);
 								$markerArray = array();
@@ -1124,7 +1114,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTSESSION###'] = $sessiondata['catnum'];
 								# Cut teaser if longer than max teaser width
 								if (0 < $teaserwidth) {
-#									$markerArray['###SLOTTEASER###'] = substr($sessiondata['teaser'], 0, $teaserwidth) . '...';
+//									$markerArray['###SLOTTEASER###'] = substr($sessiondata['teaser'], 0, $teaserwidth) . '...';
 									$markerArray['###SLOTTEASER###'] = $GLOBALS['TSFE']->csConvObj->crop(
 																		$GLOBALS['TSFE']->renderCharset,
 																		$sessiondata['teaser'],
@@ -1203,7 +1193,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined_catkey');
 								$markerArray['###SLOTCATEGORYCOLOR###'] = $catcolor_notdefined;
 								$markerArray['###SLOTLINK###'] = '';
-								// Add column width if enabled
+								# Add column width if enabled
 								if ($timecolwidth>0) {
 									$markerArray['###COLUMNWIDTH###']  = $slotcolwidth . '%';
 								}
@@ -1327,7 +1317,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###FORMSEND###'] = htmlspecialchars($this->pi_getLL('tx_wseevents_sessions.showselection', '[Show selection]'));
 		$subpartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subpartArray1);
 
-#ToDo: Hier muss die Combobox ins Template gepackt werden
+#ToDo: At this point the selection (combo) box must be put into the template.
 
 		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subpartArray);
 		return $content;
@@ -1387,10 +1377,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 
 		# Link for back to list view
-		$label = $this->pi_getLL('back', 'Back');  // the link text
+		$label = $this->pi_getLL('back', 'Back');  # the link text
 		$overrulePIvars = array ();
-		$clearAnyway = 1;    // the current values of piVars will NOT be preserved
-		$altPageId = $this->piVars['backUid'];      // ID of the view page
+		$clearAnyway = 1;    # the current values of piVars will NOT be preserved
+		$altPageId = $this->piVars['backUid'];      # ID of the view page
 		$this->setCache();
 		if (0 < $altPageId) {
 			$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
@@ -1473,10 +1463,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if ($this->internal['currentRow']['title'])	$GLOBALS['TSFE']->indexedDocTitle=$this->internal['currentRow']['title'];
 
 		# Link for back to list view
-		$label = $this->pi_getLL('back', 'Back');  // the link text
+		$label = $this->pi_getLL('back', 'Back');  # the link text
 		$overrulePIvars = array ();
-		$clearAnyway = 1;    // the current values of piVars will NOT be preserved
-		$altPageId = $this->piVars['backUid'];      // ID of the view page
+		$clearAnyway = 1;    # the current values of piVars will NOT be preserved
+		$altPageId = $this->piVars['backUid'];      # ID of the view page
 		$this->setCache();
 		if (0 < $altPageId) {
 			$backlink = $this->pi_linkTP_keepPIvars($label, $overrulePIvars, $this->use_cache, $clearAnyway, $altPageId);
@@ -1538,8 +1528,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					} else {
 						$overrulePIvars = array('showSessionUid' => $k);
 					}
-					$clearAnyway = 1;    // the current values of piVars will NOT be preserved
-					$altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
+					$clearAnyway = 1;    # the current values of piVars will NOT be preserved
+					$altPageId = $this->conf['singleSession'];      # ID of the target page, if not on the same page
 					$this->setCache();
 					$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
 						$this->use_cache, $clearAnyway, $altPageId);
@@ -1576,7 +1566,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			}
 		}
 
-#		$this->pi_getEditPanel();
+//		$this->pi_getEditPanel();
 		$subpartArray['###SESSIONROW###'] = $content_item;
 
 		return $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray, $subpartArray);
@@ -1693,8 +1683,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							$overrulePIvars = array('showSpeakerUid' => $data['uid']);
 						}
 
-					    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
-					    $altPageId = $this->conf['singleSpeaker'];      // ID of the target page, if not on the same page
+					    $clearAnyway = 1;    # the current values of piVars will NOT be preserved
+					    $altPageId = $this->conf['singleSpeaker'];      # ID of the target page, if not on the same page
 						$this->setCache();
 					    $speakername = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
 							$this->use_cache, $clearAnyway, $altPageId);
@@ -1734,8 +1724,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						} else {
 							$overrulePIvars = array('showSessionUid' => $data['uid']);
 						}
-					    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
-					    $altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
+					    $clearAnyway = 1;    # the current values of piVars will NOT be preserved
+					    $altPageId = $this->conf['singleSession'];      # ID of the target page, if not on the same page
 						$this->setCache();
 					    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
 							$this->use_cache, $clearAnyway, $altPageId);
