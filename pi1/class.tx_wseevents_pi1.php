@@ -361,9 +361,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$subpartArray['###EVENTSELECT###'] = '';
 		}
 		# show only sessions of selected event
-		if (0 < $showevent) {
-			$where .= ' AND event=' . $showevent;
-		}
+#		if (0 < $showevent) {
+#			$where .= ' AND event=' . $showevent;
+#		}
 
 		# Get date of event
 		$this->eventrecord = $this->pi_getRecord('tx_wseevents_events', $showevent);
@@ -428,67 +428,71 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###SPEAKER###'] = $this->getFieldHeader('speaker');
 		$markerArray['###TIMESLOTS###'] = $this->getFieldHeader('timeslots');
 		$markerArray['###SESSIONDOCUMENTSNAME###'] = $this->getFieldHeader('documents');
-		// For compatibility to old versions
-		// ToDo: Remove after template changes at warpstock.eu
-		$markerArray['###NAME###'] = $markerArray['###SESSIONNAME###'];
-		$markerArray['###DOCUMENTSNAME###'] = $markerArray['###SESSIONDOCUMENTSNAME###'];
 
 		$content_item .= $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray);
 
 		$switch_row = 0;
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$this->internal['currentRow'] = $row;
-				if (!t3lib_div::inList($hidecat, $row['category'])) {
-					if (!empty($this->conf['singleSession'])) {
-					    $label = $this->getFieldContent('name');  // the link text
-					    $overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'],
-							'backUid' => $GLOBALS['TSFE']->id);
-					    $clearAnyway = 1;    // the current values of piVars will NOT be preserved
-					    $altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
-						$this->setCache();
-					    $sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
-							$this->use_cache, $clearAnyway, $altPageId);
-					} else {
-						$sessionname = $this->getFieldContent('name');
+				# Get overload workspace record
+				$GLOBALS['TSFE']->sys_page->versionOL($this->internal['currentTable'], &$row);
+				# fix pid for record from workspace
+				$GLOBALS['TSFE']->sys_page->fixVersioningPid($this->internal['currentTable'], &$row);
+				# Get overload language record
+				if ($GLOBALS['TSFE']->sys_language_content) {
+					$row = $GLOBALS['TSFE']->sys_page->getRecordOverlay($this->internal['currentTable'],
+						$row, $GLOBALS['TSFE']->sys_language_content,
+						$GLOBALS['TSFE']->sys_language_contentOL, '');
+				}
+				# show only sessions of selected event
+				if (0 < $showevent) {
+					if ($showevent <> $row['event']) {
+						unset ($row);
 					}
+				}
+				if (is_array($row)) {
+					$this->internal['currentRow'] = $row;
+					if (!t3lib_div::inList($hidecat, $row['category'])) {
+						if (!empty($this->conf['singleSession'])) {
+							$label = $this->getFieldContent('name');  // the link text
+							$overrulePIvars = array('showSessionUid' => $this->internal['currentRow']['uid'],
+								'backUid' => $GLOBALS['TSFE']->id);
+							$clearAnyway = 1;    // the current values of piVars will NOT be preserved
+							$altPageId = $this->conf['singleSession'];      // ID of the target page, if not on the same page
+							$this->setCache();
+							$sessionname = $this->pi_linkTP_keepPIvars($label, $overrulePIvars,
+								$this->use_cache, $clearAnyway, $altPageId);
+						} else {
+							$sessionname = $this->getFieldContent('name');
+						}
 
-					# Build content from template + array
-					$markerArray = array();
-					$markerArray['###SESSIONTEASERNAME###'] = $this->getFieldHeader('teaser');
-					$markerArray['###SESSIONTEASER###'] = $this->getFieldContent('teaser');
-					$markerArray['###SESSIONDESCRIPTIONNAME###'] = $this->getFieldHeader('description');
-					$markerArray['###SESSIONDESCRIPTION###'] = $this->cObj->stdWrap($this->getFieldContent('description'),
-						$this->conf['sessiondescription_stdWrap.']);
+						# Build content from template + array
+						$markerArray = array();
+						$markerArray['###SESSIONTEASERNAME###'] = $this->getFieldHeader('teaser');
+						$markerArray['###SESSIONTEASER###'] = $this->getFieldContent('teaser');
+						$markerArray['###SESSIONDESCRIPTIONNAME###'] = $this->getFieldHeader('description');
+						$markerArray['###SESSIONDESCRIPTION###'] = $this->cObj->stdWrap($this->getFieldContent('description'),
+							$this->conf['sessiondescription_stdWrap.']);
 
-					$markerArray['###SESSIONDOCUMENTSNAME###'] = $this->getFieldHeader('documents');
-					$markerArray['###SESSIONDOCUMENTS###'] = $this->getFieldContent('documents');
-					$markerArray['###SESSIONNAME###'] = $sessionname;
-					$markerArray['###SPEAKER###'] = $this->getFieldContent('speaker');
-					$markerArray['###TIMESLOTS###'] = $this->getFieldContent('timeslots');
+						$markerArray['###SESSIONDOCUMENTSNAME###'] = $this->getFieldHeader('documents');
+						$markerArray['###SESSIONDOCUMENTS###'] = $this->getFieldContent('documents');
+						$markerArray['###SESSIONNAME###'] = $sessionname;
+						$markerArray['###SPEAKER###'] = $this->getFieldContent('speaker');
+						$markerArray['###TIMESLOTS###'] = $this->getFieldContent('timeslots');
 
-					$markerArray['###SESSIONNUMBER###'] = $this->getFieldContent('number');
-					// Get the data for the category of the session
-					$datacat  = $this->pi_getRecord('tx_wseevents_categories', $this->getFieldContent('category'));
-					$markerArray['###SESSIONCATEGORY###'] = $this->getFieldContent('category');
-					$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
-					$markerArray['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
+						$markerArray['###SESSIONNUMBER###'] = $this->getFieldContent('number');
+						// Get the data for the category of the session
+						$datacat  = $this->pi_getRecord('tx_wseevents_categories', $this->getFieldContent('category'));
+						$markerArray['###SESSIONCATEGORY###'] = $this->getFieldContent('category');
+						$markerArray['###SESSIONCATEGORYKEY###'] = $datacat['shortkey'];
+						$markerArray['###SESSIONCATEGORYCOLOR###'] = $datacat['color'];
 
-					// For compatibility to old versions
-					// ToDo: Remove after template changes at warpstock.eu
-					$markerArray['###DESCRIPTIONNAME###'] = $markerArray['###SESSIONDESCRIPTIONNAME###'];
-					$markerArray['###DESCRIPTIONDATA###'] = $markerArray['###SESSIONDESCRIPTION###'];
-					$markerArray['###NAME###'] = $markerArray['###SESSIONNAME###'];
-					$markerArray['###TEASERNAME###'] = $markerArray['###SESSIONTEASERNAME###'];
-					$markerArray['###TEASERDATA###'] = $markerArray['###SESSIONTEASER###'];
-					$markerArray['###DOCUMENTSNAME###'] = $markerArray['###SESSIONDOCUMENTSNAME###'];
-					$markerArray['###DOCUMENTSDATA###'] = $markerArray['###SESSIONDOCUMENTS###'];
-					
-					$switch_row = $switch_row ^ 1;
-					if($switch_row) {
-						$content_item .= $this->cObj->substituteMarkerArrayCached($template['row'], $markerArray);
-					} else {
-						$content_item .= $this->cObj->substituteMarkerArrayCached($template['row_alt'], $markerArray);
+						$switch_row = $switch_row ^ 1;
+						if($switch_row) {
+							$content_item .= $this->cObj->substituteMarkerArrayCached($template['row'], $markerArray);
+						} else {
+							$content_item .= $this->cObj->substituteMarkerArrayCached($template['row_alt'], $markerArray);
+						}
 					}
 				}
 			}
@@ -589,15 +593,22 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray0['###INFONAME###']     = $this->getFieldHeader('info');
 		$markerArray0['###IMAGENAME###']    = $this->getFieldHeader('image');
 		$markerArray0['###SESSIONSNAME###'] = $this->getFieldHeader('speakersessions');
-		// For compatibility to old versions
-		// ToDo: Remove after template changes at warpstock.eu
-		$markerArray['###NAME###'] = $markerArray['###SPEAKERNAME###'];
 
 		$subpartArray['###HEADER###']       = $this->cObj->substituteMarkerArrayCached($template['header'], $markerArray0);
 
 		$switch_row = 0;
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				# Get overload workspace record
+				$GLOBALS['TSFE']->sys_page->versionOL($this->internal['currentTable'], &$row);
+				# fix pid for record from workspace
+				$GLOBALS['TSFE']->sys_page->fixVersioningPid($this->internal['currentTable'], &$row);
+				# Get overload language record
+				if ($GLOBALS['TSFE']->sys_language_content) {
+					$row = $GLOBALS['TSFE']->sys_page->getRecordOverlay($this->internal['currentTable'],
+						$row, $GLOBALS['TSFE']->sys_language_content,
+						$GLOBALS['TSFE']->sys_language_contentOL, '');
+				}
 				$this->internal['currentRow'] = $row;
 				# Check if the speaker has a session on this event
 				$sessionids = $this->getSpeakerSessionList($this->internal['currentRow']['uid'], $this->conf['pidListEvents']);
@@ -637,10 +648,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$markerArray['###INFODATA###'] = $this->cObj->stdWrap($this->getFieldContent('info'),
 						$this->conf['infodata_stdWrap.']);
 					$markerArray['###IMAGENAME###'] = $this->getFieldHeader('image');
-
-					// For compatibility to old versions
-					// ToDo: Remove after template changes at warpstock.eu
-					$markerArray['###NAME###'] = $markerArray['###SPEAKERNAME###'];
 
 					$image = trim($this->getFieldContent('image'));
 					if (!empty($image)) {
@@ -886,11 +893,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$res = $this->pi_exec_query('tx_wseevents_events', 0, $where1);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			# Get overload workspace record
-#			$row = $GLOBALS['TSFE']->sys_page->versionOL('tx_wseevents_events', $row);
-#			# get workspaces Overlay
-#			$GLOBALS['TSFE']->sys_page->versionOL('tt_news', $row);
-#			# fix pid for record from workspace
-#			$GLOBALS['TSFE']->sys_page->fixVersioningPid('tt_news', $row);
+			$GLOBALS['TSFE']->sys_page->versionOL('tx_wseevents_events', &$row);
+			# fix pid for record from workspace
+			$GLOBALS['TSFE']->sys_page->fixVersioningPid('tx_wseevents_events', &$row);
 			# Get overload language record
 			if ($GLOBALS['TSFE']->sys_language_content) {
 				$row = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tx_wseevents_events',
@@ -1413,17 +1418,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###SESSIONDOCUMENTS###'] = $this->getFieldContent('documents');
 		$markerArray['###BACKLINK###'] = $backlink;
 
-		// For compatibility to old versions
-		// ToDo: Remove after template changes at warpstock.eu
-		$markerArray['###DESCRIPTIONNAME###'] = $markerArray['###SESSIONDESCRIPTIONNAME###'];
-		$markerArray['###DESCRIPTIONDATA###'] = $markerArray['###SESSIONDESCRIPTION###'];
-		$markerArray['###TITLE###'] = $markerArray['###SESSIONNAME###'];
-		$markerArray['###TEASERNAME###'] = $markerArray['###SESSIONTEASERNAME###'];
-		$markerArray['###TEASERDATA###'] = $markerArray['###SESSIONTEASER###'];
-		$markerArray['###DOCUMENTSNAME###'] = $markerArray['###SESSIONDOCUMENTSNAME###'];
-		$markerArray['###DOCUMENTSDATA###'] = $markerArray['###SESSIONDOCUMENTS###'];
-
-#		$this->pi_getEditPanel();
+//		$this->pi_getEditPanel();
 
 		return $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray);;
 	}
@@ -1505,9 +1500,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###INFONAME###']    = $this->getFieldHeader('info');
 		$markerArray['###INFODATA###']    = $this->getFieldContent('info');
 		$markerArray['###IMAGENAME###']   = $this->getFieldHeader('image');
-		// For compatibility to old versions
-		// ToDo: Remove after template changes at warpstock.eu
-		$markerArray['###NAME###'] = $markerArray['###SPEAKERNAME###'];
 
 		$image = trim($this->getFieldContent('image'));
 		if (!empty($image)) {
@@ -1965,12 +1957,34 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @return	array		array with record of session data
 	 */
 	function getSlotSession($slot_id) {
-		$where = 'sys_language_uid=0' . $this->cObj->enableFields('tx_wseevents_sessions');
+		$where = 'sys_language_uid=0';  // . $this->cObj->enableFields('tx_wseevents_sessions');
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, name, category, number, teaser,
 			timeslots, speaker', 'tx_wseevents_sessions', $where);
 		# We must iterate thru all sessions to find the appropriate time slot
 		# because the time slots are stored as a list in a blob field
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			# Get overload workspace record
+			$GLOBALS['TSFE']->sys_page->versionOL('tx_wseevents_sessions', &$row);
+			# fix pid for record from workspace
+			$GLOBALS['TSFE']->sys_page->fixVersioningPid('tx_wseevents_sessions', &$row);
+			# Get overload language record
+			if ($GLOBALS['TSFE']->sys_language_content) {
+				$row = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tx_wseevents_sessions',
+					$row, $GLOBALS['TSFE']->sys_language_content,
+					$GLOBALS['TSFE']->sys_language_contentOL, '');
+			}
+			# Check for enabled fields
+			$ctrl = $GLOBALS['TCA']['tx_wseevents_sessions']['ctrl'];
+			if (is_array($ctrl)) {
+				if (($ctrl['delete']) AND (1 == $row[$ctrl['delete']])) {
+					unset ($row);
+				}
+				if (is_array($ctrl['enablecolumns'])) {
+					if (($ctrl['enablecolumns']['disabled']) AND (1 == $row[$ctrl['enablecolumns']['disabled']])) {
+						unset ($row);
+					}
+				}
+			}
 			if (t3lib_div::inList($row['timeslots'], $slot_id)) {
 				$session = $row;
 				# Get overload language record

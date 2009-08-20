@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
+* (c) 2007-2009 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -75,10 +75,10 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 		} else {
 			$catnum = '';
 		}
-		// Get language flag
+		# Get language flag
 		list($imglang, $imgtrans) = $this->makeLocalizationPanel($this->tableName,$row);
 
-		// Add the result row to the table array.
+		# Add the result row to the table array.
 		$table[] = array(
 			TAB . TAB . TAB . TAB . TAB
 				. t3lib_div::fixed_lgd_cs(
@@ -116,16 +116,16 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 	function show() {
 		global $TCA, $LANG, $BE_USER, $BACK_PATH;
 
-#debug ($LANG);
-#debug ($BE_USER);
+//debug ($LANG);
+//debug ($BE_USER);
 
-		// Get selected backend language of user
+		# Get selected backend language of user
 		$userlang = $BE_USER->uc[moduleData][web_layout][language];
 
-		// Initialize the variable for the HTML source code.
+		# Initialize the variable for the HTML source code.
 		$content = '';
 
-		// Set the table layout of the event list.
+		# Set the table layout of the event list.
 		$tableLayout = array(
 			'table' => array(
 				TAB . TAB . '<table cellpadding="0" cellspacing="0" class="typo3-dblist">' . LF,
@@ -167,7 +167,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 			)
 		);
 
-		// Fill the first row of the table array with the header.
+		# Fill the first row of the table array with the header.
 		$table = array(
 			array(
 				TAB . TAB . TAB . TAB . TAB . TAB
@@ -186,7 +186,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 			)
 		);
 
-		// unserialize the configuration array
+		# unserialize the configuration array
 		$globalConfiguration = unserialize(
 			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
 		);
@@ -198,33 +198,33 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
 		}
 
-		// Initialize languages
+		# Initialize languages
 		$this->initializeLanguages($this->page->pageInfo['uid']);
 
-		// Get list of pid
+		# Get list of pid
 		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
-		// Check if sub pages available and remove main page from list
+		# Check if sub pages available and remove main page from list
 		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
 			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
 		}
-		// Remove pages with eveent data
+		# Remove pages with eveent data
 		$commonPids = $this->removeEventPages($this->selectedPids);
-		// If all in one page than use page id
+		# If all in one page than use page id
 		if (empty($commonPids)) {
 			$commonPids = $this->page->pageInfo['uid'];
 		}
-		// Get page titles
+		# Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
-		// Get the where clause
+		# Get the where clause
 		$wherePid = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids) . ')';
 
-		// Add icon for new record
+		# Add icon for new record
 		if (!empty($commonPids)) {
 			$content .= $this->getNewIconList($commonPids,$this->selectedPidsTitle);
 		}
 
-		// Initialize variables for the database query.
-		$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableName)
+		# Initialize variables for the database query.
+		$queryWhere = '1=1' . t3lib_BEfunc::deleteClause($this->tableName)
 			. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
 			. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$additionalTables = '';
@@ -232,7 +232,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 		$orderBy = 'name,firstname,sys_language_uid';
 		$limit = '';
 
-		// Get list of all events
+		# Get list of all events
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
 			$this->tableName,
@@ -244,35 +244,50 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 		if ($res) {
 			$found = false;
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$found = true;
-				$this->addRowToTable($table, $row);
+				# Overlaying record with workspace version if any
+				t3lib_BEfunc::workspaceOL($this->tableName, $row);
+				# Get the workspace version if available
+				$newrow = t3lib_BEfunc::getWorkspaceVersionOfRecord($GLOBALS['BE_USER']->workspace, 
+					$this->tableName, $row['uid']);
+				# If no workspace version is available and original record is not active (pid=-1) 
+				# or original record is only a placeholder than use empty record (don't show record)
+				if (!is_array($newrow) AND ((-1 == $row['pid']) OR ('INITIAL PLACEHOLDER' == $row['t3ver_label']))) {
+					$row = $newrow;
+				}
+				# Get correct pid for the workspace record
+				t3lib_BEfunc::fixVersioningPid($this->tableName, $row);
+				if (is_array($row) 
+					AND (t3lib_div::inList($GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids), $row['pid']))) {
+					$found = true;
+					$this->addRowToTable($table, $row);
 
-				// Check for translations.
-				$queryWhere = $wherePid . ' AND l18n_parent=' . $row['uid']
-					. t3lib_BEfunc::deleteClause($this->tableName)
-					. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-				$additionalTables = '';
-				$groupBy = '';
-				$orderBy = $TCA[$this->tableName]['ctrl']['languageField'];
-				$limit = '';
+					# Check for translations.
+					$queryWhere = $wherePid . ' AND l18n_parent=' . $row['uid']
+						. t3lib_BEfunc::deleteClause($this->tableName)
+						. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+					$additionalTables = '';
+					$groupBy = '';
+					$orderBy = $TCA[$this->tableName]['ctrl']['languageField'];
+					$limit = '';
 
-				// Get list of all translated sessions
-				$reslang = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'*',
-					$this->tableName,
-					$queryWhere,
-					$groupBy,
-					$orderBy,
-					$limit);
-				if ($reslang) {
-					while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
-						$this->addRowToTable($table, $row);
+					# Get list of all translated sessions
+					$reslang = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+						'*',
+						$this->tableName,
+						$queryWhere,
+						$groupBy,
+						$orderBy,
+						$limit);
+					if ($reslang) {
+						while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
+							$this->addRowToTable($table, $row);
+						}
 					}
 				}
 			}
 			if ($found) {
-				// Output the table array using the tableLayout array with the template
-				// class.
+				# Output the table array using the tableLayout array with the template
+				# class.
 				$content .= $this->page->doc->table($table, $tableLayout) . '<br />' . LF;
 			} else {
 				$content .= '<br />' . $LANG->getLL('norecords') . '<br /><br />' . LF;

@@ -1,3 +1,9 @@
+2009-08-20
+	* FE: Remove obsolete marker.
+	* FE: Display only records from live workspace on live website.
+	* FE: Display workspace records when front end preview is active.
+	* BE: For sessions and speaker show only records of selected workspace.
+	
 2009-08-19
 	* FE: The output of the speaker info text in speaker list view, 
 	  now can be wrapped with standard TS stdWrap settings.
