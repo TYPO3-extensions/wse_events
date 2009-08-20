@@ -78,6 +78,19 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 		# Get language flag
 		list($imglang, $imgtrans) = $this->makeLocalizationPanel($this->tableName,$row);
 
+		# If deleted in the active workspace show the delete icon instead of the delete link
+		if ('DELETED!' == $row['t3ver_label']) {
+			$deleteIcon = '<img'
+				. t3lib_iconWorks::skinImg(
+					$BACK_PATH,
+					'gfx/i/shadow_delete.png',
+					'width="16" height="14"'
+					)
+				. '>';
+		} else {
+			$deleteIcon = $this->getDeleteIcon($uid);
+		}
+		
 		# Add the result row to the table array.
 		$table[] = array(
 			TAB . TAB . TAB . TAB . TAB
@@ -97,7 +110,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 			TAB . TAB . TAB . TAB . TAB
 				. $this->getEditIcon($uid) . LF
 				. TAB . TAB . TAB . TAB . TAB
-				. $this->getDeleteIcon($uid) . LF
+				. $deleteIcon . LF
 				. TAB . TAB . TAB . TAB . TAB
 				. $this->getHideUnhideIcon(
 					$uid,

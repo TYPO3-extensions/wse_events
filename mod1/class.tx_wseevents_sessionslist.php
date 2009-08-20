@@ -85,9 +85,9 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			$catnum = '';
 		}
 		# Get language flag
-//		$imglang = $this->languageFlag($row['sys_language_uid']);
 		list($imglang, $imgtrans) = $this->makeLocalizationPanel($this->tableName,$row);
 
+		# If deleted show the delete icon instead of the delete link
 		if ('DELETED!' == $row['t3ver_label']) {
 			$deleteIcon = '<img'
 				. t3lib_iconWorks::skinImg(
