@@ -8,11 +8,13 @@
 	* FE: The output of the speaker info text in speaker list view, 
 	  now can be wrapped with standard TS stdWrap settings.
 
-2009-08-13
+2009-08-14
+	* Version 0.2.1
 	* FE: The output of the session description text in session and speaker
 	  list view, now can be wrapped with standard TS stdWrap settings.
 	
 2009-08-13
+	* Version 0.2.0
 	* FE: Make links to detail views simpler for RealURL usage.
 	  The "Back" link now is only shown when going to detail view from list view.
 	  There is no "Back" link when going from detail view to another detail view.
@@ -38,13 +40,13 @@
 	* Update documentation with new layout template.
 
 2008-11-23
-	* Version 1.1.17
+	* Version 0.1.17
 	* FE: When the event is in the past and no presentation handouts are available
 	  then show a message about missing handouts.
 	* Raise the maximum document size for presentations from 5000kB to 10000kB.
 
 2008-10-14
-	* Version 1.1.16
+	* Version 0.1.16
 	* BE: New function to update the names of timeslots.
 	* BE: New format of time slot names when editing time slots.
 	* BE: Show room number in room list and show order by room number.
@@ -55,12 +57,12 @@
 	* FE: Fix wrong width of time slot if one slot in a row is missing.
 	
 2008-10-03
-	* Version 1.1.15
+	* Version 0.1.15
 	* BE: Added form to create many time slots when no time slots are defined
 	  for an event.
 
 2008-09-10
-	* Version 1.1.14
+	* Version 0.1.14
 	* BE: Fixed SQL error when creating new session.
 	* BE: Fixed missing short category name in sessionlist when no sub pages exist.
 	* BE: Fixed SQL error when creating a session or speaker translation.
