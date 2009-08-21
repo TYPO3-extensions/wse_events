@@ -220,6 +220,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 				$parentUid .= ',' . $this->getRecursiveUidList($row['uid'], $depth);
 			}
 		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $parentUid;
 	}
 
@@ -257,6 +258,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 				if ($row['count(*)']>0) {
 					$resultList = t3lib_div::rmFromList($thisPage, $resultList);
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			}
 		}
 		return $resultList;
@@ -296,6 +298,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 				if ($row['count(*)']>0) {
 					$resultList = t3lib_div::rmFromList($thisPage, $resultList);
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			}
 		}
 		return $resultList;
@@ -611,6 +614,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 					'value'		=> $uid
 				);
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($dbResult);
 		}
 
 		// Reset the array pointer as the populateList* functions expect

@@ -296,6 +296,7 @@ $content .= '---POST end ---' . '<br />' . LF;
 				$content .= $newname . '<br />' . LF;
 				$query  = $GLOBALS['TYPO3_DB']->exec_UPDATEquery($this->tableName, 'uid=' . $uid, $updateArray);
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			$content .= LF;
 		}
 		// Finished creating the form
@@ -471,6 +472,7 @@ $content .= '---POST end ---' . '<br />' . LF;
 				$event['location'] = $row['location'];
 				$events[] = $event;
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
 		// ToDo: Add box for event selection
@@ -516,6 +518,7 @@ $content .= '---POST end ---' . '<br />' . LF;
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 					$rooms[$row['uid']] = $row['name'];
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			}
 */
 			$rooms = tx_wseevents_events::getEventRooms($event['uid']);
@@ -575,6 +578,7 @@ $content .= '---POST end ---' . '<br />' . LF;
 							) . LF,
 					);
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 				$content .= LF;
 
 				// Show no records message

@@ -284,6 +284,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$this->categories[$row['uid']] = $row['shortkey'];
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
 		# -------------------- Get list of events --------------------
@@ -315,6 +316,7 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 				$event['location'] = $row['location'];
 				$events[] = $event;
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
 		# Add box for event selection
@@ -397,9 +399,11 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 									$this->addRowToTable($table, $lRow);
 								}
 							}
+							$GLOBALS['TYPO3_DB']->sql_free_result($reslang);
 						}
 					}
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 				if ($found) {
 					# Output the table array using the tableLayout array with the template
 					# class.

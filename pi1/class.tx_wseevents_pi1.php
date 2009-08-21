@@ -340,6 +340,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$event_item .= $this->cObj->substituteMarkerArrayCached($template['evtoption'], $markerArray);
 				}
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 		# Show selection combo box if more than one event is found
 		if (1 < $eventcount) {
@@ -393,6 +394,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					}
 				}
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 		# Set select options
 		$subpartArray1['###SELECT###'] = $select_item;
@@ -486,6 +488,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					}
 				}
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 		$subpartArray['###SINGLEROW###'] = $content_item;
 
@@ -719,6 +722,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					}
 				}
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 		$subpartArray['###SINGLEROW###'] = $content_item;
 
@@ -906,6 +910,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$event_item .= $this->cObj->substituteMarkerArrayCached($template['evtoption'], $markerArray);
 			}
 		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+
 		# Show selection combo box if more than one event is found
 		if (1 < $eventcount) {
 			# Set select options
@@ -1841,6 +1847,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				}
 			}
 		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $sessions;
 	}
 
@@ -1875,6 +1882,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('name, location, begin, length, timebegin,
 			timeend, slotsize, maxslot, defslotcount', 'tx_wseevents_events', $where);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $row;
 	}
 
@@ -1895,6 +1903,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$rows[$id] = $row;
 			$id++;
 		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $rows;
 	}
 
@@ -1916,6 +1925,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'tx_wseevents_timeslots', $where);
 		if ($res) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			if (1 == $showdbgsql) { echo 'getSlot return:' . $row['uid'] . '<br>'; };
 			return $row['uid'];
 		} else {
@@ -1935,6 +1945,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$where = 'uid=' . $slot_id . $this->cObj->enableFields('tx_wseevents_timeslots');
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('length', 'tx_wseevents_timeslots', $where);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $row['length'];
 	}
 
@@ -1989,6 +2000,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$session['catcolor'] = $datacat['color'];
 			}
 		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $session;
 	}
 

@@ -262,6 +262,7 @@ class tx_wseevents_categorieslist extends tx_wseevents_backendlist{
 					while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
 						$this->addRowToTable($table, $row);
 					}
+					$GLOBALS['TYPO3_DB']->sql_free_result($reslang);
 				}
 			}
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);

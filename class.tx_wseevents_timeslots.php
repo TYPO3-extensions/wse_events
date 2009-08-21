@@ -125,6 +125,7 @@ class tx_wseevents_timeslots {
 		if ($res) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			$slotname = formatSlotName($row);
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 		return $slotname;
 	}
@@ -168,6 +169,7 @@ class tx_wseevents_timeslots {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			$eventid = $row['uid'];
 			$location = $row['location'];
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
 		if ($eventid>0) {
@@ -194,6 +196,7 @@ class tx_wseevents_timeslots {
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 					$rooms[$row['uid']] = $row['number'];
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			}
 #debug($rooms,'$rooms');
 			// Get list of all time slots for the event
@@ -219,6 +222,7 @@ class tx_wseevents_timeslots {
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 					$slotlist[] = $row;
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 #debug($slotlist,'$slotlist');
 
 				// Get list of speakers of the session
@@ -286,6 +290,7 @@ class tx_wseevents_timeslots {
 							}
 						}
 					}
+					$GLOBALS['TYPO3_DB']->sql_free_result($res);
 				}
 				$speakerslotlist = t3lib_div::uniqueList($speakerslotlist);
 #debug($speakerslotlist,'$speakerslotlist');
@@ -336,6 +341,7 @@ class tx_wseevents_timeslots {
 									}
 								}
 							}
+							$GLOBALS['TYPO3_DB']->sql_free_result($res);
 						} else {
 #debug($queryWhere, '$queryWhere');
 						}

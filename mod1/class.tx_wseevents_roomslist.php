@@ -186,6 +186,7 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 				$location['name'] = $row['name'];
 				$locations[] = $location;
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
 		// Add box for location selection
@@ -246,6 +247,7 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 							) . LF,
 					);
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 				if ($found) {
 					// Output the table array using the tableLayout array with the template
 					// class.

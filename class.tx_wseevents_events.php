@@ -263,6 +263,7 @@ class tx_wseevents_events {
 			$orderBy,
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $row;
 	}
 
@@ -310,6 +311,7 @@ class tx_wseevents_events {
 			$orderBy,
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		// Clear the item array
 		$slotlist = array();
 
@@ -384,6 +386,7 @@ class tx_wseevents_events {
 			$orderBy,
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 
 		// Clear the item array
 		$slotlist = array();
@@ -409,6 +412,7 @@ class tx_wseevents_events {
 				$limit);
 			$locationrow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			$roomcount = $locationrow['count(*)'];
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 
 			list($this_h, $this_m) = explode(':', $begin);
 
@@ -481,6 +485,7 @@ class tx_wseevents_events {
 			$limit);
 		if ($res) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 
 			$roomlist = array();
 			$roomlist[0] = '- All rooms -';
@@ -510,6 +515,7 @@ class tx_wseevents_events {
 						$roomlist[$row['uid']] = $row['name'];
 #				$roomindex += 1;
 					}
+					$GLOBALS['TYPO3_DB']->sql_free_result($res);
 				}
 			}
 		}

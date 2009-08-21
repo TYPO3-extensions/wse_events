@@ -285,8 +285,10 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 							$row['timeend'] = '';
 							$this->addRowToTable($table, $row);
 						}
+						$GLOBALS['TYPO3_DB']->sql_free_result($reslang);
 					}
 				}
+				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 				if ($found) {
 					// Output the table array using the tableLayout array with the template
 					// class.

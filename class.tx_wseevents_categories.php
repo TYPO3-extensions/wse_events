@@ -132,6 +132,7 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 				$entry[2] = '';
 				$PA['items'][] = $entry;
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
 #		debug ($PA);

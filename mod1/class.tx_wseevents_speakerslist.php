@@ -295,9 +295,11 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 						while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($reslang)) {
 							$this->addRowToTable($table, $row);
 						}
+						$GLOBALS['TYPO3_DB']->sql_free_result($reslang);
 					}
 				}
 			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			if ($found) {
 				# Output the table array using the tableLayout array with the template
 				# class.

@@ -122,6 +122,7 @@ class tx_wseevents_rooms {
 			$limit);
 
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)		;
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		$location = $row['location'];
 		if (!empty($location)) {
 			$location = 'location='.$location;
@@ -168,6 +169,8 @@ class tx_wseevents_rooms {
 				$roomfound = true;
 			}
 		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+
 		// Add the name and id of ALL ROOMS to the itemlist
 		$entry = array();
 		$entry[0] = '- All rooms -'; //$LANG->getLL('timeslots.allrooms');

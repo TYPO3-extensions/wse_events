@@ -1,3 +1,6 @@
+2009-08-21
+	* Insert sql_free_result at all relevant places.
+	
 2009-08-20
 	* FE: Remove obsolete marker.
 	* FE: Display only records from live workspace on live website.
