@@ -1,3 +1,6 @@
+2009-08-23
+	* BE: Hide all icons that are useless when not working in the live workspace.
+
 2009-08-21
 	* Insert sql_free_result at all relevant places.
 	

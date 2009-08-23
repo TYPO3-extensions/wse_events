@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007-2008 Michael Oehlhof
+* (c) 2007-2009 Michael Oehlhof
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is

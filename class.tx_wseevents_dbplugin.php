@@ -5,7 +5,7 @@
 * (c) 2007 Niels Pardon (mail@niels-pardon.de)
 * All rights reserved
 *
-* Adapted and modified 2007-2008 for use by the 'wse_events'
+* Adapted and modified 2007-2009 for use by the 'wse_events'
 * extension from Michael Oehlhof <typo3@oehlhof.de>
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -739,7 +739,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
 		$translations = $t8Tools->translationInfo($table, $row['uid']);
 
-			// Language title and icon:
+		# Language title and icon:
 		$out[0] = $this->languageFlag($row[$TCA[$table]['ctrl']['languageField']]);
 
 		if (is_array($translations))	{
@@ -751,7 +751,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 #				$editOnClick = 'alt_doc.php?' . $returnUrl . $params;
 #			}
 
-			// Traverse page translations and add icon for each language that does NOT yet exist:
+			# Traverse page translations and add icon for each language that does NOT yet exist:
 			$lNew = '';
 			foreach($this->pageOverlays as $lUid_OnPage => $lsysRec)	{
 				if (!isset($translations['translations'][$lUid_OnPage]) && $GLOBALS['BE_USER']->checkLanguageAccess($lUid_OnPage))	{

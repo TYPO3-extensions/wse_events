@@ -6,7 +6,7 @@
 * All rights reserved
 *
 * Adapted for use by the 'wse_events' extension
-* from Michael Oehlhof <typo3@oehlhof.de>
+* 2007-2009 by Michael Oehlhof <typo3@oehlhof.de>
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
 * free software; you can redistribute it and/or modify
@@ -53,11 +53,14 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	var $selectedPidsAll;
 	var $selectedPidsTitle;
 
-	// List of languages
+	# List of languages
 	var $syslang;
 
-	// Configuration
+	# Configuration
 	var $conf;
+	
+	# Workspace
+	var $workspaceActive;
 
 	/**
 	 * The constructor. Sets the table name and the back-end page object.
@@ -68,10 +71,15 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	 * @access public
 	 */
 	function tx_wseevents_backendlist(&$page) {
+		global $BE_USER;
+
 		$this->setTableNames();
 		$this->page =& $page;
+		
+		# Set flag if workspace is active
+		$this->workspaceActive = (0 <> $BE_USER->workspace);
 
-		// Get array with system languges
+		# Get array with system languges
 		$this->syslang = t3lib_BEfunc::getSystemLanguages();
 		foreach ($this->syslang as &$thislang) {
 			$langname = explode(' ', $thislang[0]);
@@ -110,6 +118,12 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 
 		$result = '';
 
+		# No edit icon if working in workspace
+		if ((true == $this->workspaceActive) 
+			AND (!t3lib_div::inList('tx_wseevents_speakers,tx_wseevents_sessions', $this->tableName))) {
+			return;
+		}
+		
 		if ($BE_USER->check('tables_modify', $this->tableName)
 			&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)) {
 			$params = '&edit[' . $this->tableName . '][' . $uid . ']=edit';
@@ -141,6 +155,12 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 		global $BACK_PATH, $LANG, $BE_USER;
 
 		$result = '';
+
+		# No delete icon if working in workspace
+		if ((true == $this->workspaceActive) 
+			AND (!t3lib_div::inList('tx_wseevents_speakers,tx_wseevents_sessions', $this->tableName))) {
+			return;
+		}
 
 		if ($BE_USER->check('tables_modify', $this->tableName)
 			&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)) {
@@ -188,6 +208,13 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	function getNewIcon($pid, $usediv = 1) {
 		global $BACK_PATH, $LANG, $BE_USER;
 
+		# No new icon if working in workspace
+		if ((true == $this->workspaceActive) 
+			AND (!t3lib_div::inList('tx_wseevents_speakers,tx_wseevents_sessions', $this->tableName))) {
+			$result = '';
+			return;
+		}
+
 		# the name of the table where the record should be saved to is stored in $this->tableName
 		if ($BE_USER->check('tables_modify', $this->tableName)
 			&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)
@@ -210,8 +237,8 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 					$BACK_PATH,
 					'gfx/new_record.gif',
 					'width="7" height="4"')
-				// We use an empty alt attribute as we already have a textual
-				// representation directly next to the icon.
+				# We use an empty alt attribute as we already have a textual
+				# representation directly next to the icon.
 				. ' title="' . $langNew . '" alt="" />' . LF
 				. TAB . TAB . TAB . TAB
 				. $langNew . LF
@@ -235,6 +262,13 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	function getNewIconList($pidList, $pidTitles) {
 		global $BACK_PATH, $LANG, $BE_USER;
 
+		# No new icon if working in workspace
+		if ((true == $this->workspaceActive) 
+			AND (!t3lib_div::inList('tx_wseevents_speakers,tx_wseevents_sessions', $this->tableName))) {
+			$result = TAB . '<br /><b>' . $LANG->getLL('onlylivews') . '</b><br /><br />' . LF;
+			return $result;
+		}
+
 		$result = TAB . '<br /><b>' . $LANG->getLL('newrecord') . '</b>&nbsp;' . LF;
 		$result .= TAB . '<div id="typo3-newRecordLink">' . LF;
 		foreach (explode(',', $pidList) as $thisPid) {
@@ -249,8 +283,8 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 						$BACK_PATH,
 						'gfx/new_record.gif',
 						'width="7" height="4"')
-					// We use an empty alt attribute as we already have a textual
-					// representation directly next to the icon.
+					# We use an empty alt attribute as we already have a textual
+					# representation directly next to the icon.
 					. ' title="' . $pidTitles[$thisPid] . '" alt="" />' . LF
 					. TAB . TAB . TAB . $pidTitles[$thisPid] . LF
 					. TAB . TAB . '</a>' . LF
@@ -272,11 +306,83 @@ class tx_wseevents_backendlist extends tx_wseevents_dbplugin {
 	 * @access protected
 	 */
 	function editNewUrl($params, $backPath = '') {
+		# No new icon if working in workspace
+		if ((true == $this->workspaceActive) 
+			AND (!t3lib_div::inList('tx_wseevents_speakers,tx_wseevents_sessions', $this->tableName))) {
+			return '';
+		}
+
 		$returnUrl = 'returnUrl=' . rawurlencode(t3lib_div::getIndpEnv('REQUEST_URI'));
 
 		return $backPath . 'alt_doc.php?' . $returnUrl . $params;
 	}
 
+	/**
+	 * Generates a linked hide or unhide icon depending on the record's hidden
+	 * status.
+	 *
+	 * @param	integer		the UID of the record
+	 * @param	boolean		indicates if the record is hidden (true) or is visible (false)
+	 * @return	string		the HTML source code of the linked hide or unhide icon
+	 * @access protected
+	 */
+	function getHideUnhideIcon($uid, $hidden) {
+		global $BACK_PATH, $LANG, $BE_USER;
+		$result = '';
+
+		# No hide/unhide icon if working in workspace
+		if ((true == $this->workspaceActive) 
+			AND (!t3lib_div::inList('tx_wseevents_speakers,tx_wseevents_sessions', $this->tableName))) {
+			return '';
+		}
+
+		if ($BE_USER->check('tables_modify', $this->tableName)
+			&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)) {
+			if ($hidden) {
+				$params = '&data[' . $this->tableName . '][' . $uid . '][hidden]=0';
+				$icon = 'gfx/button_unhide.gif';
+				$langHide = $LANG->getLL('unHide');
+			} else {
+				$params = '&data[' . $this->tableName . '][' . $uid . '][hidden]=1';
+				$icon = 'gfx/button_hide.gif';
+				$langHide = $LANG->getLL('hide');
+			}
+
+			$result = '<a href="'
+				. htmlspecialchars($this->page->doc->issueCommand($params)) . '">'
+				. '<img'
+				. t3lib_iconWorks::skinImg(
+					$BACK_PATH,
+					$icon,
+					'width="11" height="12"'
+				)
+				. ' title="' . $langHide . '" alt="' . $langHide . '" class="hideicon" />'
+				. '</a>';
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Creates the localization panel
+	 *
+	 * @param	string		The table
+	 * @param	array		The record for which to make the localization panel.
+	 * @return	array		Array with key 0/1 with content for column 1 and 2
+	 */
+	function makeLocalizationPanel($table, $row) {
+		# No hide/unhide icon if working in workspace
+		if ((true == $this->workspaceActive) 
+			AND (!t3lib_div::inList('tx_wseevents_speakers,tx_wseevents_sessions', $this->tableName))) {
+			$out = array(
+				0 => '',
+				1 => '',
+			);
+			return $out;
+		}
+		return tx_wseevents_dbplugin::makeLocalizationPanel($table, $row);
+	}
+	
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_backendlist.php']) {

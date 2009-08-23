@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2007 Michael Oehlhof <typo3@oehlhof.de>
+* (c) 2007-2009 Michael Oehlhof <typo3@oehlhof.de>
 * All rights reserved
 *
 * This script is part of the TYPO3 project. The TYPO3 project is
@@ -271,47 +271,6 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 			}
 		}
 		return $content;
-	}
-
-	/**
-	 * Generates a linked hide or unhide icon depending on the record's hidden
-	 * status.
-	 *
-	 * @param	string		the name of the table where the record is in
-	 * @param	integer		the UID of the record
-	 * @param	boolean		indicates if the record is hidden (true) or is visible (false)
-	 * @return	string		the HTML source code of the linked hide or unhide icon
-	 * @access protected
-	 */
-	function getHideUnhideIcon($uid, $hidden) {
-		global $BACK_PATH, $LANG, $BE_USER;
-		$result = '';
-
-		if ($BE_USER->check('tables_modify', $this->tableName)
-			&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $this->page->pageInfo['uid']), 16)) {
-			if ($hidden) {
-				$params = '&data[' . $this->tableName . '][' . $uid . '][hidden]=0';
-				$icon = 'gfx/button_unhide.gif';
-				$langHide = $LANG->getLL('unHide');
-			} else {
-				$params = '&data[' . $this->tableName . '][' . $uid . '][hidden]=1';
-				$icon = 'gfx/button_hide.gif';
-				$langHide = $LANG->getLL('hide');
-			}
-
-			$result = '<a href="'
-				. htmlspecialchars($this->page->doc->issueCommand($params)) . '">'
-				. '<img'
-				. t3lib_iconWorks::skinImg(
-					$BACK_PATH,
-					$icon,
-					'width="11" height="12"'
-				)
-				. ' title="' . $langHide . '" alt="' . $langHide . '" class="hideicon" />'
-				. '</a>';
-		}
-
-		return $result;
 	}
 
 }

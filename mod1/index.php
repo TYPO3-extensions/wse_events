@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Michael Oehlhof (typo3@oehlhof.de)
+*  (c) 2007-2009 Michael Oehlhof (typo3@oehlhof.de)
 *  All rights reserved
 *
 *  Because I dont want to redefine the wheel again, some ideas
