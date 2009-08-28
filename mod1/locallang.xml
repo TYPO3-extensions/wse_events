@@ -75,7 +75,7 @@
 			<label index="norecords">Aucun enregistrement défini</label>
 			<label index="event">Événement :</label>
 			<label index="newrecord">Créer un nouvel enregistrement dans le dossier sys</label>
-			<label index="onlylivews">Create new records of this type is possible in live workspace only.</label>
+			<label index="onlylivews">Création de nouveaux records de ce type est possible que dans Live Workspace seulement.</label>
 			<label index="function1">Données d'événement</label>
 			<label index="subModuleTitle_time_slots">Créneaux</label>
 			<label index="slotCreate">Créer plusieurs créneaux ensembles</label>
@@ -132,7 +132,7 @@
 			<label index="norecords">Keine Datensätze vorhanden</label>
 			<label index="event">Veranstaltung:</label>
 			<label index="newrecord">Neuen Datensatz in Systemordner anlegen</label>
-			<label index="onlylivews">Das anlegen neuer Datensätze dieses Typs ist nur im Live Workspace möglich.</label>
+			<label index="onlylivews">Das Anlegen neuer Datensätze dieses Typs ist nur im Live Workspace möglich.</label>
 			<label index="function1">Veranstaltungsdaten</label>
 			<label index="subModuleTitle_time_slots">Vortragszeiten</label>
 			<label index="slotCreate">Viele Zeitblöcke zusammen anlegen</label>
