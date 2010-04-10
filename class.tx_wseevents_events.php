@@ -339,6 +339,9 @@ class tx_wseevents_events {
 					if ($slotlist[$itemindex]==$end) {
 						$finished = true;
 					}
+					if (($this_m>=$end_m) && ($this_h>=$end_h)) {
+						$finished = true;
+					}
 					$itemindex += 1;
 				}
 			}
