@@ -107,10 +107,10 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 //				$content .= '<td>Day ' . $d . '</td>';
 				foreach ( array_keys($rooms) as $roomid ) {
 					$checked = '';
-					if (($roomid==0) and ($slotsize == $event['slotsize'])) {
+					if (($roomid==0) and ($slotsize != $event['slotsize'])) {
 						$checked = ' checked="checked"';
 					}
-					if (($roomid>0) and ($slotsize != $event['slotsize'])) {
+					if (($roomid>0) and ($slotsize == $event['slotsize'])) {
 						$checked = ' checked="checked"';
 					}
 					$content .= '<td><input type="checkbox" name="room_' . $d . '_' . $roomid . '[' . $x . ']" value="yes"' . $checked . '></td>';
