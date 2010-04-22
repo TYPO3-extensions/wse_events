@@ -1959,8 +1959,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 */
 	function getSlotSession($slot_id) {
 		$where = 'sys_language_uid=0';  // . $this->cObj->enableFields('tx_wseevents_sessions');
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, name, category, number, teaser,
-			timeslots, speaker', 'tx_wseevents_sessions', $where);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wseevents_sessions', $where);
 		# We must iterate thru all sessions to find the appropriate time slot
 		# because the time slots are stored as a list in a blob field
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
