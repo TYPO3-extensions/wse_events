@@ -925,6 +925,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		} else {
 			$subpartArray['###EVENTSELECT###'] = '';
 		}
+        $where = '';
 		# show only sessions of selected event
 		if (0 < $showevent) {
 			$where .= ' AND event=' . $showevent;
@@ -1086,7 +1087,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							# Check if a slot is assigned for all rooms
 							if (1 == $showdebugsql) { echo 'getSlot:' . $showevent . ', ' . $d . ', 0, ' . $s . '<br>'; };
 							$slot_id = $this->getSlot($showevent, $d, 0, $s, $showdebugsql);
-							$allrooms = true;
+                            if (!empty($slot_id)) {
+    							$allrooms = true;
+                            }
 						}
 						if (!empty($slot_id)) {
 							if (1 == $showdebugsql) { echo 'getSlotLength:' . $slot_id . '<br>'; };
@@ -1518,6 +1521,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$markerArray['###BACKLINK###'] = $backlink;
 
 		# For every session get information
+        $content_item = '';
 		if ($sessionids) {
 			foreach (explode(',', $sessionids) as $k){
 				$sessdata = $this->pi_getRecord('tx_wseevents_sessions', $k);
