@@ -63,7 +63,7 @@ class tx_wseevents_events {
 	/**
 	 * Dummy constructor: Does nothing.
 	 *
-	 * The base classe's constructor is called in $this->init().
+	 * The base class's constructor is called in $this->init().
 	 *
 	 * @return	void		...
 	 */
@@ -73,7 +73,7 @@ class tx_wseevents_events {
 	/**
 	 * This is the main function
 	 *
-	 * @param	array		TypoScript configuration for the plugin
+	 * @param	array		$items TypoScript configuration for the plugin
 	 * @return	void		...
 	 * @access protected
 	 */
@@ -84,8 +84,8 @@ class tx_wseevents_events {
 	/**
 	 * Get list of event days
 	 *
-	 * @param	array		Array of items passed by reference.
-	 * @param	object		The parent object (t3lib_TCEforms / t3lib_transferData depending on context)
+	 * @param	array		$params Array of items passed by reference.
+	 * @param	object		$pObj The parent object (t3lib_TCEforms / t3lib_transferData depending on context)
 	 * @return	void		...
 	 */
 	function getTCAeventDays(&$params, &$pObj) {
@@ -122,10 +122,10 @@ class tx_wseevents_events {
 	}
 
 	/**
-	 * Get length of seesion
+	 * Get length of session
 	 *
-	 * @param	array		Array of items passed by reference.
-	 * @return	void		...
+	 * @param	array		$params Array of items passed by reference.
+	 * @return	void
 	 * @access protected
 	 */
 	function getTCAsessionLength(&$params) {
@@ -163,8 +163,8 @@ class tx_wseevents_events {
 	/**
 	 * Get default session length
 	 *
-	 * @param	array		Array of items passed by reference.
-	 * @return	void		...
+	 * @param	array		$params Array of items passed by reference.
+	 * @return	void
 	 * @access protected
 	 */
 	function getTCAsessionDefault(&$params) {
@@ -177,8 +177,6 @@ class tx_wseevents_events {
 			$event = 0;
 		}
 		$eventinfo = $this->getEventInfo($event);
-
-		$thisslot = 1;
 		$defslot = $eventinfo['defslotcount'];
 
 		return $defslot;
@@ -187,8 +185,8 @@ class tx_wseevents_events {
 	/**
 	 * Get list of slots for the event
 	 *
-	 * @param	array		Array of items passed by reference.
-	 * @return	void		...
+	 * @param	array		$params Array of items passed by reference.
+	 * @return	void
 	 * @access protected
 	 */
 	function getTCAslotList(&$params) {
@@ -223,12 +221,12 @@ class tx_wseevents_events {
 	/**
 	 * Get info about an event
 	 *
-	 * @param	integer		Id of an event
-	 * @param	integer		Page to search for events if $event is set to 0
+	 * @param	integer		$event Id of an event
+	 * @param	integer		$eventpid Page to search for events if $event is set to 0
 	 * @return	array		Event record
 	 * @access protected
 	 */
-	function getEventInfo($event, $eventpid=0) {
+	public static function getEventInfo($event, $eventpid=0) {
 		global $TCA;
 
 		// --------------------- Get the list of time slots ---------------------
@@ -254,7 +252,7 @@ class tx_wseevents_events {
 		$orderBy = 'name';
 		$limit = '';
 
-		// Get info about time slots of the event
+		// Get info about the event
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
 			$tableName,
@@ -270,12 +268,12 @@ class tx_wseevents_events {
 	/**
 	 * Get list of slots for an event
 	 *
-	 * @param	string		Id of event
-	 * @param	integer		Page to search for events if $event is set to 0
+	 * @param	string		$event Id of event
+	 * @param	integer		$eventpid Page to search for events if $event is set to 0
 	 * @return	array		List of slots for the event
 	 * @access protected
 	 */
-	function getEventSlotList($event, $eventpid = 0) {
+	public static function getEventSlotList($event, $eventpid = 0) {
 		global $TCA;
 
 		// --------------------- Get the list of time slots ---------------------
@@ -350,10 +348,10 @@ class tx_wseevents_events {
 	}
 
 	/**
-	 * Getlist of slots for an event
+	 * Get list of slots for an event
 	 *
-	 * @param	string		Id of event
-	 * @param	integer		Page to search for events if $event is set to 0
+	 * @param	string		$event Id of event
+	 * @param	integer		$eventpid Page to search for events if $event is set to 0
 	 * @return	array		List of slots for the event
 	 * @access protected
 	 */
@@ -450,12 +448,12 @@ class tx_wseevents_events {
 	/**
 	 * Get list of room names of an event
 	 *
-	 * @param	integer		Id of an event
-	 * @param	integer		Page to search for events if $event is set to 0
+	 * @param	integer		$event Id of an event
+	 * @param	integer		$eventpid Page to search for events if $event is set to 0
 	 * @return	array		List of room names
 	 * @access protected
 	 */
-	function getEventRooms($event, $eventpid = 0) {
+	public static function getEventRooms($event, $eventpid = 0) {
 		global $TCA;
 
 		// --------------------- Get the list of time slots ---------------------
@@ -504,7 +502,7 @@ class tx_wseevents_events {
 				$limit = '';
 #debug($queryWhere, '$queryWhere tx_wseevents_rooms');
 
-				// Get info about the roomss of the location
+				// Get info about the rooms of the location
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 					'*',
 					$tableName,

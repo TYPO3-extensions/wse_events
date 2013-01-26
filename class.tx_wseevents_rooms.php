@@ -80,7 +80,7 @@ class tx_wseevents_rooms {
 	/**
 	 * Get list of available rooms
 	 *
-	 * @param	array		TypoScript configuration for the plugin
+	 * @param	array		$PA TypoScript configuration for the plugin
 	 * @param	object		$fobj: ToDo: insert description
 	 * @return	void		...
 	 * @access protected

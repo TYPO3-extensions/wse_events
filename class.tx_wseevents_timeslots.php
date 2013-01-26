@@ -85,13 +85,13 @@ class tx_wseevents_timeslots {
 	/**
 	 * Format the name of a time slot
 	 *
-	 * @param	array		Recoord data of slot
+	 * @param	array		$row Record data of slot
 	 * @return	string		Localized name of time slot
 	 * @access protected
 	 */
 	function formatSlotName($row) {
 		if (empty($row['event'])) {
-			return;
+			return '';
 		}
 		$secofday = 60*60*24;
 		// Get record with event data
@@ -110,30 +110,30 @@ class tx_wseevents_timeslots {
 	/**
 	 * Get the localized name of a time slot
 	 *
-	 * @param	integer		Id of slot
+	 * @param	integer		$slotId Id of slot
 	 * @return	string		Localized name of time slot
 	 * @access protected
 	 */
-	function getSlotName($slotid) {
+	function getSlotName($slotId) {
 		global $TCA;
 
-		$slotname = '';
-		$where = 'uid='.$slotid.
+		$slotName = '';
+		$where = 'uid='.$slotId.
 			' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
 			t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,event,eventday,room,begin,length', 'tx_wseevents_timeslots', $where);
 		if ($res) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-			$slotname = formatSlotName($row);
+			$slotName = formatSlotName($row);
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
-		return $slotname;
+		return $slotName;
 	}
 
 	/**
 	 * Get list of available time slots
 	 *
-	 * @param	array		TypoScript configuration for the plugin
+	 * @param	array		$PA TypoScript configuration for the plugin
 	 * @return	void		...
 	 * @access protected
 	 */
