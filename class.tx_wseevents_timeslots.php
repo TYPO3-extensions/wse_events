@@ -93,18 +93,18 @@ class tx_wseevents_timeslots {
 		if (empty($row['event'])) {
 			return '';
 		}
-		$secofday = 60*60*24;
+		$secOfDay = 60*60*24;
 		// Get record with event data
-		$eventdata = tx_wseevents_events::getEventInfo($row['event']);
+		$eventData = tx_wseevents_events::getEventInfo($row['event']);
 		// Get localized name of weekday
-		$thisday = $eventdata['begin']+($row['eventday']-1)*$secofday;
-		$weekday = strftime('%A', $thisday);
+		$thisDay = $eventData['begin']+($row['eventday']-1)*$secOfDay;
+		$weekday = strftime('%A', $thisDay);
 		// Get list of time slots in format hh:mm
-		$eventslots = tx_wseevents_events::getEventSlotList($row['event']);
+		$eventSlots = tx_wseevents_events::getEventSlotList($row['event']);
 		// Get name of room
-		$eventrooms = tx_wseevents_events::getEventRooms($row['event']);
+		$eventRooms = tx_wseevents_events::getEventRooms($row['event']);
 		// Compose name of time slot
-		return	$weekday.' '.$eventslots[$row['begin']].' '.$eventrooms[$row['room']];
+		return	$weekday.' '.$eventSlots[$row['begin']].' '.$eventRooms[$row['room']];
 	}
 
 	/**
@@ -144,12 +144,12 @@ class tx_wseevents_timeslots {
 		$PA['items'] = array();
 
 		$tableName = 'tx_wseevents_events';
-		$eventid = $PA['row']['event'];
+		$eventId = $PA['row']['event'];
 		// Get event record
-		if ($eventid==0) {
+		if ($eventId==0) {
 			$queryWhere = 'pid='.$PA['row']['pid'];
 		} else {
-			$queryWhere = 'uid='.$eventid;
+			$queryWhere = 'uid='.$eventId;
 		}
 		$queryWhere .= ' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
 			t3lib_BEfunc::BEenableFields($tableName).
@@ -167,12 +167,12 @@ class tx_wseevents_timeslots {
 			$limit);
 		if ($res) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-			$eventid = $row['uid'];
+			$eventId = $row['uid'];
 			$location = $row['location'];
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
-		if ($eventid>0) {
+		if ($eventId>0) {
 			// Get list of room ids and numbers
 			$rooms = array();
 			$rooms[0] = 0;
@@ -202,7 +202,7 @@ class tx_wseevents_timeslots {
 			// Get list of all time slots for the event
 			$tableName = 'tx_wseevents_timeslots';
 			t3lib_div::loadTCA($tableName);
-			$queryWhere = 'event='.$eventid.
+			$queryWhere = 'event='.$eventId.
 				t3lib_BEfunc::BEenableFields($tableName).
 				t3lib_BEfunc::versioningPlaceholderClause($tableName).
 				t3lib_BEfunc::deleteClause($tableName);
@@ -218,9 +218,9 @@ class tx_wseevents_timeslots {
 				$orderBy,
 				$limit);
 			if ($res) {
-				$slotlist = array();
+				$slotList = array();
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-					$slotlist[] = $row;
+					$slotList[] = $row;
 				}
 				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 #debug($slotlist,'$slotlist');
@@ -229,14 +229,14 @@ class tx_wseevents_timeslots {
 				$sp1 = $PA['row']['speaker'];
 				$sp2 = array();
 				$sp2 = explode(',',$sp1);
-				$speakerlist = '';
-				$speakerslotlist = '';
+				$speakerList = '';
+				$speakerSlotList = '';
 				foreach($sp2 as $i=>$n) {
 					list($si, $sn) = explode('|',$n);
-					if (empty($speakerlist)) {
-						$speakerlist = $si;
+					if (empty($speakerList)) {
+						$speakerList = $si;
 					} else {
-						$speakerlist .= ','.$si;
+						$speakerList .= ','.$si;
 					}
 				}
 #debug($speakerlist,'$speakerlist');
@@ -245,7 +245,7 @@ class tx_wseevents_timeslots {
 				// and subtract them from the slot list
 				// Get list of time slots from speakers of the event
 				$tableName = 'tx_wseevents_sessions';
-				$queryWhere = 'event='.$eventid.
+				$queryWhere = 'event='.$eventId.
 					' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
 					t3lib_BEfunc::versioningPlaceholderClause($tableName).
 					t3lib_BEfunc::deleteClause($tableName);
@@ -263,27 +263,27 @@ class tx_wseevents_timeslots {
 					$limit);
 				if ($res) {
 					while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-						$usedslots = $row['timeslots'];
-						if (!empty($usedslots)) {
-							foreach ($slotlist as &$checkslot) {
-								if (t3lib_div::inList($usedslots,$checkslot['uid'])) {
-									$checkslot['uid'] = 0;
+						$usedSlots = $row['timeslots'];
+						if (!empty($usedSlots)) {
+							foreach ($slotList as &$checkSlot) {
+								if (t3lib_div::inList($usedSlots,$checkSlot['uid'])) {
+									$checkSlot['uid'] = 0;
 								}
 							}
 						}
 						// Get speaker of session and check if same as for actual session
-						$usedspeaker = $row['speaker'];
-						if (!empty($usedspeaker)) {
-							$foundslot = false;
-							$usedspeakerlist = explode(',',$usedspeaker);
-							foreach ($usedspeakerlist as $checkspeaker) {
-								if (t3lib_div::inList($speakerlist,$checkspeaker)) {
-									if (!$foundslot) {
-										$foundslot = true;
-										if (empty($speakerslotlist)) {
-											$speakerslotlist = $row['timeslots'];
+						$usedSpeaker = $row['speaker'];
+						if (!empty($usedSpeaker)) {
+							$foundSlot = false;
+							$usedSpeakerList = explode(',',$usedSpeaker);
+							foreach ($usedSpeakerList as $checkSpeaker) {
+								if (t3lib_div::inList($speakerList,$checkSpeaker)) {
+									if (!$foundSlot) {
+										$foundSlot = true;
+										if (empty($speakerSlotList)) {
+											$speakerSlotList = $row['timeslots'];
 										} else {
-											$speakerslotlist .= ','.$row['timeslots'];
+											$speakerSlotList .= ','.$row['timeslots'];
 										}
 									}
 								}
@@ -292,7 +292,7 @@ class tx_wseevents_timeslots {
 					}
 					$GLOBALS['TYPO3_DB']->sql_free_result($res);
 				}
-				$speakerslotlist = t3lib_div::uniqueList($speakerslotlist);
+				$speakerSlotList = t3lib_div::uniqueList($speakerSlotList);
 #debug($speakerslotlist,'$speakerslotlist');
 
 				// Subtract time slots of speakers of the event
@@ -300,27 +300,27 @@ class tx_wseevents_timeslots {
 				// if speaker held a session at the same time in an other room
 
 				// Get array with all slots of all rooms of all days
-				$eventslotarray = tx_wseevents_events::getEventSlotArray($eventid);
+				$eventSlotArray = tx_wseevents_events::getEventSlotArray($eventId);
 
 				// Loop over all speaker slots
-				$roomcount = count($eventslotarray['1']);
+				$roomCount = count($eventSlotArray['1']);
 #debug($roomcount,'$roomcount');
-				foreach (explode(',',$speakerslotlist) as $speakerslot) {
+				foreach (explode(',',$speakerSlotList) as $speakerSlot) {
 					// Get slot record
-					$slotrow = t3lib_BEfunc::getRecord ('tx_wseevents_timeslots', $speakerslot);
-					for ( $s = 0; $s < $slotrow['length']; $s++ ) {
-						for ($r = 1; $r <= $roomcount; $r++) {
-							$eventslotarray[$slotrow['eventday']][$r][$slotrow['begin']+$s] = 0;
+					$slotRow = t3lib_BEfunc::getRecord ('tx_wseevents_timeslots', $speakerSlot);
+					for ( $s = 0; $s < $slotRow['length']; $s++ ) {
+						for ($r = 1; $r <= $roomCount; $r++) {
+							$eventSlotArray[$slotRow['eventday']][$r][$slotRow['begin']+$s] = 0;
 						}
 					}
 				}
 
 				// Get list of all restrictions from speakers of the event
 				// and subtract them from the slot list if speaker is not present at the time
-				foreach (explode(',',$speakerlist) as $speaker) {
+				foreach (explode(',',$speakerList) as $speaker) {
 					if ($speaker) {
 						$tableName = 'tx_wseevents_speakerrestrictions';
-						$queryWhere = 'speaker='.$speaker.' AND event='.$eventid.
+						$queryWhere = 'speaker='.$speaker.' AND event='.$eventId.
 							t3lib_BEfunc::versioningPlaceholderClause($tableName).
 							t3lib_BEfunc::deleteClause($tableName);
 						$groupBy = '';
@@ -334,10 +334,10 @@ class tx_wseevents_timeslots {
 							$orderBy,
 							$limit);
 						if ($res) {
-							while ($speakerrow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-								for ( $s = $speakerrow['begin']; $s <= $speakerrow['end']; $s++ ) {
-									for ($r = 1; $r <= $roomcount; $r++) {
-										$eventslotarray[$speakerrow['eventday']][$r][$s] = 0;
+							while ($speakerRow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+								for ( $s = $speakerRow['begin']; $s <= $speakerRow['end']; $s++ ) {
+									for ($r = 1; $r <= $roomCount; $r++) {
+										$eventSlotArray[$speakerRow['eventday']][$r][$s] = 0;
 									}
 								}
 							}
@@ -351,18 +351,18 @@ class tx_wseevents_timeslots {
 #debug($slotlist,'$slotlist');
 #debug($eventslotarray,'$eventslotarray');
 				// Now subtract the not possible slots
-				foreach ($slotlist as &$slot) {
+				foreach ($slotList as &$slot) {
 					if ($slot['uid']>0) {
 						// Get slot record
-						$slotrow = t3lib_BEfunc::getRecord ('tx_wseevents_timeslots', $slot['uid']);
-						for ( $s = 0; $s < $slotrow['length']; $s++ ) {
-							if ($slotrow['room']<>0) {
-								if ($eventslotarray[$slotrow['eventday']][$rooms[$slotrow['room']]][$slotrow['begin']+$s] == 0) {
+						$slotRow = t3lib_BEfunc::getRecord ('tx_wseevents_timeslots', $slot['uid']);
+						for ( $s = 0; $s < $slotRow['length']; $s++ ) {
+							if ($slotRow['room']<>0) {
+								if ($eventSlotArray[$slotRow['eventday']][$rooms[$slotRow['room']]][$slotRow['begin']+$s] == 0) {
 									$slot['uid'] = 0;
 								}
 							} else {
-								for ($r = 1; $r <= $roomcount; $r++) {
-									if ($eventslotarray[$slotrow['eventday']][$r][$slotrow['begin']+$s] == 0) {
+								for ($r = 1; $r <= $roomCount; $r++) {
+									if ($eventSlotArray[$slotRow['eventday']][$r][$slotRow['begin']+$s] == 0) {
 										$slot['uid'] = 0;
 									}
 
@@ -374,17 +374,17 @@ class tx_wseevents_timeslots {
 
 #debug($slotlist,'$slotlist');
 				// Put remained slots in result array
-				$thisslot = 1;
-				foreach ($slotlist as $oneslot) {
+				$thisSlot = 1;
+				foreach ($slotList as $oneSlot) {
 #debug($oneslot,'$oneslot');
-					if ($oneslot['uid']>0) {
+					if ($oneSlot['uid']>0) {
 						// Add the name and id to the itemlist
 						$entry = array();
-						$entry[0] = $this->formatSlotName($oneslot);
-						$entry[1] = $oneslot['uid'];
+						$entry[0] = $this->formatSlotName($oneSlot);
+						$entry[1] = $oneSlot['uid'];
 						$entry[2] = '';
 						$PA['items'][] = $entry;
-						$thisslot += 1;
+						$thisSlot += 1;
 					}
 				}
 #debug($PA['items'],'$PA[items]');

@@ -196,9 +196,8 @@
 			</form>
 		</div>
 		<!-- ###EVENTSELECT### end -->
-		<table border=1>
-		<!-- ###TITLEROW### begin -->
-		<!-- Combobox to select category -->
+		<!-- ###TITLEDAYSELECT### begin -->
+		<!-- Combobox to select day of event -->
 		<form action="" method="post" name="eventday_select">
 		<input type="hidden" name="no_cache" value="1">
 		<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.eventday_select.submit()">
@@ -212,6 +211,25 @@
 			<!-- ###SELECT### -->
 		</select>
 		</form>
+		<!-- ###TITLEDAYSELECT### end -->
+		<!-- ###TITLEROOMSELECT### begin -->
+		<!-- Combobox to select room -->
+		<form action="" method="post" name="event_room_select">
+		<input type="hidden" name="no_cache" value="1">
+		<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.event_room_select.submit()">
+			<!-- ###SELECT### -->
+			<!-- ###OPTIONSELECTED### -->
+			<option value="###VALUE###" selected="selected">###OPTION###</option>
+			<!-- ###OPTIONSELECTED### -->
+			<!-- ###OPTIONNOTSELECTED### -->
+			<option value="###VALUE###">###OPTION###</option>
+			<!-- ###OPTIONNOTSELECTED### -->
+			<!-- ###SELECT### -->
+		</select>
+		</form>
+		<!-- ###TITLEROOMSELECT### end -->
+		<table border=1>
+		<!-- ###TITLEROW### begin -->
 		<tr>
 			<td>###TITLEBEGIN###<!-- Width=###COLUMNWIDTH### --></td>
 			<!-- ###TITLECOLUMN### begin -->

@@ -220,7 +220,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				return $this->pi_wrapInBaseClass($this->singleSpeakerView($content, $conf));
 			break;
 			case 'timeslots':
-				return $this->pi_wrapInBaseClass($this->listTimeslotView($content, $conf));
+				return $this->pi_wrapInBaseClass($this->listTimeSlotView($content, $conf));
 			break;
 			default:
 				return $this->pi_wrapInBaseClass('Not implemented: ['
@@ -925,7 +925,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 * @param	array		$conf TypoScript configuration for the plugin
 	 * @return	string		Content for output on the web site
 	 */
-	function listTimeslotView($content, $conf)	{
+	function listTimeSlotView($content, $conf)	{
 		$this->conf=$conf;		# Setting the TypoScript passed to this function in $this->conf
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();		# Loading the LOCAL_LANG values
@@ -941,6 +941,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Check for event day selection
 		$showDay = $this->piVars['showDay'];
+
+		# Check for event room selection
+		$showRoom = $this->piVars['showRoom'];
 
 		# Check for hidden catagory links
 		$hideCat = $conf['listTimeslotView.']['hideCategoryLinks'];
@@ -1022,6 +1025,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$hideEmptyRooms = 0;
 		}
 
+		# For showing the days vertically
+		$showDaysVertical = $conf['listTimeslotView.']['showDaysVertical'];
+		if (empty($showDaysVertical)) {
+			$showDaysVertical = 0;
+		}
+
+		# For showing room selector
+		$showRoomSelector = $conf['listTimeslotView.']['showRoomSelector'];
+		if (empty($showRoomSelector)) {
+			$showRoomSelector = 0;
+		}
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -1036,8 +1051,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if ((empty($template['total'])) or (0 == $showDay)) {
 			$template['total']		= $this->cObj->getSubpart($this->templateCode, '###SLOTSALL###');
 		}
+		$template['titledayselect']		= $this->cObj->getSubpart($template['total'],			'###TITLEDAYSELECT###');
+		$template['select']				= $this->cObj->getSubpart($template['titledayselect'],	'###SELECT###');
+		$template['option']				= $this->cObj->getSubpart($template['select'],			'###OPTIONNOTSELECTED###');
+		$template['optionsel']			= $this->cObj->getSubpart($template['select'],			'###OPTIONSELECTED###');
+		$template['titleroomselect']	= $this->cObj->getSubpart($template['total'],			'###TITLEROOMSELECT###');
+		$template['selectroom']			= $this->cObj->getSubpart($template['titleroomselect'],	'###SELECT###');
+		$template['roomoption']			= $this->cObj->getSubpart($template['selectroom'],		'###OPTIONNOTSELECTED###');
+		$template['roomoptionsel']		= $this->cObj->getSubpart($template['selectroom'],		'###OPTIONSELECTED###');
 		$template['titlerow']		= $this->cObj->getSubpart($template['total'],		'###TITLEROW###');
-		$template['select']			= $this->cObj->getSubpart($template['titlerow'],	'###SELECT###');
 		$template['titlecol']		= $this->cObj->getSubpart($template['titlerow'],	'###TITLECOLUMN###');
 		$template['evtsection']		= $this->cObj->getSubpart($template['total'],		'###EVENTSELECT###');
 		$template['evtselect']		= $this->cObj->getSubpart($template['evtsection'],	'###SELECT###');
@@ -1151,7 +1173,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$dayName[$d] = strftime($conf['strftime'], $thisDay);
 			$weekdays[$d] = strftime('%A', $thisDay);
 
-			# Set one event day  option
+			# Set one event day option
 			$markerArray['###VALUE###'] = $d;
 			$markerArray['###OPTION###'] = $weekdays[$d] . ' - ' . $dayName[$d];
 			if ($showDay==$d) {
@@ -1159,6 +1181,16 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			} else {
 				$content_select .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
 			}
+		}
+
+		# Create template data for rooms combobox
+		$content_room_select = '';	# Clear var;
+		$markerArray['###VALUE###'] = 0;
+		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.chooseallrooms', '[-All-]');
+		if (0 == $showRoom) {
+			$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoptionsel'], $markerArray);
+		} else {
+			$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoption'], $markerArray);
 		}
 
 		# Get count of rooms and name of rooms
@@ -1172,6 +1204,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$roomIds = $rooms[$r]['uid'];
 			} else {
 				$roomIds .= ',' . $rooms[$r]['uid'];
+			}
+			# Set one event room option
+			$markerArray['###VALUE###'] = $r;
+			$markerArray['###OPTION###'] = $roomName[$r];
+			if ($showRoom==$r) {
+				$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoptionsel'], $markerArray);
+			} else {
+				$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoption'], $markerArray);
 			}
 		}
 #$content .= t3lib_div::view_array($GLOBALS['TSFE']->config['config']);
@@ -1216,281 +1256,264 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$slotColWidth = (100 - $timeColWidth - (($dayCount-1) * $dayDelimiterWidth)) / $columnCount;
 		}
 
-		# Here the output begins
-		$content_title = '';
-		$content_header = '';
-		$content_slot = '';
-		$visible = array();
-		# Loop over all days
-		for ( $d = 1; $d <= $dayCount; $d++ ) {
-			if (($showDay == $d) or (0 == $showDay)) {
-				# Loop over all rooms
-				$newRoomCount = 0;
-				for ( $r = 1; $r <= $roomCount; $r++ ) {
-					if (1 == $hideEmptyRooms) {
-						$visible[$d][$r] = $this->checkRoom($showEvent, $d, $rooms[$r]['uid'], $showDebugSql);
-					} else {
-						$visible[$d][$r] = 1;
-					}
-					if (0 < $visible[$d][$r]) {
-						$newRoomCount += 1;
-						$markerArray = array();
-						$markerArray['###HEADERROOM###'] = $roomName[$r];
-						# Add column width if enabled
-						if ($timeColWidth>0) {
-							$markerArray['###COLUMNWIDTH###']  = $slotColWidth . '%';
+		if ($showDay > 0) {
+			$showDaysVertical = 0;
+		}
+		# Loop over all days vertical
+		if ((1 == $showDaysVertical) and (0 == $showDay)) {
+			$showDay = 1;
+		}
+		while ($showDay <= $dayCount) {
+
+			# Here the output begins
+			$content_title = '';
+			$content_header = '';
+			$content_slot = '';
+			$visible = array();
+
+			# Loop over all days
+			for ( $d = 1; $d <= $dayCount; $d++ ) {
+				if (($showDay == $d) or (0 == $showDay)) {
+					# Loop over all rooms
+					$newRoomCount = 0;
+					for ( $r = 1; $r <= $roomCount; $r++ ) {
+						if (($showRoom == $r) or (0 == $showRoom)) {
+							if (1 == $hideEmptyRooms) {
+								$visible[$d][$r] = $this->checkRoom($showEvent, $d, $rooms[$r]['uid'], $showDebugSql);
+							} else {
+								$visible[$d][$r] = 1;
+							}
+							if (0 < $visible[$d][$r]) {
+								$newRoomCount += 1;
+								$markerArray = array();
+								$markerArray['###HEADERROOM###'] = $roomName[$r];
+								# Add column width if enabled
+								if ($timeColWidth>0) {
+									$markerArray['###COLUMNWIDTH###']  = $slotColWidth . '%';
+								}
+								$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercol'], $markerArray);
+							}
+						} else {
+							$visible[$d][$r] = 0;
 						}
-						$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercol'], $markerArray);
 					}
-				}
 
-				$markerArray = array();
-				$markerArray['###ROOMCOUNT###'] = $newRoomCount;
-				$markerArray['###TITLEDAY###'] = $dayName[$d];
-				$markerArray['###TITLEWEEKDAY###'] = $weekdays[$d];
-				# Add column width if enabled
-				if (0 < $timeColWidth) {
-					$markerArray['###COLUMNWIDTH###']  = ($slotColWidth * $newRoomCount) . '%';
-				}
-				$content_title .= $this->cObj->substituteMarkerArrayCached($template['titlecol'], $markerArray);
+					$markerArray = array();
+					$markerArray['###ROOMCOUNT###'] = $newRoomCount;
+					$markerArray['###TITLEDAY###'] = $dayName[$d];
+					$markerArray['###TITLEWEEKDAY###'] = $weekdays[$d];
+					# Add column width if enabled
+					if (0 < $timeColWidth) {
+						$markerArray['###COLUMNWIDTH###'] = ($slotColWidth * $newRoomCount) . '%';
+					}
+					$content_title .= $this->cObj->substituteMarkerArrayCached($template['titlecol'], $markerArray);
 
-				# Insert space between days if defined
-				if ((0 == $showDay) and ($d<$dayCount)) {
-					if (0 < $dayDelimiterWidth) {
-						$markerArray = array();
-						$markerArray['###COLUMNWIDTH###']  = $dayDelimiterWidth . '%';
-						$markerArray['###DAYDELIMITER###']  = $dayDelimiterClass;
-						$content_title .= $this->cObj->substituteMarkerArrayCached($template['headercolempty'], $markerArray);
-						$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercolempty'], $markerArray);
+					# Insert space between days if defined
+					if ((0 == $showDay) and ($d<$dayCount)) {
+						if (0 < $dayDelimiterWidth) {
+							$markerArray = array();
+							$markerArray['###COLUMNWIDTH###'] = $dayDelimiterWidth . '%';
+							$markerArray['###DAYDELIMITER###'] = $dayDelimiterClass;
+							$content_title .= $this->cObj->substituteMarkerArrayCached($template['headercolempty'], $markerArray);
+							$content_header .= $this->cObj->substituteMarkerArrayCached($template['headercolempty'], $markerArray);
+						}
 					}
 				}
 			}
-		}
 
-		# Loop over all slots of a day
-		for ( $s = 1; $s <= $slotCount; $s++ ) {
-			$content_slotRow = '';
-			# Loop over all days
-			for ( $d = 1; $d <= $dayCount; $d++ ) {
-				if (($showDay==$d) or (0 == $showDay)) {
-					# Loop over all rooms
-					$allRooms = false;
-					for ( $r = 1; $r <= $roomCount; $r++ ) {
-						if (0 < $visible[$d][$r]) {
-							if (0 < $showDebug) {
-								$content_slotRow .= LF . '<!-- s=' . $s . ' d=' . $d . ' r=' . $r . ' -->';
-							}
-							if (1 == $showDebugSql) { echo '<br>getSlot:' . $showEvent . ', ' . $d . ', ' . $rooms[$r]['uid'] . ', ' . $s . '<br>'; };
-							$slot_id = $this->getSlot($showEvent, $d, $rooms[$r]['uid'], $s, $showDebugSql);
-							if (1 == $r && empty($slot_id) && !$allRooms) {
-								# Check if a slot is assigned for all rooms
-								if (1 == $showDebugSql) { echo 'getSlot:' . $showEvent . ', ' . $d . ', 0, ' . $s . '<br>'; };
-								$slot_id = $this->getSlot($showEvent, $d, 0, $s, $showDebugSql);
+			# Loop over all slots of a day
+			for ( $s = 1; $s <= $slotCount; $s++ ) {
+				$content_slotRow = '';
+				# Loop over all days
+				for ( $d = 1; $d <= $dayCount; $d++ ) {
+					if (($showDay==$d) or (0 == $showDay)) {
+						# Loop over all rooms
+						$allRooms = false;
+						for ( $r = 1; $r <= $roomCount; $r++ ) {
+							if (0 < $visible[$d][$r]) {
+								if (0 < $showDebug) {
+									$content_slotRow .= LF . '<!-- s=' . $s . ' d=' . $d . ' r=' . $r . ' -->';
+								}
+								if (1 == $showDebugSql) { echo '<br>getSlot:' . $showEvent . ', ' . $d . ', ' . $rooms[$r]['uid'] . ', ' . $s . '<br>'; };
+								$slot_id = $this->getSlot($showEvent, $d, $rooms[$r]['uid'], $s, $showDebugSql);
+								if (1 == $r && empty($slot_id) && !$allRooms) {
+									# Check if a slot is assigned for all rooms
+									if (1 == $showDebugSql) { echo 'getSlot:' . $showEvent . ', ' . $d . ', 0, ' . $s . '<br>'; };
+									$slot_id = $this->getSlot($showEvent, $d, 0, $s, $showDebugSql);
+									if (!empty($slot_id)) {
+										$allRooms = true;
+									}
+								}
 								if (!empty($slot_id)) {
-									$allRooms = true;
-								}
-							}
-							if (!empty($slot_id)) {
-								if (1 == $showDebugSql) { echo 'getSlotLength:' . $slot_id . '<br>'; };
-								$slot_len = $this->getSlotLength($slot_id);
-								if (1 == $showDebugSql) { echo 'slot_len:' . $slot_len . '<br>getSlotSession:' . $slot_id . '<br>'; };
-								$sessionData = $this->getSlotSession($slot_id);
-								if (1 == $showDebugSql) { echo 'sessiondata:' . $sessionData . '<br>'; };
-								if (!empty($sessionData)) {
-									$label = $sessionData['catnum'];  # the link text
-									//$overrulePiVars = '';//array('session' => $this->getFieldContent('uid'));
-									$overrulePiVars = array('showSessionUid' => $sessionData['uid'], 'backUid' => $GLOBALS['TSFE']->id);
-									$clearAnyway = 1;    # the current values of piVars will NOT be preserved
-									$altPageId = $this->conf['singleSession'];      # ID of the target page, if not on the same page
-									$this->setCache();
-									if (!t3lib_div::inList($hideCat, $sessionData['catkey'])) {
-										$sessionLink = $this->pi_linkTP_keepPIvars($label, $overrulePiVars,
-											$this->useCache, $clearAnyway, $altPageId);
-									} else {
-										$sessionLink = '';
-									}
-									$label = $sessionData['name'];  # the link text
-									$sessionLinkName = $this->pi_linkTP_keepPIvars($label, $overrulePiVars,
-										$this->useCache, $clearAnyway, $altPageId);
-									if (1 == $this->conf['showCalendarLink']) {
-										// Create link for iCal download
-										$overrulePiVars = array('sessionUid' => $sessionData['uid'], 'slotUid' => $slot_id, 'download' => 'iCal');
-										if (!empty($this->conf['calendarLinkLabel'])) {
-											$label = $this->conf['calendarLinkLabel'];
+									if (1 == $showDebugSql) { echo 'getSlotLength:' . $slot_id . '<br>'; };
+									$slot_len = $this->getSlotLength($slot_id);
+									if (1 == $showDebugSql) { echo 'slot_len:' . $slot_len . '<br>getSlotSession:' . $slot_id . '<br>'; };
+									$sessionData = $this->getSlotSession($slot_id);
+									if (1 == $showDebugSql) { echo 'sessiondata:' . $sessionData . '<br>'; };
+									if (!empty($sessionData)) {
+										$label = $sessionData['catnum'];  # the link text
+										//$overrulePiVars = '';//array('session' => $this->getFieldContent('uid'));
+										$overrulePiVars = array('showSessionUid' => $sessionData['uid'], 'backUid' => $GLOBALS['TSFE']->id);
+										$clearAnyway = 1;    # the current values of piVars will NOT be preserved
+										$altPageId = $this->conf['singleSession'];      # ID of the target page, if not on the same page
+										$this->setCache();
+										if (!t3lib_div::inList($hideCat, $sessionData['catkey'])) {
+											$sessionLink = $this->pi_linkTP_keepPIvars($label, $overrulePiVars,
+												$this->useCache, $clearAnyway, $altPageId);
 										} else {
-											$label = 'iCal';  # the link text
+											$sessionLink = '';
 										}
-										$iCalLinkName = $this->pi_linkTP_keepPIvars($label, $overrulePiVars,
+										$label = $sessionData['name'];  # the link text
+										$sessionLinkName = $this->pi_linkTP_keepPIvars($label, $overrulePiVars,
 											$this->useCache, $clearAnyway, $altPageId);
-									} else {
-										$iCalLinkName = '';
-									}
-									$markerArray = array();
-									$markerArray['###SLOTNAME###'] = $sessionData['name'];
-									$markerArray['###SLOTCATEGORY###'] = $sessionData['category'];
-									$markerArray['###SLOTCATEGORYKEY###'] = $sessionData['catkey'];
-									$markerArray['###SLOTCATEGORYCOLOR###'] = $sessionData['catcolor'];
-									$markerArray['###SLOTICAL###'] = $iCalLinkName;
-									$markerArray['###SLOTLINK###'] = $sessionLink;
-									$markerArray['###SLOTLINKNAME###'] = $sessionLinkName;
-									$markerArray['###SLOTSESSION###'] = $sessionData['catnum'];
-									# Cut teaser if longer than max teaser width
-									if (0 < $teaserWidth) {
-	//									$markerArray['###SLOTTEASER###'] = substr($sessiondata['teaser'], 0, $teaserwidth) . '...';
-										$markerArray['###SLOTTEASER###'] = $GLOBALS['TSFE']->csConvObj->crop(
-																			$GLOBALS['TSFE']->renderCharset,
-																			$sessionData['teaser'],
-																			$teaserWidth, '...');
-									} else {
-										$markerArray['###SLOTTEASER###'] = $sessionData['teaser'];
-									}
-									# ToDo: Ticket #11
-									# Get speaker list of session
-									$markerArray['###SLOTSPEAKER###'] = $this->getSpeakerNames($sessionData['speaker']);
-								} else {
-									$markerArray = array();
-									if (0 == $hideNotAssigned) {
-										$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
-										$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
-										$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
-										$markerArray['###SLOTSPEAKER###'] = '';
-									} else {
-										$markerArray['###SLOTNAME###'] = '';
-										$markerArray['###SLOTSESSION###'] = '';
-										$markerArray['###SLOTTEASER###'] = '';
-										$markerArray['###SLOTSPEAKER###'] = '';
-									}
-									$markerArray['###SLOTCATEGORY###'] = 0;
-									$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned_catkey');
-									$markerArray['###SLOTCATEGORYCOLOR###'] = $catColorNotAssigned;
-									$markerArray['###SLOTICAL###'] = '';
-									$markerArray['###SLOTLINK###'] = '';
-									$markerArray['###SLOTLINKNAME###'] = '';
-								}
-								$markerArray['###SLOTDAY###'] = $d;
-								$markerArray['###SLOTROOM###'] = $r;
-								$markerArray['###SLOTNUM###'] = $s;
-								$markerArray['###SLOTBEGIN###'] = $slotBegin[$s];
-								$markerArray['###SLOTEND###'] = $slotBegin[$s+$slot_len];
-								$markerArray['###SLOTSIZE###'] = $slot_len;
-								if ($allRooms) {
-									$slotWidth = $roomCount;
-								} else {
-									$slotWidth = 1;
-								}
-								$markerArray['###SLOTWIDTH###'] = $slotWidth;
-								$markerArray['###DAYDELIMITER###']  = '';
-								# Add column width if enabled
-								if (0 < $timeColWidth) {
-									$markerArray['###COLUMNWIDTH###']  = ($slotColWidth * $slotWidth) . '%';
-								}
-								$content_slotRow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
-								for ( $x = $s; $x < $s+$slot_len; $x++) {
-									if ($allRooms) {
-										for ( $r1 = 1; $r1 <= $roomCount; $r1++ ) {
-											$used[$x][$d][$r1] = ($x==$s)?$slot_len:(-$slot_len);
+										if (1 == $this->conf['showCalendarLink']) {
+											// Create link for iCal download
+											$overrulePiVars = array('sessionUid' => $sessionData['uid'], 'slotUid' => $slot_id, 'download' => 'iCal');
+											if (!empty($this->conf['calendarLinkLabel'])) {
+												$label = $this->conf['calendarLinkLabel'];
+											} else {
+												$label = 'iCal';  # the link text
+											}
+											$iCalLinkName = $this->pi_linkTP_keepPIvars($label, $overrulePiVars,
+												$this->useCache, $clearAnyway, $altPageId);
+										} else {
+											$iCalLinkName = '';
 										}
+										$markerArray = array();
+										$markerArray['###SLOTNAME###'] = $sessionData['name'];
+										$markerArray['###SLOTCATEGORY###'] = $sessionData['category'];
+										$markerArray['###SLOTCATEGORYKEY###'] = $sessionData['catkey'];
+										$markerArray['###SLOTCATEGORYCOLOR###'] = $sessionData['catcolor'];
+										$markerArray['###SLOTICAL###'] = $iCalLinkName;
+										$markerArray['###SLOTLINK###'] = $sessionLink;
+										$markerArray['###SLOTLINKNAME###'] = $sessionLinkName;
+										$markerArray['###SLOTSESSION###'] = $sessionData['catnum'];
+										# Cut teaser if longer than max teaser width
+										if (0 < $teaserWidth) {
+		//									$markerArray['###SLOTTEASER###'] = substr($sessiondata['teaser'], 0, $teaserwidth) . '...';
+											$markerArray['###SLOTTEASER###'] = $GLOBALS['TSFE']->csConvObj->crop(
+																				$GLOBALS['TSFE']->renderCharset,
+																				$sessionData['teaser'],
+																				$teaserWidth, '...');
+										} else {
+											$markerArray['###SLOTTEASER###'] = $sessionData['teaser'];
+										}
+										# ToDo: Ticket #11
+										# Get speaker list of session
+										$markerArray['###SLOTSPEAKER###'] = $this->getSpeakerNames($sessionData['speaker']);
 									} else {
-										$used[$x][$d][$r] = ($x==$s)?$slot_len:(-$slot_len);
+										$markerArray = array();
+										if (0 == $hideNotAssigned) {
+											$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+											$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+											$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned');
+											$markerArray['###SLOTSPEAKER###'] = '';
+										} else {
+											$markerArray['###SLOTNAME###'] = '';
+											$markerArray['###SLOTSESSION###'] = '';
+											$markerArray['###SLOTTEASER###'] = '';
+											$markerArray['###SLOTSPEAKER###'] = '';
+										}
+										$markerArray['###SLOTCATEGORY###'] = 0;
+										$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notassigned_catkey');
+										$markerArray['###SLOTCATEGORYCOLOR###'] = $catColorNotAssigned;
+										$markerArray['###SLOTICAL###'] = '';
+										$markerArray['###SLOTLINK###'] = '';
+										$markerArray['###SLOTLINKNAME###'] = '';
 									}
-								}
-							} else {
-								if (empty($used[$s][$d][$r])) {
-									$markerArray = array();
 									$markerArray['###SLOTDAY###'] = $d;
 									$markerArray['###SLOTROOM###'] = $r;
 									$markerArray['###SLOTNUM###'] = $s;
 									$markerArray['###SLOTBEGIN###'] = $slotBegin[$s];
-									$markerArray['###SLOTEND###'] = $slotBegin[$s+1];
-									$markerArray['###SLOTSIZE###'] = 1;
-									$markerArray['###SLOTWIDTH###'] = 1;
-									if (0 == $hideNotDefined) {
-										$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
-										$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
-										$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+									$markerArray['###SLOTEND###'] = $slotBegin[$s+$slot_len];
+									$markerArray['###SLOTSIZE###'] = $slot_len;
+									if ($allRooms) {
+										$slotWidth = $roomCount;
 									} else {
-										$markerArray['###SLOTNAME###'] = '';
-										$markerArray['###SLOTSESSION###'] = '';
-										$markerArray['###SLOTTEASER###'] = '';
+										$slotWidth = 1;
 									}
-									$markerArray['###SLOTCATEGORY###'] = 0;
-									$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined_catkey');
-									$markerArray['###SLOTCATEGORYCOLOR###'] = $catColorNotDefined;
-									$markerArray['###SLOTLINK###'] = '';
+									$markerArray['###SLOTWIDTH###'] = $slotWidth;
 									$markerArray['###DAYDELIMITER###']  = '';
 									# Add column width if enabled
-									if ($timeColWidth>0) {
-										$markerArray['###COLUMNWIDTH###']  = $slotColWidth . '%';
+									if (0 < $timeColWidth) {
+										$markerArray['###COLUMNWIDTH###']  = ($slotColWidth * $slotWidth) . '%';
 									}
-									$content_slotRow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
+									$content_slotRow .= $this->cObj->substituteMarkerArrayCached($template['slotcol'], $markerArray);
+									for ( $x = $s; $x < $s+$slot_len; $x++) {
+										if ($allRooms) {
+											for ( $r1 = 1; $r1 <= $roomCount; $r1++ ) {
+												$used[$x][$d][$r1] = ($x==$s)?$slot_len:(-$slot_len);
+											}
+										} else {
+											$used[$x][$d][$r] = ($x==$s)?$slot_len:(-$slot_len);
+										}
+									}
+								} else {
+									if (empty($used[$s][$d][$r])) {
+										$markerArray = array();
+										$markerArray['###SLOTDAY###'] = $d;
+										$markerArray['###SLOTROOM###'] = $r;
+										$markerArray['###SLOTNUM###'] = $s;
+										$markerArray['###SLOTBEGIN###'] = $slotBegin[$s];
+										$markerArray['###SLOTEND###'] = $slotBegin[$s+1];
+										$markerArray['###SLOTSIZE###'] = 1;
+										$markerArray['###SLOTWIDTH###'] = 1;
+										if (0 == $hideNotDefined) {
+											$markerArray['###SLOTNAME###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+											$markerArray['###SLOTSESSION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+											$markerArray['###SLOTTEASER###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined');
+										} else {
+											$markerArray['###SLOTNAME###'] = '';
+											$markerArray['###SLOTSESSION###'] = '';
+											$markerArray['###SLOTTEASER###'] = '';
+										}
+										$markerArray['###SLOTCATEGORY###'] = 0;
+										$markerArray['###SLOTCATEGORYKEY###'] = $this->pi_getLL('tx_wseevents_sessions.slot_notdefined_catkey');
+										$markerArray['###SLOTCATEGORYCOLOR###'] = $catColorNotDefined;
+										$markerArray['###SLOTLINK###'] = '';
+										$markerArray['###DAYDELIMITER###']  = '';
+										# Add column width if enabled
+										if ($timeColWidth>0) {
+											$markerArray['###COLUMNWIDTH###']  = $slotColWidth . '%';
+										}
+										$content_slotRow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
+									}
 								}
 							}
 						}
-					}
-					if ((0 == $showDay) and ($d < $dayCount)) {
-						if (0 < $dayDelimiterWidth) {
-							$markerArray = array();
-/*
-							$markerArray['###SLOTDAY###'] = '';
-							$markerArray['###SLOTROOM###'] = '';
-							$markerArray['###SLOTNUM###'] = '';
-							$markerArray['###SLOTBEGIN###'] = '';
-							$markerArray['###SLOTEND###'] = '';
-							$markerArray['###SLOTNAME###'] = '';
-							$markerArray['###SLOTSESSION###'] = '';
-							$markerArray['###SLOTTEASER###'] = '';
-							$markerArray['###SLOTCATEGORYKEY###'] = '';
-							$markerArray['###SLOTCATEGORYCOLOR###'] = $catcolor_notdefined;
-							$markerArray['###SLOTLINK###'] = '';
-*/
-							$markerArray['###SLOTCATEGORY###'] = 0;
-							$markerArray['###SLOTSIZE###'] = 1;
-							$markerArray['###SLOTWIDTH###'] = 1;
-							$markerArray['###COLUMNWIDTH###'] = $dayDelimiterWidth . '%';
-							$markerArray['###DAYDELIMITER###'] = $dayDelimiterClass;
-							$content_slotRow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
+						if ((0 == $showDay) and ($d < $dayCount)) {
+							if (0 < $dayDelimiterWidth) {
+								$markerArray = array();
+	/*
+								$markerArray['###SLOTDAY###'] = '';
+								$markerArray['###SLOTROOM###'] = '';
+								$markerArray['###SLOTNUM###'] = '';
+								$markerArray['###SLOTBEGIN###'] = '';
+								$markerArray['###SLOTEND###'] = '';
+								$markerArray['###SLOTNAME###'] = '';
+								$markerArray['###SLOTSESSION###'] = '';
+								$markerArray['###SLOTTEASER###'] = '';
+								$markerArray['###SLOTCATEGORYKEY###'] = '';
+								$markerArray['###SLOTCATEGORYCOLOR###'] = $catcolor_notdefined;
+								$markerArray['###SLOTLINK###'] = '';
+	*/
+								$markerArray['###SLOTCATEGORY###'] = 0;
+								$markerArray['###SLOTSIZE###'] = 1;
+								$markerArray['###SLOTWIDTH###'] = 1;
+								$markerArray['###COLUMNWIDTH###'] = $dayDelimiterWidth . '%';
+								$markerArray['###DAYDELIMITER###'] = $dayDelimiterClass;
+								$content_slotRow .= $this->cObj->substituteMarkerArrayCached($template['slotcolempty'], $markerArray);
+							}
 						}
 					}
 				}
-			}
-			$subPartArray1['###SLOTCOLUMN###'] = $content_slotRow;
-			$subPartArray1['###SLOTCOLUMNEMPTY###'] = '';
-			# Column with Start and end time
-			$markerArray = array();
-			$content_timeCol = '';
-			$content_timeColFree = '';
-			if (0 == $roomTime) {
-				$markerArray['###SLOTBEGIN###'] = $slotBegin[$s];
-				$markerArray['###SLOTEND###']   = $slotBegin[$s+1];
-				$markerArray['###SLOTSIZE###']  = 1;
-				# Add column width if enabled
-				if (0 < $timeColWidth) {
-					$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
-				}
-				$content_timeCol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
-			} else {
-				if (0 < $showDay) {
-					$timeDay = $showDay;
-				} else {
-					for ( $i=1; $i<=$dayCount; $i++ ) {
-						if (!empty($used[$s][$i][$roomTime])) {
-							$timeDay = $i;
-						}
-					}
-				}
-				if (!empty($used[$s][$timeDay][$roomTime])) {
-					$slot_len = $used[$s][$timeDay][$roomTime];
-					if (0 < $slot_len) {
-						$markerArray['###SLOTBEGIN###'] = $slotBegin[$s];
-						$markerArray['###SLOTEND###']   = $slotBegin[$s+$slot_len];
-						$markerArray['###SLOTSIZE###']  = $slot_len;
-						# Add column width if enabled
-						if (0 < $timeColWidth) {
-							$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
-						}
-						$content_timeCol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
-					}
-				} else {
+				$subPartArray1['###SLOTCOLUMN###'] = $content_slotRow;
+				$subPartArray1['###SLOTCOLUMNEMPTY###'] = '';
+				# Column with Start and end time
+				$markerArray = array();
+				$content_timeCol = '';
+				$content_timeColFree = '';
+				if (0 == $roomTime) {
 					$markerArray['###SLOTBEGIN###'] = $slotBegin[$s];
 					$markerArray['###SLOTEND###']   = $slotBegin[$s+1];
 					$markerArray['###SLOTSIZE###']  = 1;
@@ -1498,53 +1521,102 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					if (0 < $timeColWidth) {
 						$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
 					}
-					$content_timeColFree = $this->cObj->substituteMarkerArrayCached($template['timecolfree'], $markerArray);
+					$content_timeCol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
+				} else {
+					if (0 < $showDay) {
+						$timeDay = $showDay;
+					} else {
+						for ( $i=1; $i<=$dayCount; $i++ ) {
+							if (!empty($used[$s][$i][$roomTime])) {
+								$timeDay = $i;
+							}
+						}
+					}
+					if (!empty($used[$s][$timeDay][$roomTime])) {
+						$slot_len = $used[$s][$timeDay][$roomTime];
+						if (0 < $slot_len) {
+							$markerArray['###SLOTBEGIN###'] = $slotBegin[$s];
+							$markerArray['###SLOTEND###']   = $slotBegin[$s+$slot_len];
+							$markerArray['###SLOTSIZE###']  = $slot_len;
+							# Add column width if enabled
+							if (0 < $timeColWidth) {
+								$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
+							}
+							$content_timeCol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
+						}
+					} else {
+						$markerArray['###SLOTBEGIN###'] = $slotBegin[$s];
+						$markerArray['###SLOTEND###']   = $slotBegin[$s+1];
+						$markerArray['###SLOTSIZE###']  = 1;
+						# Add column width if enabled
+						if (0 < $timeColWidth) {
+							$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
+						}
+						$content_timeColFree = $this->cObj->substituteMarkerArrayCached($template['timecolfree'], $markerArray);
+					}
 				}
+				# Add debug output if enabled
+				if (0 < $showDebug) {
+					$content_timeCol = LF . '<!-- s=' . $s . ' d=' . $d . ' timecol -->' . $content_timeCol;
+					$content_timeColFree = LF . '<!-- s=' . $s . ' d=' . $d . ' timecolfree -->' . $content_timeColFree;
+				}
+				$subPartArray1['###TIMECOLUMN###'] = $content_timeCol;
+				$subPartArray1['###TIMECOLUMNEMPTY###'] = $content_timeColFree;
+
+				$content_slot .= $this->cObj->substituteMarkerArrayCached($template['slotrow'], $markerArray, $subPartArray1);
 			}
-			# Add debug output if enabled
-			if (0 < $showDebug) {
-				$content_timeCol = LF . '<!-- s=' . $s . ' d=' . $d . ' timecol -->' . $content_timeCol;
-				$content_timeColFree = LF . '<!-- s=' . $s . ' d=' . $d . ' timecolfree -->' . $content_timeColFree;
+
+			$subPartArray['###SLOTROW###']  = $content_slot;
+
+			$subPartArray1['###HEADERCOLUMN###'] = $content_header;
+			$subPartArray1['###HEADERCOLUMNEMPTY###'] = '';
+			$markerArray = array();
+			if (0 == $hideTime) {
+				$markerArray['###HEADERBEGIN###'] = $this->pi_getLL('tx_wseevents_sessions.slot_titlebegin', 'Time');
+			} else {
+				$markerArray['###HEADERBEGIN###'] = '';
 			}
-			$subPartArray1['###TIMECOLUMN###'] = $content_timeCol;
-			$subPartArray1['###TIMECOLUMNEMPTY###'] = $content_timeColFree;
+			# Add column width if enabled
+			if (0 < $timeColWidth) {
+				$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
+			}
+			$subPartArray['###HEADERROW###']  = $this->cObj->substituteMarkerArrayCached($template['headerrow'], $markerArray, $subPartArray1);
 
-			$content_slot .= $this->cObj->substituteMarkerArrayCached($template['slotrow'], $markerArray, $subPartArray1);
+			$subPartArray1['###TITLECOLUMN###'] = $content_title;
+			$subPartArray1['###SELECT###'] = $content_select;
+			$markerArray = array();
+			$markerArray['###TITLEBEGIN###'] = '';
+			# Add column width if enabled
+			if (0 < $timeColWidth) {
+				$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
+			}
+			$markerArray['###LABEL###'] = $this->pi_getLL('tx_wseevents_sessions.chooseeventday', '[Choose event day]');
+			$markerArray['###FORMACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->page['uid']);
+			$markerArray['###FORMSELECT###'] = $this->prefixId . '[showDay]';
+			$markerArray['###FORMSEND###'] = htmlspecialchars($this->pi_getLL('tx_wseevents_sessions.showselection', '[Show selection]'));
+			if (empty($content)) {
+				$subPartArray['###TITLEDAYSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['titledayselect'], $markerArray, $subPartArray1);
+			} else {
+				$subPartArray['###TITLEDAYSELECT###'] = '';
+			}
+			$subPartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subPartArray1);
+			if ((empty($content)) and (1 == $showRoomSelector)) {
+				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showRoom]';
+				$subPartArray1['###SELECT###'] = $content_room_select;
+				$subPartArray['###TITLEROOMSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['titleroomselect'], $markerArray, $subPartArray1);
+			} else {
+				$subPartArray['###TITLEROOMSELECT###'] = '';
+			}
+
+	#ToDo: At this point the selection (combo) box must be put into the template.
+
+			$content .= $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subPartArray);
+
+			if ((0 == $showDay) or (0 == $showDaysVertical)) {
+				$showDay = $dayCount;
+			}
+			$showDay++;
 		}
-
-		$subPartArray['###SLOTROW###']  = $content_slot;
-
-		$subPartArray1['###HEADERCOLUMN###'] = $content_header;
-		$subPartArray1['###HEADERCOLUMNEMPTY###'] = '';
-		$markerArray = array();
-		if (0 == $hideTime) {
-			$markerArray['###HEADERBEGIN###'] = $this->pi_getLL('tx_wseevents_sessions.slot_titlebegin', 'Time');
-		} else {
-			$markerArray['###HEADERBEGIN###'] = '';
-		}
-		# Add column width if enabled
-		if (0 < $timeColWidth) {
-			$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
-		}
-		$subPartArray['###HEADERROW###']  = $this->cObj->substituteMarkerArrayCached($template['headerrow'], $markerArray, $subPartArray1);
-
-		$subPartArray1['###TITLECOLUMN###'] = $content_title;
-		$subPartArray1['###SELECT###'] = $content_select;
-		$markerArray = array();
-		$markerArray['###TITLEBEGIN###'] = '';
-		# Add column width if enabled
-		if (0 < $timeColWidth) {
-			$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
-		}
-		$markerArray['###LABEL###'] = $this->pi_getLL('tx_wseevents_sessions.chooseeventday', '[Choose event day]');
-		$markerArray['###FORMACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->page['uid']);
-		$markerArray['###FORMSELECT###'] = $this->prefixId . '[showDay]';
-		$markerArray['###FORMSEND###'] = htmlspecialchars($this->pi_getLL('tx_wseevents_sessions.showselection', '[Show selection]'));
-		$subPartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subPartArray1);
-
-#ToDo: At this point the selection (combo) box must be put into the template.
-
-		$content .= $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subPartArray);
 		return $content;
 	}
 

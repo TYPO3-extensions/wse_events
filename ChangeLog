@@ -1,3 +1,29 @@
+2013-02-03 Version 0.2.4
+	Add option to show all day vertical instead of horizontal
+	Add option to show room selector
+
+2013-01-27 Version 0.2.3
+	Add options to create links for downloading calendar files (*.ics) for each session.
+
+2012-06-24 Version 0.2.2
+	New marker ###DAYDELIMITER### for the class name that is used for the delimiter column.
+	The class name can be set via TypoScript.
+
+2012-02-27
+	Fixed problem with column width in time table.
+
+2010-04-24
+	Get all fields from tx_wseevents_sessions in function getSlotSession, otherwise the translations does not work.
+
+2010-04-11
+	When creating many time slots together, as default all the rooms are selected.
+
+2010-04-10
+	Correct creation of time slot list. It was possible that in the backend a blank page was shown.
+
+2009-08-28
+	Add French translation for info text in workspaces for records that can't be edited.
+
 2009-08-23
 	* BE: Hide all icons that are useless when not working in the live workspace.
 
