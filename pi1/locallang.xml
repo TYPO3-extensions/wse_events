@@ -25,6 +25,7 @@
 			<label index="tx_wseevents_sessions.chooseall">- All Categories -</label>
 			<label index="tx_wseevents_sessions.choosealldays">- All Days -</label>
 			<label index="tx_wseevents_sessions.chooseallrooms">- All Rooms -</label>
+			<label index="tx_wseevents_sessions.chooseallcategories">- All Categories -</label>
 			<label index="tx_wseevents_sessions.showselection">Show selected category</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_name">Speaker name</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_email">E-Mail</label>
@@ -59,6 +60,7 @@
 			<label index="tx_wseevents_sessions.chooseall">- Alle Kategorien -</label>
 			<label index="tx_wseevents_sessions.choosealldays">- Alle Tage -</label>
 			<label index="tx_wseevents_sessions.chooseallrooms">- Alle Räume -</label>
+			<label index="tx_wseevents_sessions.chooseallcategories">- Alle Kategorien -</label>
 			<label index="tx_wseevents_sessions.showselection">Ausgewählte Kategorie anzeigen</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_name">Referentenname</label>
 			<label index="tx_wseevents_speakers.listFieldHeader_email">E-Mail</label>

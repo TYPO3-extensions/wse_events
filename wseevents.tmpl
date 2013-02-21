@@ -177,13 +177,13 @@
 
 <!-- ###SLOTSALL### begin -->
 		<!-- wse_events default template: time slot view begin -->
+		<form action="" method="post" name="event_select" id="event_select">
+		<input type="hidden" name="no_cache" value="1">
 		<!-- ###EVENTSELECT### begin -->
 		<div class="tx-wseevents-pi1-chooseevent">
 			###LABEL###
 			<!-- Combobox to select event -->
-			<form action="" method="post" name="event_select">
-			<input type="hidden" name="no_cache" value="1">
-			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.event_select.submit()">
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.getElementById('event_select').submit();">
 				<!-- ###SELECT### -->
 				<!-- ###OPTIONSELECTED### -->
 				<option value="###VALUE###" selected="selected">###OPTION###</option>
@@ -193,41 +193,85 @@
 				<!-- ###OPTIONNOTSELECTED### -->
 				<!-- ###SELECT### -->
 			</select>
-			</form>
 		</div>
 		<!-- ###EVENTSELECT### end -->
 		<!-- ###TITLEDAYSELECT### begin -->
 		<!-- Combobox to select day of event -->
-		<form action="" method="post" name="eventday_select">
-		<input type="hidden" name="no_cache" value="1">
-		<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.eventday_select.submit()">
-			<!-- ###SELECT### -->
-			<!-- ###OPTIONSELECTED### -->
-			<option value="###VALUE###" selected="selected">###OPTION###</option>
-			<!-- ###OPTIONSELECTED### -->
-			<!-- ###OPTIONNOTSELECTED### -->
-			<option value="###VALUE###">###OPTION###</option>
-			<!-- ###OPTIONNOTSELECTED### -->
-			<!-- ###SELECT### -->
-		</select>
-		</form>
+		<div class="tx-wseevents-pi1-choosetimeday">
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.getElementById('event_select').submit();">
+				<!-- ###SELECT### -->
+				<!-- ###OPTIONSELECTED### -->
+				<option value="###VALUE###" selected="selected">###OPTION###</option>
+				<!-- ###OPTIONSELECTED### -->
+				<!-- ###OPTIONNOTSELECTED### -->
+				<option value="###VALUE###">###OPTION###</option>
+				<!-- ###OPTIONNOTSELECTED### -->
+				<!-- ###SELECT### -->
+			</select>
+		</div>
 		<!-- ###TITLEDAYSELECT### end -->
+		<!-- ###TIMESTARTSELECT### begin -->
+		<!-- Combobox to select time -->
+		<div class="tx-wseevents-pi1-choosetimestart">
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.getElementById('event_select').submit();">
+				<!-- ###SELECT### -->
+				<!-- ###OPTIONSELECTED### -->
+				<option value="###VALUE###" selected="selected">###OPTION###</option>
+				<!-- ###OPTIONSELECTED### -->
+				<!-- ###OPTIONNOTSELECTED### -->
+				<option value="###VALUE###">###OPTION###</option>
+				<!-- ###OPTIONNOTSELECTED### -->
+				<!-- ###SELECT### -->
+			</select>
+		</div>
+		<!-- ###TIMESTARTSELECT### end -->
+		<!-- ###TIMEENDSELECT### begin -->
+		<!-- Combobox to select time -->
+		<div class="tx-wseevents-pi1-choosetimeend">
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.getElementById('event_select').submit();">
+				<!-- ###SELECT### -->
+				<!-- ###OPTIONSELECTED### -->
+				<option value="###VALUE###" selected="selected">###OPTION###</option>
+				<!-- ###OPTIONSELECTED### -->
+				<!-- ###OPTIONNOTSELECTED### -->
+				<option value="###VALUE###">###OPTION###</option>
+				<!-- ###OPTIONNOTSELECTED### -->
+				<!-- ###SELECT### -->
+			</select>
+		</div>
+		<!-- ###TIMEENDSELECT### end -->
+		<!-- ###CATEGORYSELECT### begin -->
+		<div class="tx-wseevents-pi1-choosecategory">
+			<!-- Combobox to select category -->
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.getElementById('event_select').submit();">
+				<!-- ###SELECT### -->
+				<!-- ###OPTIONSELECTED### -->
+				<option value="###VALUE###" style="background: ###COLOR###;" selected="selected">###OPTION###</option>
+				<!-- ###OPTIONSELECTED### -->
+				<!-- ###OPTIONNOTSELECTED### -->
+				<option value="###VALUE###" style="background: ###COLOR###;">###OPTION###</option>
+				<!-- ###OPTIONNOTSELECTED### -->
+				<!-- ###SELECT### -->
+			</select>
+		</div>
+		<!-- ###CATEGORYSELECT### end -->
 		<!-- ###TITLEROOMSELECT### begin -->
 		<!-- Combobox to select room -->
-		<form action="" method="post" name="event_room_select">
-		<input type="hidden" name="no_cache" value="1">
-		<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.event_room_select.submit()">
-			<!-- ###SELECT### -->
-			<!-- ###OPTIONSELECTED### -->
-			<option value="###VALUE###" selected="selected">###OPTION###</option>
-			<!-- ###OPTIONSELECTED### -->
-			<!-- ###OPTIONNOTSELECTED### -->
-			<option value="###VALUE###">###OPTION###</option>
-			<!-- ###OPTIONNOTSELECTED### -->
-			<!-- ###SELECT### -->
-		</select>
-		</form>
+		<div class="tx-wseevents-pi1-chooseroom">
+			<select class="tx-wseevents-select" name="###FORMSELECT###" onchange="document.getElementById('event_select').submit();">
+				<!-- ###SELECT### -->
+				<!-- ###OPTIONSELECTED### -->
+				<option value="###VALUE###" selected="selected">###OPTION###</option>
+				<!-- ###OPTIONSELECTED### -->
+				<!-- ###OPTIONNOTSELECTED### -->
+				<option value="###VALUE###">###OPTION###</option>
+				<!-- ###OPTIONNOTSELECTED### -->
+				<!-- ###SELECT### -->
+			</select>
+		</div>
 		<!-- ###TITLEROOMSELECT### end -->
+		<div style="clear:both"></div>
+		</form>
 		<table border=1>
 		<!-- ###TITLEROW### begin -->
 		<tr>
@@ -255,7 +299,7 @@
 		<tr>
 			<!-- ###TIMECOLUMN### begin -->
 			<!-- Width=###COLUMNWIDTH### -->
-			<td rowspan="###SLOTSIZE###">###SLOTBEGIN###-###SLOTEND###</td>
+			<td rowspan="###SLOTSIZE###">###SLOTBEGIN### - ###SLOTEND###</td>
 			<!-- ###TIMECOLUMN### end -->
 
 			<!-- ###TIMECOLUMNEMPTY### begin -->

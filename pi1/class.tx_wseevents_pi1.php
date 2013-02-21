@@ -945,6 +945,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		# Check for event room selection
 		$showRoom = $this->piVars['showRoom'];
 
+		# Check for event category selection
+		$showCategory = $this->piVars['showCategory'];
+
+		# Check for event begin slot selection
+		$showBegin = $this->piVars['showBegin'];
+
+		# Check for event end slot selection
+		$showEnd = $this->piVars['showEnd'];
+
 		# Check for hidden catagory links
 		$hideCat = $conf['listTimeslotView.']['hideCategoryLinks'];
 		if (empty($hideCat)) {
@@ -1037,6 +1046,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$showRoomSelector = 0;
 		}
 
+		# For showing category selector
+		$showCategorySelector = $conf['listTimeslotView.']['showCategorySelector'];
+		if (empty($showCategorySelector)) {
+			$showCategorySelector = 0;
+		}
+
+		# For showing hour selector
+		$showHourSelector = $conf['listTimeslotView.']['showHourSelector'];
+		if (empty($showHourSelector)) {
+			$showHourSelector = 0;
+		}
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -1059,6 +1080,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['selectroom']			= $this->cObj->getSubpart($template['titleroomselect'],	'###SELECT###');
 		$template['roomoption']			= $this->cObj->getSubpart($template['selectroom'],		'###OPTIONNOTSELECTED###');
 		$template['roomoptionsel']		= $this->cObj->getSubpart($template['selectroom'],		'###OPTIONSELECTED###');
+		$template['catsection']			= $this->cObj->getSubpart($template['total'],			'###CATEGORYSELECT###');
+		$template['catselect']			= $this->cObj->getSubpart($template['catsection'],		'###SELECT###');
+		$template['catoption']			= $this->cObj->getSubpart($template['catselect'],		'###OPTIONNOTSELECTED###');
+		$template['catoptionsel']		= $this->cObj->getSubpart($template['catselect'],		'###OPTIONSELECTED###');
 		$template['titlerow']		= $this->cObj->getSubpart($template['total'],		'###TITLEROW###');
 		$template['titlecol']		= $this->cObj->getSubpart($template['titlerow'],	'###TITLECOLUMN###');
 		$template['evtsection']		= $this->cObj->getSubpart($template['total'],		'###EVENTSELECT###');
@@ -1184,7 +1209,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 
 		# Create template data for rooms combobox
-		$content_room_select = '';	# Clear var;
+		$content_room_select = '';
 		$markerArray['###VALUE###'] = 0;
 		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.chooseallrooms', '[-All-]');
 		if (0 == $showRoom) {
@@ -1232,16 +1257,79 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		# Get count of slots
 		$slotLen = $event['slotsize']*60;
 		$slotCount = ($t_end - $t_start)/$slotLen;
+		$slotName = array();
+		$slotBegin = array();
+		$slotEnding = array();
 		for ( $s = 1; $s <= $slotCount+1; $s++ ) {
 			$slotName[$s] = 'Slot ' . $s;
 			$slotBegin[$s] = date('H:i', (($s-1)*$slotLen+$t_start));
+			$slotEnding[$s] = date('H:i', (($s)*$slotLen+$t_start));
 			// %H:%M
 		}
 
-#$content .= '<br>Zeitzone' . date('T Z O') . '<br>';
-#$content .= 'Start=' . $timebegin . '<br>Sekunden=' . $t_start . '<br>';
-#$content .= 'Ende=' . $timeend . '<br>Sekunden=' . $t_end . '<br>';
-#$content .= 'Slotlen=' . $slotlen . '<br>Slotcount=' . $slotcount . '<br>';
+		// Create template data for category combobox
+		$content_category_select = '';
+		$markerArray['###VALUE###'] = 0;
+		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.chooseallcategories', '[-All-]');
+		if (0 == $showCategory) {
+			$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoptionsel'], $markerArray);
+		} else {
+			$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
+		}
+		if (1 == $showCategorySelector) {
+			$allCategories = $this->getCategoryInfo($showEvent);
+			foreach ($allCategories as $thisCategory) {
+				# Set one event category option
+				$markerArray['###VALUE###'] = $thisCategory['shortkey'];
+				$markerArray['###OPTION###'] = $thisCategory['name'];
+				$markerArray['###COLOR###'] = $thisCategory['color'];
+				if ($showCategory == $thisCategory['shortkey']) {
+					$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoptionsel'], $markerArray);
+				} else {
+					$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
+				}
+			}
+		}
+
+		// show time selector
+		$slotStart = 1;
+		$slotEnd = $slotCount;
+		if (!empty($showBegin)) {
+			$slotStart = $showBegin;
+		}
+		if (!empty($showEnd)) {
+			$slotEnd = $showEnd;
+		}
+		$content_time_start_select = '';
+		$content_time_end_select = '';
+		if (1 == $showHourSelector) {
+			$template['timestartselect']	= $this->cObj->getSubpart($template['total'],		'###TIMESTARTSELECT###');
+			$template['timeendselect']		= $this->cObj->getSubpart($template['total'],		'###TIMEENDSELECT###');
+			$templateSelect					= $this->cObj->getSubpart($template['timestartselect'],	'###SELECT###');
+			$templateOption					= $this->cObj->getSubpart($templateSelect,			'###OPTIONNOTSELECTED###');
+			$templateOptionSelected			= $this->cObj->getSubpart($templateSelect,			'###OPTIONSELECTED###');
+			for ( $s = 1; $s <= $slotCount; $s++ ) {
+				$markerArray['###VALUE###'] = $s;
+				$markerArray['###OPTION###'] = $slotBegin[$s];
+				if ($slotStart == $s) {
+					$content_time_start_select .= $this->cObj->substituteMarkerArrayCached($templateOptionSelected, $markerArray);
+				} else {
+					$content_time_start_select .= $this->cObj->substituteMarkerArrayCached($templateOption, $markerArray);
+				}
+				$markerArray['###OPTION###'] = $slotEnding[$s];
+				if ($slotEnd == $s) {
+					$content_time_end_select .= $this->cObj->substituteMarkerArrayCached($templateOptionSelected, $markerArray);
+				} else {
+					$content_time_end_select .= $this->cObj->substituteMarkerArrayCached($templateOption, $markerArray);
+				}
+			}
+
+		}
+/*
+
+ */
+//		$slotStart = showBegin;
+//		$slotEnd = showEnd;
 
 		// Calculate column width if enabled
 		if (0 < $timeColWidth) {
@@ -1322,7 +1410,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			}
 
 			# Loop over all slots of a day
-			for ( $s = 1; $s <= $slotCount; $s++ ) {
+			for ( $s = $slotStart; $s <= $slotEnd; $s++ ) {
 				$content_slotRow = '';
 				# Loop over all days
 				for ( $d = 1; $d <= $dayCount; $d++ ) {
@@ -1350,6 +1438,13 @@ class tx_wseevents_pi1 extends tslib_pibase {
 									if (1 == $showDebugSql) { echo 'slot_len:' . $slot_len . '<br>getSlotSession:' . $slot_id . '<br>'; };
 									$sessionData = $this->getSlotSession($slot_id);
 									if (1 == $showDebugSql) { echo 'sessiondata:' . $sessionData . '<br>'; };
+									if (!empty($sessionData)) {
+										if ((!empty($showCategory) and ($showCategory != $sessionData['catkey']))) {
+											$slot_id = '';
+										}
+									}
+								}
+								if (!empty($slot_id)) {
 									if (!empty($sessionData)) {
 										$label = $sessionData['catnum'];  # the link text
 										//$overrulePiVars = '';//array('session' => $this->getFieldContent('uid'));
@@ -1523,6 +1618,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					}
 					$content_timeCol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
 				} else {
+					if (0 < $showRoom) {
+						$roomTime = $showRoom;
+					}
 					if (0 < $showDay) {
 						$timeDay = $showDay;
 					} else {
@@ -1600,12 +1698,33 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$subPartArray['###TITLEDAYSELECT###'] = '';
 			}
 			$subPartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subPartArray1);
+
 			if ((empty($content)) and (1 == $showRoomSelector)) {
 				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showRoom]';
 				$subPartArray1['###SELECT###'] = $content_room_select;
 				$subPartArray['###TITLEROOMSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['titleroomselect'], $markerArray, $subPartArray1);
 			} else {
 				$subPartArray['###TITLEROOMSELECT###'] = '';
+			}
+
+			if ((empty($content)) and (1 == $showCategorySelector)) {
+				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showCategory]';
+				$subPartArray1['###SELECT###'] = $content_category_select;
+				$subPartArray['###CATEGORYSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['catsection'], $markerArray, $subPartArray1);
+			} else {
+				$subPartArray['###CATEGORYSELECT###'] = '';
+			}
+
+			if ((empty($content)) and (1 == $showHourSelector)) {
+				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showBegin]';
+				$subPartArray1['###SELECT###'] = $content_time_start_select;
+				$subPartArray['###TIMESTARTSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['timestartselect'], $markerArray, $subPartArray1);
+				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showEnd]';
+				$subPartArray1['###SELECT###'] = $content_time_end_select;
+				$subPartArray['###TIMEENDSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['timeendselect'], $markerArray, $subPartArray1);
+			} else {
+				$subPartArray['###TIMESTARTSELECT###'] = '';
+				$subPartArray['###TIMEENDSELECT###'] = '';
 			}
 
 	#ToDo: At this point the selection (combo) box must be put into the template.
@@ -2214,6 +2333,29 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 
 	/**
+	 * Get info about categories of an event
+	 *
+	 * @param	integer		$event_id id of event
+	 * @return	array		array with record data of all categories of an event
+	 */
+	function getCategoryInfo($event_id) {
+//		$where = 'sys_language_uid=0 AND location=' . $loc_id . $this->cObj->enableFields('tx_wseevents_categories');
+		// ToDo: get only the categories that are used by sessions of the event
+		$where = 'sys_language_uid=0 ' . $this->cObj->enableFields('tx_wseevents_categories');
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, name, comment, shortkey, color',
+			'tx_wseevents_categories', $where, 'shortkey');
+		$id = 1;
+		$rows = array();
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$rows[$id] = $row;
+			$id++;
+		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		return $rows;
+	}
+
+
+	/**
 	 * Get id of record from time slot for given event, day, room and slot
 	 *
 	 * @param	integer		$event id of event
@@ -2285,7 +2427,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	/**
 	 * Get session data for given slot
 	 *
-	 * @param	integer		$slot_idid of a time slot
+	 * @param	integer		$slot_id id of a time slot
 	 * @return	array		array with record of session data
 	 */
 	function getSlotSession($slot_id) {
@@ -2329,10 +2471,10 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$session['catkey'] = $dataCat['shortkey'];
 				$session['catcolor'] = $dataCat['color'];
 				// We need the timeslot record for creating the iCal data
-				$where = 'uid=' . $slot_id;
-				$resSlot = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wseevents_timeslots', $where);
-				$rowSlot = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resSlot);
-				$GLOBALS['TYPO3_DB']->sql_free_result($resSlot);
+//				$where = 'uid=' . $slot_id;
+//				$resSlot = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wseevents_timeslots', $where);
+//				$rowSlot = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resSlot);
+//				$GLOBALS['TYPO3_DB']->sql_free_result($resSlot);
 			}
 		}
 		$GLOBALS['TYPO3_DB']->sql_free_result($res);
