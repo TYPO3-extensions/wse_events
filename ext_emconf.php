@@ -1,14 +1,14 @@
 <?php
 
-########################################################################
-# Extension Manager/Repository config file for ext "wse_events".
-#
-# Auto generated 21-02-2013 23:22
-#
-# Manual updates:
-# Only the data in the array - everything else is removed by next
-# writing. "version" and "dependencies" must not be touched!
-########################################################################
+/***************************************************************
+ * Extension Manager/Repository config file for ext "wse_events".
+ *
+ * Auto generated 04-03-2013 17:27
+ *
+ * Manual updates:
+ * Only the data in the array - everything else is removed by next
+ * writing. "version" and "dependencies" must not be touched!
+ ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'WSE Eventmanagement',
@@ -29,7 +29,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '0.2.6',
+	'version' => '0.2.7',
 	'constraints' => array(
 		'depends' => array(
 			'cms' => '',

@@ -44,7 +44,6 @@ if (!defined('PATH_tslib')) {
 if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
     $LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
 }
-require_once(t3lib_extMgm::extPath('wse_events') . 'class.tx_wseevents_dbplugin.php');
 
 /**
  * Class 'tx_wseevents_locations' for the 'wse_events' extension.

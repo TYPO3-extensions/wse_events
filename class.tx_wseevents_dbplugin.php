@@ -49,14 +49,10 @@ DEFINE(UTF8_EN_DASH, chr(0xE2) . chr(0x80) . chr(0x93));
 // a CR-LF combination (the default Unix line ending)
 DEFINE(CRLF, chr(0x0D) . chr(0x0A));
 
-require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
-require_once(PATH_t3lib . 'class.t3lib_page.php');
-
 // In case we're on the back end, PATH_tslib isn't defined yet.
 if (!defined('PATH_tslib')) {
 	define('PATH_tslib', t3lib_extMgm::extPath('cms') . 'tslib/');
 }
-require_once(PATH_tslib . 'class.tslib_pibase.php');
 
 // If we are in the back end, we include the extension's locallang.xml.
 if ((TYPO3_MODE == 'BE') && is_object($LANG)) {

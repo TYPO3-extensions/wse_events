@@ -27,12 +27,6 @@
 *  tx_seminars
 ***************************************************************/
 
-require_once('conf.php');
-require_once($BACK_PATH . 'init.php');
-require_once($BACK_PATH . 'template.php');
-require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_backendlist.php');
-require_once(t3lib_extMgm::extPath('wse_events') . 'class.tx_wseevents_events.php');
-
 
 /**
  * Class 'tx_wseevents_timeslotslist' for the 'wse_events' extension.
@@ -157,7 +151,7 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 
 if (1==0) {
 $content .= '---POST begin ---' . '<br />' . LF;
-$content .= t3lib_div::view_array(t3lib_div::_POST()) . '<br />' . LF;
+$content .= t3lib_utility_Debug::view_array(t3lib_div::_POST()) . '<br />' . LF;
 $content .= '---POST end ---' . '<br />' . LF;
 }
 		$slotlist = tx_wseevents_events::getEventSlotList($eventid);

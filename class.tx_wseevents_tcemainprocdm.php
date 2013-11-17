@@ -23,9 +23,6 @@
 ***************************************************************/
 
 
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
-
 /**
  * Class 'tx_wseevents_tcemainprocdm' for the 'wse_events' extension.
  *

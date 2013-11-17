@@ -238,14 +238,9 @@ $TCA['tx_wseevents_categories'] = Array (
 );
 
 
-// enable Workspace versioning only for TYPO3 v 4.0 and higher
-if (t3lib_div::int_from_ver(TYPO3_version) >= 4000000) {
-	$TCA['tx_wseevents_sessions']['ctrl']['versioningWS'] = TRUE;
-	$TCA['tx_wseevents_speakers']['ctrl']['versioningWS'] = TRUE;
-} else {
-	$TCA['tx_wseevents_sessions']['ctrl']['versioning'] = TRUE;
-	$TCA['tx_wseevents_speakers']['ctrl']['versioning'] = TRUE;
-}
+// enable Workspace versioning
+$TCA['tx_wseevents_sessions']['ctrl']['versioningWS'] = TRUE;
+$TCA['tx_wseevents_speakers']['ctrl']['versioningWS'] = TRUE;
 
 t3lib_div::loadTCA('tt_content');
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages';

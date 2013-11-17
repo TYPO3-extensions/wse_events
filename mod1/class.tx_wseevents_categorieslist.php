@@ -27,11 +27,6 @@
 *  tx_seminars
 ***************************************************************/
 
-require_once('conf.php');
-require_once($BACK_PATH . 'init.php');
-require_once($BACK_PATH . 'template.php');
-require_once(t3lib_extMgm::extPath('wse_events') . 'mod1/class.tx_wseevents_backendlist.php');
-
 
 /**
  * Class 'tx_wseevents_categorieslist' for the 'wse_events' extension.

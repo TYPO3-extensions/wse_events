@@ -1,13 +1,6 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_events.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_locations.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_rooms.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_speakers.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_categories.php');
-require_once(t3lib_extMgm::extPath('wse_events').'class.tx_wseevents_timeslots.php');
-
 $TCA['tx_wseevents_events'] = Array (
 	'ctrl' => $TCA['tx_wseevents_events']['ctrl'],
 	'interface' => Array (
@@ -634,7 +627,7 @@ $TCA['tx_wseevents_sessions'] = Array (
 				'foreign_table_where' => 'ORDER BY tx_wseevents_timeslots.name',
 				'size' => 6,
 				'minitems' => 0,
-				'maxitems' => 3,
+				'maxitems' => 5,
 			)
 		),
 		'category' => Array (

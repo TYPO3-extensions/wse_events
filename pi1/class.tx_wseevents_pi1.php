@@ -65,21 +65,6 @@
  *
  */
 
-require_once(PATH_tslib . 'class.tslib_pibase.php');
-
-/*
- * Include Static Info Tables for country selection
- */
-require_once(t3lib_extMgm::extPath('static_info_tables')
-	. 'pi1/class.tx_staticinfotables_pi1.php');
-
-/*
- * Include timeslot class for function to format time slot name
- */
-require_once(t3lib_extMgm::extPath('wse_events')
-	. 'class.tx_wseevents_timeslots.php');
-
-
 define('TAB', chr(9));
 define('LF', chr(10));
 
@@ -194,7 +179,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$conf['lastnameFirst'] = $this->pi_getFFvalue($piFlexForm, 'lastnameFirst', 'display');
 		$conf['recursive'] = $this->cObj->data['recursive'];
 
-//			return t3lib_div::view_array($conf);
+//			return t3lib_utility_Debug::view_array($conf);
 
 		# Show input page depend on selected tab
 		switch((string)$flexFormValuesArray['dynListType'])	{
@@ -447,9 +432,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		# Initializing the query parameters:
 //		$sorting = $this->conf['sorting'];
 		# Number of results to show in a listing.
-		$this->internal['results_at_a_time'] = t3lib_div::intInRange($lConf['results_at_a_time'], 0, 1000, 100);
+		$this->internal['results_at_a_time'] = t3lib_utility_Math::forceIntegerInRange($lConf['results_at_a_time'], 0, 1000, 100);
 		# The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
-		$this->internal['maxPages'] = t3lib_div::intInRange($lConf['maxPages'], 0, 1000, 2);
+		$this->internal['maxPages'] = t3lib_utility_Math::forceIntegerInRange($lConf['maxPages'], 0, 1000, 2);
 		$this->internal['searchFieldList'] = 'uid, name, category, number, speaker, room, timeslots, teaser';
 		$this->internal['orderByList'] = 'category, number, name';
 	    $where = ' AND ' . $this->internal['currentTable'] . '.'
@@ -699,9 +684,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		# Initializing the query parameters:
 //		$sorting = $this->conf['sorting'];
 		# Number of results to show in a listing.
-		$this->internal['results_at_a_time'] = t3lib_div::intInRange($lConf['results_at_a_time'], 0, 1000, 100);
+		$this->internal['results_at_a_time'] = t3lib_utility_Math::forceIntegerInRange($lConf['results_at_a_time'], 0, 1000, 100);
 		# The maximum number of "pages" in the browse-box: "Page 1", 'Page 2', etc.
-		$this->internal['maxPages'] = t3lib_div::intInRange($lConf['maxPages'], 0, 1000, 2);
+		$this->internal['maxPages'] = t3lib_utility_Math::forceIntegerInRange($lConf['maxPages'], 0, 1000, 2);
 		$this->internal['searchFieldList'] = 'name, firstname, email, info, uid';
 		$this->internal['orderByList'] = 'name, firstname, email, info, uid';
 		$this->internal['orderBy'] = 'name, firstname';
@@ -1178,7 +1163,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 
 		# Get date format for selected language
-#$content .= t3lib_div::view_array($conf);
+#$content .= t3lib_utility_Debug::view_array($conf);
 #$content .= 'index=' . $index . '<br>';
 #$content .= 'conf fmtDate=' . $conf[$index . '.']['fmtDate'] . '<br>';
 		if (!$conf[$index . '.']['fmtDate']){
@@ -1239,8 +1224,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoption'], $markerArray);
 			}
 		}
-#$content .= t3lib_div::view_array($GLOBALS['TSFE']->config['config']);
-#$content .= t3lib_div::view_array($GLOBALS['TSFE']);
+#$content .= t3lib_utility_Debug::view_array($GLOBALS['TSFE']->config['config']);
+#$content .= t3lib_utility_Debug::view_array($GLOBALS['TSFE']);
 		# Create a list with the times of slot begins
 		$timeoffsetGMT = date('O');
 		$timeoffset = date('Z');
