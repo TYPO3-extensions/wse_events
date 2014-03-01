@@ -151,12 +151,12 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 			array(
 				'tr' => array(
 					TAB . TAB . TAB . '<thead>' . LF
-						. TAB . TAB . TAB . TAB . '<tr>' . LF,
+						. TAB . TAB . TAB . TAB . '<tr class="c-headLineTable">' . LF,
 					TAB . TAB . TAB . TAB . '</tr>' . LF
 						. TAB . TAB . TAB . '</thead>' . LF
 				),
 				'defCol' => array(
-					TAB . TAB . TAB . TAB . TAB . '<td class="c-headLineTable">' . LF,
+					TAB . TAB . TAB . TAB . TAB . '<td>' . LF,
 					TAB . TAB . TAB . TAB . TAB . '</td>' . LF
 				)
 			),
@@ -200,19 +200,19 @@ class tx_wseevents_sessionslist extends tx_wseevents_backendlist{
 		$tableheader = array(
 			array(
 				TAB . TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('sessions.category') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('sessions.name') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('language') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('translate') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('sessions.timeslots') . '</span>' . LF,
 				'',
 			)

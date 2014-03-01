@@ -65,18 +65,18 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 		// Set the table layout of the event list.
 		$tableLayout = array(
 			'table' => array(
-				TAB . TAB . '<table cellpadding="0" cellspacing="0" class="typo3-dblist">' . LF,
+				TAB . TAB . '<table cellpadding="0" cellspacing="0" class="typo3-dblist" border="1" rules="rows">' . LF,
 				TAB . TAB . '</table>' . LF
 			),
 			array(
 				'tr' => array(
 					TAB . TAB . TAB . '<thead>' . LF
-						. TAB . TAB . TAB . TAB . '<tr>' . LF,
+						. TAB . TAB . TAB . TAB . '<tr class="c-headLineTable">' . LF,
 					TAB . TAB . TAB . TAB . '</tr>' . LF
 						. TAB . TAB . TAB . '</thead>' . LF
 				),
 				'defCol' => array(
-					TAB . TAB . TAB . TAB . TAB . '<td class="c-headLineTable">' . LF,
+					TAB . TAB . TAB . TAB . TAB . '<td>' . LF,
 					TAB . TAB . TAB . TAB . TAB . '</td>' . LF
 				)
 			),
@@ -108,13 +108,13 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 		$tableheader = array(
 			array(
 				TAB . TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('rooms.name') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('rooms.seats') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('rooms.number') . '</span>' . LF,
 				'',
 			)

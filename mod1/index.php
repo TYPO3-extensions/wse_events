@@ -30,13 +30,18 @@
 // initialization of the module
 unset($MCONF);
 
-$LANG->includeLLFile('EXT:lang/locallang_show_rechis.xml');
-$LANG->includeLLFile('EXT:lang/locallang_mod_web_list.xml');
-$LANG->includeLLFile('EXT:wse_events/mod1/locallang.xml');
+require('conf.php');
+require($BACK_PATH . 'init.php');
+require($BACK_PATH . 'template.php');
 
+$GLOBALS['LANG']->includeLLFile('EXT:lang/locallang_show_rechis.xml');
+$GLOBALS['LANG']->includeLLFile('EXT:lang/locallang_mod_web_list.xml');
+$GLOBALS['LANG']->includeLLFile('EXT:wse_events/mod1/locallang.xml');
+
+require_once (PATH_t3lib . 'class.t3lib_scbase.php');
 
 // This checks permissions and exits if the users has no permission for entry.
-$BE_USER->modAccess($MCONF, 1);
+$GLOBALS['BE_USER']->modAccess($MCONF, 1);
 
 
 
@@ -47,7 +52,7 @@ $BE_USER->modAccess($MCONF, 1);
  * @package		TYPO3
  * @subpackage	wse_events
  */
-class  tx_wseevents_module1 extends t3lib_SCbase {
+class tx_wseevents_module1 extends t3lib_SCbase {
 	var $pageInfo;
 
 	/** an array of available sub modules */
@@ -191,13 +196,13 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 			$this->moduleContent();
 
 			// For debuging purpose only
-			$debugline = '<br /><br /><hr />
+/*			$debugline = '<br /><br /><hr />
 						<br />### DEBUG ###<br />This is the GET/POST vars sent to the script:<br /><br />' 
 						. 'GET:' . t3lib_utility_Debug::view_array($_GET) . '<br />'
 						. 'POST:' . t3lib_utility_Debug::view_array($_POST) . '<br />'
 #						. 'pageInfo:' . t3lib_utility_Debug::view_array($this->pageInfo) . '<br />'
 #						. debug($_GET, 'GET:')
-						. '';
+						. '';*/
 
 #			$this->content .= $debugline;
 
@@ -410,12 +415,9 @@ class  tx_wseevents_module1 extends t3lib_SCbase {
 }
 
 
-
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/index.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/index.php']);
 }
-
-
 
 
 // Make instance:

@@ -52,7 +52,6 @@
  * 1567:     function getFieldContent($fN)
  * 1809:     function getSpeakerSessionList($speakerid, $eventPid)
  * 1835:     function getFieldHeader($fN)
- * 1852:     function getEventInfo($event)
  * 1867:     function getRoomInfo($loc_id)
  * 1891:     function getSlot($event, $day, $room, $slot, $showdbgsql)
  * 1913:     function getSlotLength($slot_id)
@@ -64,6 +63,9 @@
  * (This index is automatically created/updated by the extension "extdeveval")
  *
  */
+
+require_once(t3lib_extMgm::extPath('static_info_tables') . 'pi1/class.tx_staticinfotables_pi1.php');
+require_once(t3lib_extMgm::extPath('wse_events') . 'class.tx_wseevents_events.php');
 
 define('TAB', chr(9));
 define('LF', chr(10));
@@ -137,9 +139,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$lDef = array_keys($sDef);
 
 		# Initialize Static Info
-		$this->staticInfo = t3lib_div::makeInstance('tx_staticinfotables_pi1');
-		$this->staticInfo->init();
-
+//		$this->staticInfo = t3lib_div::makeInstance('tx_staticinfotables_pi1');
+//		$this->staticInfo->init();
+		$this->staticInfo = &t3lib_div::getUserObj('&tx_staticinfotables_pi1');
+		if ($this->staticInfo->needsInit())	{
+			$this->staticInfo->init();
+		}
 		# Read TypoScript settings and initialize internal variables
 
 		# Check if delimiter for speaker is set, if not use the default value
@@ -929,6 +934,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Check for event room selection
 		$showRoom = $this->piVars['showRoom'];
+		if (empty($showRoom)) {
+			$showRoom = 0;
+		}
 
 		# Check for event category selection
 		$showCategory = $this->piVars['showCategory'];
@@ -964,10 +972,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 
 		# Check for compact display of begin and end of sessions
-		$roomTime = $conf['listTimeslotView.']['showRoomTime'];
-		if (empty($roomTime)) {
-			$roomTime = 0;
+		$roomTimeSetting = $conf['listTimeslotView.']['showRoomTime'];
+		if (empty($roomTimeSetting)) {
+			$roomTimeSetting = 0;
 		}
+		$roomTime = $roomTimeSetting;
 
 		# Check for not assigned time slot color
 		$catColorNotAssigned = $conf['listTimeslotView.']['categoryColorNotAssigned'];
@@ -1043,6 +1052,17 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$showHourSelector = 0;
 		}
 
+		# For using jquery
+		$useJQuery = $conf['listTimeslotView.']['useJQuery'];
+		if (empty($useJQuery)) {
+			$useJQuery = 0;
+		}
+
+		$timeSelect = $conf['listTimeslotView.']['timeSelect.'];
+		if (empty($timeSelect)) {
+			$timeSelect = array();
+		}
+
 		# Check if template file is set, if not use the default template
 		if (!isset($conf['templateFile'])) {
 			$templateFile = 'EXT:wse_events/wseevents.tmpl';
@@ -1057,15 +1077,23 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		if ((empty($template['total'])) or (0 == $showDay)) {
 			$template['total']		= $this->cObj->getSubpart($this->templateCode, '###SLOTSALL###');
 		}
-		$template['titledayselect']		= $this->cObj->getSubpart($template['total'],			'###TITLEDAYSELECT###');
+		if (1 == $useJQuery) {
+			$template['titledayselect']		= $this->cObj->getSubpart($template['total'],		'###TITLEDAYSELECTJQUERY###');
+			$template['titleroomselect']	= $this->cObj->getSubpart($template['total'],		'###TITLEROOMSELECTJQUERY###');
+			$template['catsection']			= $this->cObj->getSubpart($template['total'],		'###CATEGORYSELECTJQUERY###');
+			$template['selectdetail']		= $this->cObj->getSubpart($template['total'],		'###SELECTDETAIL###');
+		} else {
+			$template['titledayselect']		= $this->cObj->getSubpart($template['total'],		'###TITLEDAYSELECT###');
+			$template['titleroomselect']	= $this->cObj->getSubpart($template['total'],		'###TITLEROOMSELECT###');
+			$template['catsection']			= $this->cObj->getSubpart($template['total'],		'###CATEGORYSELECT###');
+			$template['selectdetail']		= '';
+		}
 		$template['select']				= $this->cObj->getSubpart($template['titledayselect'],	'###SELECT###');
 		$template['option']				= $this->cObj->getSubpart($template['select'],			'###OPTIONNOTSELECTED###');
 		$template['optionsel']			= $this->cObj->getSubpart($template['select'],			'###OPTIONSELECTED###');
-		$template['titleroomselect']	= $this->cObj->getSubpart($template['total'],			'###TITLEROOMSELECT###');
 		$template['selectroom']			= $this->cObj->getSubpart($template['titleroomselect'],	'###SELECT###');
 		$template['roomoption']			= $this->cObj->getSubpart($template['selectroom'],		'###OPTIONNOTSELECTED###');
 		$template['roomoptionsel']		= $this->cObj->getSubpart($template['selectroom'],		'###OPTIONSELECTED###');
-		$template['catsection']			= $this->cObj->getSubpart($template['total'],			'###CATEGORYSELECT###');
 		$template['catselect']			= $this->cObj->getSubpart($template['catsection'],		'###SELECT###');
 		$template['catoption']			= $this->cObj->getSubpart($template['catselect'],		'###OPTIONNOTSELECTED###');
 		$template['catoptionsel']		= $this->cObj->getSubpart($template['catselect'],		'###OPTIONSELECTED###');
@@ -1075,8 +1103,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		$template['evtselect']		= $this->cObj->getSubpart($template['evtsection'],	'###SELECT###');
 		$template['evtoption']		= $this->cObj->getSubpart($template['evtselect'],	'###OPTIONNOTSELECTED###');
 		$template['evtoptionsel']	= $this->cObj->getSubpart($template['evtselect'],	'###OPTIONSELECTED###');
-		$template['option']			= $this->cObj->getSubpart($template['select'],		'###OPTIONNOTSELECTED###');
-		$template['optionsel']		= $this->cObj->getSubpart($template['select'],		'###OPTIONSELECTED###');
+//		$template['option']			= $this->cObj->getSubpart($template['select'],		'###OPTIONNOTSELECTED###');
+//		$template['optionsel']		= $this->cObj->getSubpart($template['select'],		'###OPTIONSELECTED###');
 		$template['headerrow']		= $this->cObj->getSubpart($template['total'],		'###HEADERROW###');
 		$template['headercol']		= $this->cObj->getSubpart($template['headerrow'],	'###HEADERCOLUMN###');
 		$template['headercolempty']	= $this->cObj->getSubpart($template['headerrow'],	'###HEADERCOLUMNEMPTY###');
@@ -1150,16 +1178,18 @@ class tx_wseevents_pi1 extends tslib_pibase {
 //			$where .= ' AND event=' . $showevent;
 //		}
 		# Get event info
-		$event = $this->getEventInfo($showEvent);
+		$event = tx_wseevents_events::getEventInfo($showEvent);
 
 		# Create template data for eventday combobox
 		$content_select = '';	# Clear var;
-		$markerArray['###VALUE###'] = 0;
-		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.choosealldays', '[-All-]');
-		if (0 == $showDay) {
-			$content_select .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
-		} else {
-			$content_select .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
+		if (0 == $useJQuery) {
+			$markerArray['###VALUE###'] = 0;
+			$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.choosealldays', '[-All-]');
+			if (0 == $showDay) {
+				$content_select .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
+			} else {
+				$content_select .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
+			}
 		}
 
 		# Get date format for selected language
@@ -1186,7 +1216,12 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			# Set one event day option
 			$markerArray['###VALUE###'] = $d;
 			$markerArray['###OPTION###'] = $weekdays[$d] . ' - ' . $dayName[$d];
-			if ($showDay==$d) {
+			if (($showDay==$d) or (1 == $useJQuery)) {
+				if ( $d & 1 ) {
+					$markerArray['###SELECTPOS###'] = 'left';
+				} else {
+					$markerArray['###SELECTPOS###'] = 'right';
+				}
 				$content_select .= $this->cObj->substituteMarkerArrayCached($template['optionsel'], $markerArray);
 			} else {
 				$content_select .= $this->cObj->substituteMarkerArrayCached($template['option'], $markerArray);
@@ -1195,12 +1230,14 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		# Create template data for rooms combobox
 		$content_room_select = '';
-		$markerArray['###VALUE###'] = 0;
-		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.chooseallrooms', '[-All-]');
-		if (0 == $showRoom) {
-			$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoptionsel'], $markerArray);
-		} else {
-			$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoption'], $markerArray);
+		if (0 == $useJQuery) {
+			$markerArray['###VALUE###'] = 0;
+			$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.chooseallrooms', '[-All-]');
+			if (0 == $showRoom) {
+				$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoptionsel'], $markerArray);
+			} else {
+				$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoption'], $markerArray);
+			}
 		}
 
 		# Get count of rooms and name of rooms
@@ -1218,7 +1255,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			# Set one event room option
 			$markerArray['###VALUE###'] = $r;
 			$markerArray['###OPTION###'] = $roomName[$r];
-			if ($showRoom==$r) {
+			if (($showRoom==$r) or (1 == $useJQuery)) {
 				$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoptionsel'], $markerArray);
 			} else {
 				$content_room_select .= $this->cObj->substituteMarkerArrayCached($template['roomoption'], $markerArray);
@@ -1254,21 +1291,27 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 		// Create template data for category combobox
 		$content_category_select = '';
-		$markerArray['###VALUE###'] = 0;
-		$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.chooseallcategories', '[-All-]');
-		if (0 == $showCategory) {
-			$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoptionsel'], $markerArray);
-		} else {
-			$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
+		if (0 == $useJQuery) {
+			$markerArray['###VALUE###'] = 0;
+			$markerArray['###OPTION###'] = $this->pi_getLL('tx_wseevents_sessions.chooseallcategories', '[-All-]');
+			if (0 == $showCategory) {
+				$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoptionsel'], $markerArray);
+			} else {
+				$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
+			}
 		}
 		if (1 == $showCategorySelector) {
 			$allCategories = $this->getCategoryInfo($showEvent);
 			foreach ($allCategories as $thisCategory) {
 				# Set one event category option
-				$markerArray['###VALUE###'] = $thisCategory['shortkey'];
+				if (0 == $useJQuery) {
+					$markerArray['###VALUE###'] = $thisCategory['shortkey'];
+				} else {
+					$markerArray['###VALUE###'] = $thisCategory['uid'];
+				}
 				$markerArray['###OPTION###'] = $thisCategory['name'];
 				$markerArray['###COLOR###'] = $thisCategory['color'];
-				if ($showCategory == $thisCategory['shortkey']) {
+				if (($showCategory == $thisCategory['shortkey']) or (1 == $useJQuery)) {
 					$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoptionsel'], $markerArray);
 				} else {
 					$content_category_select .= $this->cObj->substituteMarkerArrayCached($template['catoption'], $markerArray);
@@ -1287,25 +1330,43 @@ class tx_wseevents_pi1 extends tslib_pibase {
 		}
 		$content_time_start_select = '';
 		$content_time_end_select = '';
+		$content_time_select = '';
 		if (1 == $showHourSelector) {
-			$template['timestartselect']	= $this->cObj->getSubpart($template['total'],		'###TIMESTARTSELECT###');
-			$template['timeendselect']		= $this->cObj->getSubpart($template['total'],		'###TIMEENDSELECT###');
-			$templateSelect					= $this->cObj->getSubpart($template['timestartselect'],	'###SELECT###');
-			$templateOption					= $this->cObj->getSubpart($templateSelect,			'###OPTIONNOTSELECTED###');
-			$templateOptionSelected			= $this->cObj->getSubpart($templateSelect,			'###OPTIONSELECTED###');
-			for ( $s = 1; $s <= $slotCount; $s++ ) {
-				$markerArray['###VALUE###'] = $s;
-				$markerArray['###OPTION###'] = $slotBegin[$s];
-				if ($slotStart == $s) {
-					$content_time_start_select .= $this->cObj->substituteMarkerArrayCached($templateOptionSelected, $markerArray);
-				} else {
-					$content_time_start_select .= $this->cObj->substituteMarkerArrayCached($templateOption, $markerArray);
+			if (1 == $useJQuery) {
+				$template['timeselect']			= $this->cObj->getSubpart($template['total'],		'###TIMESELECTJQUERY###');
+				$template['timestartselect']	= '';
+				$template['timeendselect']		= '';
+				$templateSelect					= $this->cObj->getSubpart($template['timeselect'],	'###SELECT###');
+				$templateOption					= $this->cObj->getSubpart($templateSelect,			'###OPTIONNOTSELECTED###');
+				$templateOptionSelected			= $this->cObj->getSubpart($templateSelect,			'###OPTIONSELECTED###');
+				if (count($timeSelect) > 0) {
+					foreach ($timeSelect as $timeRange) {
+						$markerArray['###VALUE###'] = $timeRange['Slots'];
+						$markerArray['###OPTION###'] = $timeRange['Name'];
+						$content_time_select .= $this->cObj->substituteMarkerArrayCached($templateOptionSelected, $markerArray);
+					}
 				}
-				$markerArray['###OPTION###'] = $slotEnding[$s];
-				if ($slotEnd == $s) {
-					$content_time_end_select .= $this->cObj->substituteMarkerArrayCached($templateOptionSelected, $markerArray);
-				} else {
-					$content_time_end_select .= $this->cObj->substituteMarkerArrayCached($templateOption, $markerArray);
+			} else {
+				$template['timeselect']			= '';
+				$template['timestartselect']	= $this->cObj->getSubpart($template['total'],		'###TIMESTARTSELECT###');
+				$template['timeendselect']		= $this->cObj->getSubpart($template['total'],		'###TIMEENDSELECT###');
+				$templateSelect					= $this->cObj->getSubpart($template['timestartselect'],	'###SELECT###');
+				$templateOption					= $this->cObj->getSubpart($templateSelect,			'###OPTIONNOTSELECTED###');
+				$templateOptionSelected			= $this->cObj->getSubpart($templateSelect,			'###OPTIONSELECTED###');
+				for ( $s = 1; $s <= $slotCount; $s++ ) {
+					$markerArray['###VALUE###'] = $s;
+					$markerArray['###OPTION###'] = $slotBegin[$s];
+					if ($slotStart == $s) {
+						$content_time_start_select .= $this->cObj->substituteMarkerArrayCached($templateOptionSelected, $markerArray);
+					} else {
+						$content_time_start_select .= $this->cObj->substituteMarkerArrayCached($templateOption, $markerArray);
+					}
+					$markerArray['###OPTION###'] = $slotEnding[$s];
+					if ($slotEnd == $s) {
+						$content_time_end_select .= $this->cObj->substituteMarkerArrayCached($templateOptionSelected, $markerArray);
+					} else {
+						$content_time_end_select .= $this->cObj->substituteMarkerArrayCached($templateOption, $markerArray);
+					}
 				}
 			}
 
@@ -1346,6 +1407,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 
 			# Loop over all days
 			for ( $d = 1; $d <= $dayCount; $d++ ) {
+				$roomTime = $roomTimeSetting;
 				if (($showDay == $d) or (0 == $showDay)) {
 					# Loop over all rooms
 					$newRoomCount = 0;
@@ -1359,6 +1421,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							if (0 < $visible[$d][$r]) {
 								$newRoomCount += 1;
 								$markerArray = array();
+								$markerArray['###DAYNR###'] = $d;
+								$markerArray['###ROOMNR###'] = $r;
 								$markerArray['###HEADERROOM###'] = $roomName[$r];
 								# Add column width if enabled
 								if ($timeColWidth>0) {
@@ -1372,6 +1436,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					}
 
 					$markerArray = array();
+					$markerArray['###DAYNR###'] = $d;
+					$markerArray['###ROOMNR###'] = $r;
 					$markerArray['###ROOMCOUNT###'] = $newRoomCount;
 					$markerArray['###TITLEDAY###'] = $dayName[$d];
 					$markerArray['###TITLEWEEKDAY###'] = $weekdays[$d];
@@ -1385,6 +1451,8 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					if ((0 == $showDay) and ($d<$dayCount)) {
 						if (0 < $dayDelimiterWidth) {
 							$markerArray = array();
+							$markerArray['###DAYNR###'] = $d;
+							$markerArray['###ROOMNR###'] = $r;
 							$markerArray['###COLUMNWIDTH###'] = $dayDelimiterWidth . '%';
 							$markerArray['###DAYDELIMITER###'] = $dayDelimiterClass;
 							$content_title .= $this->cObj->substituteMarkerArrayCached($template['headercolempty'], $markerArray);
@@ -1501,6 +1569,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 										$markerArray['###SLOTLINK###'] = '';
 										$markerArray['###SLOTLINKNAME###'] = '';
 									}
+									$markerArray['###DAYNR###'] = $d;
+									$markerArray['###ROOMNR###'] = $r;
+									$markerArray['###SLOTNR###'] = $s;
 									$markerArray['###SLOTDAY###'] = $d;
 									$markerArray['###SLOTROOM###'] = $r;
 									$markerArray['###SLOTNUM###'] = $s;
@@ -1531,6 +1602,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 								} else {
 									if (empty($used[$s][$d][$r])) {
 										$markerArray = array();
+										$markerArray['###DAYNR###'] = $d;
+										$markerArray['###ROOMNR###'] = $r;
+										$markerArray['###SLOTNR###'] = $s;
 										$markerArray['###SLOTDAY###'] = $d;
 										$markerArray['###SLOTROOM###'] = $r;
 										$markerArray['###SLOTNUM###'] = $s;
@@ -1564,6 +1638,9 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						if ((0 == $showDay) and ($d < $dayCount)) {
 							if (0 < $dayDelimiterWidth) {
 								$markerArray = array();
+								$markerArray['###DAYNR###'] = $d;
+								$markerArray['###ROOMNR###'] = 0;
+								$markerArray['###SLOTNR###'] = $s;
 	/*
 								$markerArray['###SLOTDAY###'] = '';
 								$markerArray['###SLOTROOM###'] = '';
@@ -1601,6 +1678,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					if (0 < $timeColWidth) {
 						$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
 					}
+					if (1 == $showDaysVertical) {
+						$markerArray['###DAYNR###'] = $showDay;
+					} else {
+						$markerArray['###DAYNR###'] = 0;
+					}
 					$content_timeCol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
 				} else {
 					if (0 < $showRoom) {
@@ -1615,6 +1697,13 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							}
 						}
 					}
+					if (empty($used[$s][$timeDay][$roomTime])) {
+						for ( $i=1; $i<=2; $i++ ) {
+							if (!empty($used[$s][$timeDay][$i])) {
+								$roomTime = $i;
+							}
+						}
+					}
 					if (!empty($used[$s][$timeDay][$roomTime])) {
 						$slot_len = $used[$s][$timeDay][$roomTime];
 						if (0 < $slot_len) {
@@ -1625,6 +1714,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 							if (0 < $timeColWidth) {
 								$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
 							}
+							if (1 == $showDaysVertical) {
+								$markerArray['###DAYNR###'] = $showDay;
+							} else {
+								$markerArray['###DAYNR###'] = 0;
+							}
 							$content_timeCol = $this->cObj->substituteMarkerArrayCached($template['timecol'], $markerArray);
 						}
 					} else {
@@ -1634,6 +1728,11 @@ class tx_wseevents_pi1 extends tslib_pibase {
 						# Add column width if enabled
 						if (0 < $timeColWidth) {
 							$markerArray['###COLUMNWIDTH###']  = $timeColWidth . '%';
+						}
+						if (1 == $showDaysVertical) {
+							$markerArray['###DAYNR###'] = $showDay;
+						} else {
+							$markerArray['###DAYNR###'] = 0;
 						}
 						$content_timeColFree = $this->cObj->substituteMarkerArrayCached($template['timecolfree'], $markerArray);
 					}
@@ -1646,6 +1745,7 @@ class tx_wseevents_pi1 extends tslib_pibase {
 				$subPartArray1['###TIMECOLUMN###'] = $content_timeCol;
 				$subPartArray1['###TIMECOLUMNEMPTY###'] = $content_timeColFree;
 
+				$markerArray['###SLOTNR###'] = $s;
 				$content_slot .= $this->cObj->substituteMarkerArrayCached($template['slotrow'], $markerArray, $subPartArray1);
 			}
 
@@ -1678,43 +1778,118 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			$markerArray['###FORMSELECT###'] = $this->prefixId . '[showDay]';
 			$markerArray['###FORMSEND###'] = htmlspecialchars($this->pi_getLL('tx_wseevents_sessions.showselection', '[Show selection]'));
 			if (empty($content)) {
-				$subPartArray['###TITLEDAYSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['titledayselect'], $markerArray, $subPartArray1);
+				if (1 == $useJQuery) {
+					$subPartArray['###TITLEDAYSELECT###'] = '';
+					$subPartArray['###TITLEDAYSELECTJQUERY###'] = $this->cObj->substituteMarkerArrayCached($template['titledayselect'], $markerArray, $subPartArray1);
+				} else {
+					$subPartArray['###TITLEDAYSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['titledayselect'], $markerArray, $subPartArray1);
+					$subPartArray['###TITLEDAYSELECTJQUERY###'] = '';
+				}
 			} else {
 				$subPartArray['###TITLEDAYSELECT###'] = '';
+				$subPartArray['###TITLEDAYSELECTJQUERY###'] = '';
 			}
 			$subPartArray['###TITLEROW###']  = $this->cObj->substituteMarkerArrayCached($template['titlerow'], $markerArray, $subPartArray1);
 
 			if ((empty($content)) and (1 == $showRoomSelector)) {
 				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showRoom]';
 				$subPartArray1['###SELECT###'] = $content_room_select;
-				$subPartArray['###TITLEROOMSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['titleroomselect'], $markerArray, $subPartArray1);
+				if (1 == $useJQuery) {
+					$subPartArray['###TITLEROOMSELECTJQUERY###'] = $this->cObj->substituteMarkerArrayCached($template['titleroomselect'], $markerArray, $subPartArray1);
+					$subPartArray['###TITLEROOMSELECT###'] =  '';
+				} else {
+					$subPartArray['###TITLEROOMSELECTJQUERY###'] = '';
+					$subPartArray['###TITLEROOMSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['titleroomselect'], $markerArray, $subPartArray1);
+				}
 			} else {
 				$subPartArray['###TITLEROOMSELECT###'] = '';
+				$subPartArray['###TITLEROOMSELECTJQUERY###'] = '';
 			}
 
 			if ((empty($content)) and (1 == $showCategorySelector)) {
 				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showCategory]';
 				$subPartArray1['###SELECT###'] = $content_category_select;
-				$subPartArray['###CATEGORYSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['catsection'], $markerArray, $subPartArray1);
+				if (1 == $useJQuery) {
+					$subPartArray['###CATEGORYSELECTJQUERY###'] = $this->cObj->substituteMarkerArrayCached($template['catsection'], $markerArray, $subPartArray1);
+					$subPartArray['###CATEGORYSELECT###'] = '';
+				} else {
+					$subPartArray['###CATEGORYSELECTJQUERY###'] = '';
+					$subPartArray['###CATEGORYSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['catsection'], $markerArray, $subPartArray1);
+				}
 			} else {
 				$subPartArray['###CATEGORYSELECT###'] = '';
+				$subPartArray['###CATEGORYSELECTJQUERY###'] = '';
 			}
 
 			if ((empty($content)) and (1 == $showHourSelector)) {
+				$markerArray['###FORMSELECT###'] = '';
+				$subPartArray1['###SELECT###'] = $content_time_select;
+				$subPartArray['###TIMESELECTJQUERY###'] = $this->cObj->substituteMarkerArrayCached($template['timeselect'], $markerArray, $subPartArray1);
 				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showBegin]';
 				$subPartArray1['###SELECT###'] = $content_time_start_select;
 				$subPartArray['###TIMESTARTSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['timestartselect'], $markerArray, $subPartArray1);
 				$markerArray['###FORMSELECT###'] = $this->prefixId . '[showEnd]';
 				$subPartArray1['###SELECT###'] = $content_time_end_select;
 				$subPartArray['###TIMEENDSELECT###'] = $this->cObj->substituteMarkerArrayCached($template['timeendselect'], $markerArray, $subPartArray1);
+				$markerArray['###HIDEDAYS###'] = '';
+				// Ermitteln von Datum und Uhrzeit, umgerechnet in DAYNR und SLOTNR
+				// Wenn Datum vor dem 1.Tag oder nach dem letzten Tag liegt, Tag=1 und Slot=0
+				list($thisDayNr, $thisSlotNr) = tx_wseevents_events::checkForToday($showEvent);
+				$markerArray['###HIDEDAYS###'] .= '$(".tx-wseevents-pi1-choosetimeday input").each(function( index ) {
+					var dayClass = ".daynr-" + $(this).val();
+					if ($(this).val() == "' . $thisDayNr .  '") {
+						$(this).prop( "checked", true );
+					} else {
+						$(this).prop( "checked", false );
+					}
+					var check = $(this).attr("checked");
+					if ("checked" == check) {
+						$(dayClass).removeClass("tx-wseevents-pi1-hide");
+					} else {
+						$(dayClass).addClass("tx-wseevents-pi1-hide");
+					}
+				});' . LF;
+				$markerArray['###HIDEDAYS###'] .= '$(".tx-wseevents-pi1-choosetime input").each(function( index ) {
+					var slotlist = $(this).val();
+					var slots = new Array();
+					slots = slotlist.split(",");
+					var checkVal = false;
+					for (var i = 0; i < slots.length; i++) {
+						if (slots[i] >= ' . $thisSlotNr . ') {
+							checkVal = true;
+						}
+					}
+					$(this).prop( "checked", checkVal );
+					var check = $(this).attr("checked");
+					for (var i = 0; i < slots.length; i++) {
+						var timeClass = ".slotnr-" + slots[i];
+						if ("checked" == check) {
+							$(timeClass).removeClass("tx-wseevents-pi1-hide");
+						} else {
+							$(timeClass).addClass("tx-wseevents-pi1-hide");
+						}
+					}
+				});' . LF;
+				$markerArray['###RESTRICT_SELECTION###'] = $this->pi_getLL('tx_wseevents_sessions.slot_choose_select', 'Restrict selection');
+				$subPartArray['###SELECTDETAIL###'] = $this->cObj->substituteMarkerArrayCached($template['selectdetail'], $markerArray, $subPartArray1);
 			} else {
+				$subPartArray['###TIMESELECTJQUERY###'] = '';
 				$subPartArray['###TIMESTARTSELECT###'] = '';
 				$subPartArray['###TIMEENDSELECT###'] = '';
+				$subPartArray['###SELECTDETAIL###'] = '';
 			}
 
-	#ToDo: At this point the selection (combo) box must be put into the template.
+				#ToDo: At this point the selection (combo) box must be put into the template.
 
-			$content .= $this->cObj->substituteMarkerArrayCached($template['total'], array(), $subPartArray);
+			$markerArray = array();
+			if (1 == $showDaysVertical) {
+				$markerArray['###DAYNR###'] = $showDay;
+				$markerArray['###DAYNR1###'] = $showDay - 1;
+			} else {
+				$markerArray['###DAYNR###'] = 0;
+				$markerArray['###DAYNR1###'] = 0;
+			}
+			$content .= $this->cObj->substituteMarkerArrayCached($template['total'], $markerArray, $subPartArray);
 
 			if ((0 == $showDay) or (0 == $showDaysVertical)) {
 				$showDay = $dayCount;
@@ -2204,16 +2379,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 			break;
 
 			case 'documents':
-				foreach (explode(',', $this->internal['currentRow'][$fN]) as $k){
-					# ToDo: Ticket #15, #17
-				    $documentsName = '<a href="uploads/tx_wseevents/' . $k . '" '
-						. $this->documentsTarget . '>' . $k . '</a>';
-					if (isset($docContent)) {
-						$docContent .= $this->internal['documentsdelimiter'] . $documentsName;
-					} else {
-						$docContent = $documentsName;
-					}
-				}
 				# Check if any presentation handouts are available
 				if (empty($this->internal['currentRow'][$fN])) {
 					# if not then check for the date and get back a message if event is in the past
@@ -2221,6 +2386,17 @@ class tx_wseevents_pi1 extends tslib_pibase {
 					$thisDate = date('Ymd');
 					if ($thisDate>=$eventDate) {
 						$docContent = $this->pi_getLL('tx_wseevents_sessions.nohandout');
+					}
+				} else {
+					foreach (explode(',', $this->internal['currentRow'][$fN]) as $k){
+						# ToDo: Ticket #15, #17
+						$documentsName = '<a href="uploads/tx_wseevents/' . $k . '" '
+							. $this->documentsTarget . '>' . $k . '</a>';
+						if (isset($docContent)) {
+							$docContent .= $this->internal['documentsdelimiter'] . $documentsName;
+						} else {
+							$docContent = $documentsName;
+						}
 					}
 				}
 				return $docContent;
@@ -2278,24 +2454,6 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	}
 
 
-
-
-	/**
-	 * Get info about an event
-	 *
-	 * @param	integer		$event id of event
-	 * @return	array		record data of event
-	 */
-	function getEventInfo($event) {
-		$where = 'sys_language_uid=0 AND uid=' . $event . $this->cObj->enableFields('tx_wseevents_events');
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('name, location, begin, length, timebegin,
-			timeend, slotsize, maxslot, defslotcount', 'tx_wseevents_events', $where);
-		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		$GLOBALS['TYPO3_DB']->sql_free_result($res);
-		return $row;
-	}
-
-
 	/**
 	 * Get info about rooms of an location
 	 *
@@ -2325,8 +2483,15 @@ class tx_wseevents_pi1 extends tslib_pibase {
 	 */
 	function getCategoryInfo($event_id) {
 //		$where = 'sys_language_uid=0 AND location=' . $loc_id . $this->cObj->enableFields('tx_wseevents_categories');
-		// ToDo: get only the categories that are used by sessions of the event
-		$where = 'sys_language_uid=0 ' . $this->cObj->enableFields('tx_wseevents_categories');
+		$where = 'event=' . $event_id . ' AND sys_language_uid=0 ' . $this->cObj->enableFields('tx_wseevents_sessions');
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('category', 'tx_wseevents_sessions', $where, '');
+		$categoryIds = array();
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$categoryIds[] = $row['category'];
+		}
+		$uniqueCategoryIds = implode(',', array_unique($categoryIds));
+
+		$where = 'sys_language_uid=0 AND uid in (' . $uniqueCategoryIds . ')' . $this->cObj->enableFields('tx_wseevents_categories');
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, name, comment, shortkey, color',
 			'tx_wseevents_categories', $where, 'shortkey');
 		$id = 1;

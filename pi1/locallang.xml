@@ -41,6 +41,7 @@
 			<label index="tx_wseevents_sessions.slot_notdefined">free</label>
 			<label index="tx_wseevents_sessions.slot_notassigned_catkey">UNUSED</label>
 			<label index="tx_wseevents_sessions.slot_notdefined_catkey">NONE</label>
+			<label index="tx_wseevents_sessions.slot_choose_select">Restrict selection</label>
 			<label index="back">Back</label>
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -75,6 +76,7 @@
 			<label index="tx_wseevents_sessions.slot_notdefined">Frei</label>
 			<label index="tx_wseevents_sessions.slot_notassigned_catkey">NICHT VERWENDET</label>
 			<label index="tx_wseevents_sessions.slot_notdefined_catkey">KEIN</label>
+			<label index="tx_wseevents_sessions.slot_choose_select">Auswahl einschränken</label>
 			<label index="back">Zurück</label>
 		</languageKey>
 		<languageKey index="nl" type="array">
@@ -104,6 +106,7 @@
 			<label index="tx_wseevents_sessions.slot_headerbegin">Aanvang</label>
 			<label index="tx_wseevents_sessions.slot_notassigned">niet in gebruik</label>
 			<label index="tx_wseevents_sessions.slot_notdefined">vrije</label>
+			<label index="tx_wseevents_sessions.slot_choose_select">Restrict selection</label>
 			<label index="back">Back</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
@@ -135,6 +138,7 @@
 			<label index="tx_wseevents_sessions.slot_notdefined">libre</label>
 			<label index="tx_wseevents_sessions.slot_notassigned_catkey">INUTILISÉ</label>
 			<label index="tx_wseevents_sessions.slot_notdefined_catkey">AUCUN</label>
+			<label index="tx_wseevents_sessions.slot_choose_select">Restrict selection</label>
 			<label index="back">Retour</label>
 		</languageKey>
 	</data>

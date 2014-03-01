@@ -332,18 +332,18 @@ $content .= '---POST end ---' . '<br />' . LF;
 		// Set the table layout of the time slot list.
 		$tableLayout = array(
 			'table' => array(
-				TAB . '<table cellpadding="0" cellspacing="0" class="typo3-dblist">' . LF,
+				TAB . '<table cellpadding="0" cellspacing="0" class="typo3-dblist" border="1" rules="rows">' . LF,
 				TAB . '</table>' . LF
 			),
 			array(
 				'tr' => array(
 					TAB . TAB . '<thead>' . LF
-						. TAB . TAB . TAB . '<tr>' . LF,
+						. TAB . TAB . TAB . '<tr class="c-headLineTable">' . LF,
 					TAB . TAB . TAB . '</tr>' . LF
 						. TAB . TAB . '</thead>' . LF
 				),
 				'defCol' => array(
-					TAB . TAB . TAB . TAB . '<td class="c-headLineTable">' . LF,
+					TAB . TAB . TAB . TAB . '<td>' . LF,
 					TAB . TAB . TAB . TAB . '</td>' . LF
 				)
 			),
@@ -375,22 +375,22 @@ $content .= '---POST end ---' . '<br />' . LF;
 		$tableheader = array(
 			array(
 				TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('timeslots.name') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('timeslots.eventday') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('timeslots.room') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('timeslots.begin') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('timeslots.length') . '</span>' . LF,
 				TAB . TAB . TAB . TAB . TAB
-					. '<span style="color: #ffffff; font-weight: bold;">'
+					. '<span style="font-weight: bold;">'
 					. $LANG->getLL('timeslots.id') . '</span>' . LF,
 				'',
 			)

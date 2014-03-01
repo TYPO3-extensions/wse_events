@@ -701,15 +701,16 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @return	string		Language icon
 	 */
 	function languageFlag($sys_language_uid)	{
-		return ($this->languageIconTitles[$sys_language_uid]['flagIcon'] ? '<img src="' . $this->languageIconTitles[$sys_language_uid]['flagIcon'] . '" class="absmiddle" alt="" />&nbsp;' : '')
+		return t3lib_iconWorks::getSpriteIcon($this->languageIconTitles[$sys_language_uid]['flagIcon'])
 			. htmlspecialchars($this->languageIconTitles[$sys_language_uid]['title']);
 	}
 
 	/**
 	 * Creates the URL to this script, including all relevant GPvars
 	 *
-	 * @param	string		Alternative id value. Enter blank string for the current id ($this->id)
-	 * @return	string		URL
+	 * @param string $altId
+	 * @internal param \Alternative $string id value. Enter blank string for the current id ($this->id)
+	 * @return    string        URL
 	 */
 	function listURL($altId='')	{
 		return $this->script . '?id=' . (strcmp($altId, '')?$altId:$this->id);
@@ -758,7 +759,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 #						. '&returnUrl=' . t3lib_div::getIndpEnv('REQUEST_URI')
 					);
 
-					$lC = ($this->languageIconTitles[$lUid_OnPage]['flagIcon'] ? '<img src="' . $this->languageIconTitles[$lUid_OnPage]['flagIcon'] . '" class="absmiddle" alt="" />' : $this->languageIconTitles[$lUid_OnPage]['title']);
+					$lC = $this->languageFlag($lUid_OnPage);
 					$lC = '<a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/' . htmlspecialchars($href) . '">' . $lC . '</a> ';
 
 					$lNew .= $lC;

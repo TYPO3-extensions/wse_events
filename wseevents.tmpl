@@ -176,8 +176,22 @@
 
 
 <!-- ###SLOTSALL### begin -->
+		<!-- ###SELECTDETAIL### begin -->
+		<div><button id="tx-wseevents-pi1-detail">Auswahl einschränken</button></div>
+		<script type="text/javascript">
+			$(function() {
+				$('#tx-wseevents-pi1-settings').hide();
+				$('#tx-wseevents-pi1-detail').click(function() {
+					$('#tx-wseevents-pi1-settings').toggle();
+					return false;
+				});
+				###HIDEDAYS###
+			});
+		</script>
+		<!-- ###SELECTDETAIL### begin -->
+		<div id="tx-wseevents-pi1-settings">
 		<!-- wse_events default template: time slot view begin -->
-		<form action="" method="post" name="event_select" id="event_select">
+		<form action="" method="post" name="event_select" id="event_select" class="daynr-###DAYNR1###">
 		<input type="hidden" name="no_cache" value="1">
 		<!-- ###EVENTSELECT### begin -->
 		<div class="tx-wseevents-pi1-chooseevent">
@@ -210,6 +224,34 @@
 			</select>
 		</div>
 		<!-- ###TITLEDAYSELECT### end -->
+		<!-- ###TITLEDAYSELECTJQUERY### begin -->
+		<!-- Checkboxes to show/hide days -->
+		<div class="tx-wseevents-pi1-choosetimeday">
+			<!-- ###SELECT### -->
+			<!-- ###OPTIONSELECTED### -->
+			<span class="select-###SELECTPOS###"><input type="checkbox" value="###VALUE###" checked="checked">&nbsp;###OPTION###</input></span>
+			<!-- ###OPTIONSELECTED### -->
+			<!-- ###OPTIONNOTSELECTED### -->
+			<span class="select-###SELECTPOS###"><input type="checkbox" value="###VALUE###">&nbsp;###OPTION###</input></span>
+			<!-- ###OPTIONNOTSELECTED### -->
+			<!-- ###SELECT### -->
+		</div>
+		<div style="clear:both"></div>
+		<script type="text/javascript">
+			$(function() {
+				$('.tx-wseevents-pi1-choosetimeday input').change(function() {
+					var dayClass = '.daynr-' + $(this).val();
+					var check = $(this).attr('checked');
+					if ('checked' == check) {
+						$(dayClass).removeClass('tx-wseevents-pi1-hide');
+					} else {
+						$(dayClass).addClass('tx-wseevents-pi1-hide');
+					}
+					return false;
+				});
+			});
+		</script>
+		<!-- ###TITLEDAYSELECTJQUERY### end -->
 		<!-- ###TIMESTARTSELECT### begin -->
 		<!-- Combobox to select time -->
 		<div class="tx-wseevents-pi1-choosetimestart">
@@ -240,6 +282,38 @@
 			</select>
 		</div>
 		<!-- ###TIMEENDSELECT### end -->
+		<!-- ###TIMESELECTJQUERY### begin -->
+		<div class="tx-wseevents-pi1-choosetime">
+			<!-- ###SELECT### -->
+			<!-- ###OPTIONSELECTED### -->
+			<span class="select-###SELECTPOS###"><input type="checkbox" value="###VALUE###" checked="checked">&nbsp;###OPTION###</input></span>
+			<!-- ###OPTIONSELECTED### -->
+			<!-- ###OPTIONNOTSELECTED### -->
+			<span class="select-###SELECTPOS###"><input type="checkbox" value="###VALUE###">&nbsp;###OPTION###</input></span>
+			<!-- ###OPTIONNOTSELECTED### -->
+			<!-- ###SELECT### -->
+		</div>
+		<div style="clear:both"></div>
+		<script type="text/javascript">
+			$(function() {
+				$('.tx-wseevents-pi1-choosetime input').change(function() {
+					var check = $(this).attr('checked');
+					var slotlist = $(this).val();
+					var slots = new Array();
+					slots = slotlist.split(',');
+					for (var i = 0; i < slots.length; i++) {
+						var timeClass = '.slotnr-' + slots[i];
+						if ('checked' == check) {
+							$(timeClass).removeClass('tx-wseevents-pi1-hide');
+						} else {
+							$(timeClass).addClass('tx-wseevents-pi1-hide');
+						}
+					}
+					return false;
+				});
+			});
+		</script>
+		<!-- ###TIMESELECTJQUERY### end -->
 		<!-- ###CATEGORYSELECT### begin -->
 		<div class="tx-wseevents-pi1-choosecategory">
 			<!-- Combobox to select category -->
@@ -255,6 +329,34 @@
 			</select>
 		</div>
 		<!-- ###CATEGORYSELECT### end -->
+		<!-- ###CATEGORYSELECTJQUERY### begin -->
+		<div class="tx-wseevents-pi1-choosecategory">
+			<!-- Checkboxes to show/hide category -->
+			<!-- ###SELECT### -->
+			<!-- ###OPTIONSELECTED### -->
+			<span class="select-###SELECTPOS###" style="background: ###COLOR###;"><input type="checkbox" value="###VALUE###" checked="checked">&nbsp;###OPTION###</span>
+			<!-- ###OPTIONSELECTED### -->
+			<!-- ###OPTIONNOTSELECTED### -->
+			<span class="select-###SELECTPOS###" style="background: ###COLOR###;"><input type="checkbox" value="###VALUE###" style="background: ###COLOR###;">&nbsp;###OPTION###</span>
+			<!-- ###OPTIONNOTSELECTED### -->
+			<!-- ###SELECT### -->
+		</div>
+		<div style="clear:both"></div>
+		<script type="text/javascript">
+			$(function() {
+				$('.tx-wseevents-pi1-choosecategory input').change(function() {
+					var roomClass = '.tx-wseevents-pi1-category-' + $(this).val();
+					var check = $(this).attr('checked');
+					if ('checked' == check) {
+						$(roomClass).removeClass('tx-wseevents-pi1-hide');
+					} else {
+						$(roomClass).addClass('tx-wseevents-pi1-hide');
+					}
+					return false;
+				});
+			});
+		</script>
+		<!-- ###CATEGORYSELECTJQUERY### end -->
 		<!-- ###TITLEROOMSELECT### begin -->
 		<!-- Combobox to select room -->
 		<div class="tx-wseevents-pi1-chooseroom">
@@ -270,15 +372,45 @@
 			</select>
 		</div>
 		<!-- ###TITLEROOMSELECT### end -->
+		<!-- ###TITLEROOMSELECTJQUERY### begin -->
+		<!-- Checkboxes to show/hide room -->
+		<div class="tx-wseevents-pi1-chooseroom">
+			<!-- ###SELECT### -->
+			<!-- ###OPTIONSELECTED### -->
+			<span class="select-###SELECTPOS###"><input type="checkbox" value="###VALUE###" checked="checked">###OPTION###</input></span>
+			<!-- ###OPTIONSELECTED### -->
+			<!-- ###OPTIONNOTSELECTED### -->
+			<span class="select-###SELECTPOS###"><input type="checkbox" value="###VALUE###">###OPTION###</input></span>
+			<!-- ###OPTIONNOTSELECTED### -->
+			<!-- ###SELECT### -->
+			</select>
+		</div>
+		<div style="clear:both"></div>
+		<script type="text/javascript">
+			$(function() {
+				$('.tx-wseevents-pi1-chooseroom input').change(function() {
+					var roomClass = '.roomnr-' + $(this).val();
+					var check = $(this).attr('checked');
+					if ('checked' == check) {
+						$(roomClass).removeClass('tx-wseevents-pi1-hide');
+					} else {
+						$(roomClass).addClass('tx-wseevents-pi1-hide');
+					}
+					return false;
+				});
+			});
+		</script>
+		<!-- ###TITLEROOMSELECTJQUERY### end -->
+		</div>
 		<div style="clear:both"></div>
 		</form>
-		<table border=1>
+		<table border=1 class="daynr-###DAYNR###">
 		<!-- ###TITLEROW### begin -->
 		<tr>
 			<td>###TITLEBEGIN###<!-- Width=###COLUMNWIDTH### --></td>
 			<!-- ###TITLECOLUMN### begin -->
 			<!-- Width=###COLUMNWIDTH### -->
-			<th colspan="###ROOMCOUNT###">###TITLEWEEKDAY###<br />###TITLEDAY###</th>
+			<th colspan="###ROOMCOUNT###" class="daynr-###DAYNR###">###TITLEWEEKDAY###<br />###TITLEDAY###</th>
 			<!-- ###TITLECOLUMN### end -->
 		</tr>
 		<!-- ###TITLEROW### end -->
@@ -287,16 +419,16 @@
 			<td>###HEADERBEGIN###<!-- Width=###COLUMNWIDTH### --></td>
 			<!-- ###HEADERCOLUMN### begin -->
 			<!-- Width=###COLUMNWIDTH### -->
-			<td>###HEADERROOM###</td>
+			<td class="daynr-###DAYNR### roomnr-###ROOMNR###">###HEADERROOM###</td>
 			<!-- ###HEADERCOLUMN### end -->
 			<!-- ###HEADERCOLUMNEMPTY### begin -->
 			<!-- Width=###COLUMNWIDTH### -->
-			<td class="###DAYDELIMITER###">&nbsp;</td>
+			<td class="###DAYDELIMITER### daynr-###DAYNR###">&nbsp;</td>
 			<!-- ###HEADERCOLUMNEMPTY### end -->
 		</tr>
 		<!-- ###HEADERROW### end -->
 		<!-- ###SLOTROW### begin -->
-		<tr>
+		<tr class="slotnr-###SLOTNR###">
 			<!-- ###TIMECOLUMN### begin -->
 			<!-- Width=###COLUMNWIDTH### -->
 			<td rowspan="###SLOTSIZE###">###SLOTBEGIN### - ###SLOTEND###</td>
@@ -309,14 +441,14 @@
 
 			<!-- ###SLOTCOLUMN### begin -->
 			<!-- Width=###COLUMNWIDTH### -->
-			<td class="tx-wseevents-pi1-category-###SLOTCATEGORY### ###DAYDELIMITER###" rowspan="###SLOTSIZE###" colspan="###SLOTWIDTH###" style="background-color:###SLOTCATEGORYCOLOR###">
+			<td class="tx-wseevents-pi1-category-###SLOTCATEGORY### ###DAYDELIMITER### daynr-###DAYNR### roomnr-###ROOMNR### slotnr-###SLOTNR###" rowspan="###SLOTSIZE###" colspan="###SLOTWIDTH###" style="background-color:###SLOTCATEGORYCOLOR###">
 			<p title="###SLOTTEASER###">###SLOTLINK### ###SLOTICAL###<br />
 			###SLOTNAME###</p><br>(###SLOTBEGIN### - ###SLOTEND###)</td>
 			<!-- ###SLOTCOLUMN### end -->
 
 			<!-- ###SLOTCOLUMNEMPTY### begin -->
 			<!-- Width=###COLUMNWIDTH### -->
-			<td class="tx-wseevents-pi1-category-###SLOTCATEGORY### ###DAYDELIMITER###" rowspan="###SLOTSIZE###" colspan="###SLOTWIDTH###">&nbsp;</td>
+			<td class="tx-wseevents-pi1-category-###SLOTCATEGORY### ###DAYDELIMITER### daynr-###DAYNR### roomnr-###ROOMNR### slotnr-###SLOTNR###" rowspan="###SLOTSIZE###" colspan="###SLOTWIDTH###">&nbsp;</td>
 			<!-- ###SLOTCOLUMNEMPTY### end -->
 		</tr>
 		<!-- ###SLOTROW### end -->

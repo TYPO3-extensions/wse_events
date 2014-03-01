@@ -60,6 +60,9 @@ class tx_wseevents_events {
 	// List of id's of rooms
 	var $roomIds;
 
+	// Array to cache event data
+	var $cacheEvent;
+
 	/**
 	 * Dummy constructor: Does nothing.
 	 *
@@ -176,10 +179,10 @@ class tx_wseevents_events {
 		} else {
 			$event = 0;
 		}
-		$eventinfo = $this->getEventInfo($event);
-		$defslot = $eventinfo['defslotcount'];
+		$eventInfo = $this->getEventInfo($event);
+		$defSlot = $eventInfo['defslotcount'];
 
-		return $defslot;
+		return $defSlot;
 	}
 
 	/**
@@ -194,27 +197,27 @@ class tx_wseevents_events {
 		// Clear the item array
 		$params['items'] = array();
 
-		$thispid = $params['row']['pid'];
+		$thisPid = $params['row']['pid'];
 		// If pid is negative than the pid is the uid of the last saved record
 		// and we must get the pid of the folder from the last saved record
-		if (0 > $thispid) {
-			$lastpage = t3lib_BEfunc::getRecord($params['table'], abs($thispid));
-			$thispid = $lastpage['pid'];
+		if (0 > $thisPid) {
+			$lastPage = t3lib_BEfunc::getRecord($params['table'], abs($thisPid));
+			$thisPid = $lastPage['pid'];
 		}
 
 		// Get the event info
-		$slotlist = $this->getEventSlotList($params['row']['event'], $thispid);
+		$slotList = $this->getEventSlotList($params['row']['event'], $thisPid);
 
-		$thisslot = 1;
+		$thisSlot = 1;
 		// Create list of event slots
-		foreach ($slotlist as $slot) {
+		foreach ($slotList as $slot) {
 			// Add the name and id to the itemlist
 			$entry = array();
 			$entry[0] = $slot;
-			$entry[1] = $thisslot;
+			$entry[1] = $thisSlot;
 			$entry[2] = '';
 			$params['items'][] = $entry;
-			$thisslot += 1;
+			$thisSlot += 1;
 		}
 	}
 
@@ -222,24 +225,23 @@ class tx_wseevents_events {
 	 * Get info about an event
 	 *
 	 * @param	integer		$event Id of an event
-	 * @param	integer		$eventpid Page to search for events if $event is set to 0
+	 * @param	integer		$eventPid Page to search for events if $event is set to 0
 	 * @return	array		Event record
 	 * @access protected
 	 */
-	public static function getEventInfo($event, $eventpid=0) {
+	public static function getEventInfo($event, $eventPid=0) {
 		global $TCA;
 
-		// --------------------- Get the list of time slots ---------------------
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
 
 		// Loading all TCA details for this table:
 		t3lib_div::loadTCA($tableName);
 
-		if (0 == $eventpid) {
+		if (0 == $eventPid) {
 			$pidWhere = '0=0';
 		} else {
-			$pidWhere = 'pid=' . $eventpid;
+			$pidWhere = 'pid=' . $eventPid;
 		}
 		if (0 < $event) {
 			$queryWhere = 'uid=' . $event;
@@ -524,6 +526,34 @@ class tx_wseevents_events {
 		return $roomlist;
 	}
 
+	/**
+	 *
+	 */
+	public static function checkForToday ($event) {
+		$eventInfo = tx_wseevents_events::getEventInfo($event);
+		$eventBegin = $eventInfo['begin'];
+		$today = time();
+		$dayToBegin = intval(($today - intval($eventBegin)) / 86400) + 1; // (60 * 60 * 24)
+		if (($dayToBegin < 1) or ($dayToBegin > intval($eventInfo['length']))) {
+			$dayNr = 1;
+			$slotNr = 0;
+		} else {
+			// Today is during the event
+			$dayNr = $dayToBegin;
+			$timeBegin = intval(substr($eventInfo['timebegin'], 0, 2) * 60 + substr($eventInfo['timebegin'], 3, 2));
+			$timeEnd = intval(substr($eventInfo['timeend'], 0, 2) * 60 + substr($eventInfo['timeend'], 3, 2));
+			$timeTodayString = date('H:i', $today);
+			$timeToday = intval(substr($timeTodayString, 0, 2) * 60 + substr($timeTodayString, 3, 2));
+			$slotCount = intval(($timeEnd - $timeBegin) / intval($eventInfo['slotsize']));
+			$slotToday = intval(($timeToday - $timeBegin) / intval($eventInfo['slotsize'])) + 1;
+			if (($slotToday < 1) or ($slotToday > $slotCount)) {
+				$slotNr = 0;
+			} else {
+				$slotNr = $slotToday;
+			}
+		}
+		return array($dayNr, $slotNr);
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_events.php']) {
