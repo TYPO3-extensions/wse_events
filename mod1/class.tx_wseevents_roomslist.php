@@ -41,7 +41,7 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
 	 *
-	 * @param	object		the current back-end page object
+	 * @param	object		$page the current back-end page object
 	 * @return	void		...
 	 */
 	function tx_wseevents_roomslist(&$page) {
@@ -120,16 +120,11 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 			)
 		);
 
-		// unserialize the configuration array
-		$globalConfiguration = unserialize(
-			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
-		);
-
-		# Get date format for selected language
-		if (!$conf[$index . '.']['fmtDate']){
-			$conf['strftime'] = '%d.%m.%Y';
+		// Get date format for selected language
+		if (!$this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate']){
+			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate'];
 		}
 
 		// Get list of pid
@@ -159,7 +154,6 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 		$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableLocations)
 			. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
 			. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
@@ -197,7 +191,6 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 				. t3lib_BEfunc::deleteClause($this->tableName)
 				. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
 				. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'number';
 			$limit = '';
@@ -261,5 +254,3 @@ class tx_wseevents_roomslist extends tx_wseevents_backendlist{
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_roomslist.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_roomslist.php']);
 }
-
-?>

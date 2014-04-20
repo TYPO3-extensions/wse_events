@@ -41,7 +41,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
 	 *
-	 * @param	object		the current back-end page object
+	 * @param	object		$page the current back-end page object
 	 * @return	void		...
 	 */
 	function tx_wseevents_eventslist(&$page) {
@@ -53,12 +53,12 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	/**
 	 * Generates and prints out an event list.
 	 *
-	 * @param	array		the table where the record data is to be addded
-	 * @param	array		the current record
+	 * @param	array		$table table where the record data is to be addded
+	 * @param	array		$row current record
 	 * @return	void
 	 */
 	function addRowToTable(&$table, $row) {
-		global $BE_USER, $BACK_PATH;
+		global $BE_USER;
 		$uid = $row['uid'];
 		$hidden = $row['hidden'];
 		// Get language flag
@@ -104,7 +104,7 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $TCA, $LANG, $BE_USER;
+		global $TCA, $LANG;
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -183,16 +183,11 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			)
 		);
 
-		// unserialize the configuration array
-		$globalConfiguration = unserialize(
-			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
-		);
-
-		# Get date format for selected language
-		if (!$this->conf[$index . '.']['fmtDate']){
+		// Get date format for selected language
+		if (!$this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate']){
 			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$this->conf['strftime'] = $this->conf[$index . '.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate'];
 		}
 
 		// Get list of pid
@@ -231,7 +226,6 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 			$queryWhere = 'pid=' . $eventPid . t3lib_BEfunc::deleteClause($this->tableName)
 				. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
 				. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'name';
 			$limit = '';
@@ -259,7 +253,6 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 						. t3lib_BEfunc::deleteClause($this->tableName)
 						. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
 						. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-					$additionalTables = '';
 					$groupBy = '';
 					$orderBy = 'sys_language_uid';
 					$limit = '';
@@ -302,5 +295,3 @@ class tx_wseevents_eventslist extends tx_wseevents_backendlist{
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_eventslist.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_eventslist.php']);
 }
-
-?>

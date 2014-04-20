@@ -197,7 +197,7 @@ class tx_wseevents_module1 extends t3lib_SCbase {
 
 			// For debuging purpose only
 /*			$debugline = '<br /><br /><hr />
-						<br />### DEBUG ###<br />This is the GET/POST vars sent to the script:<br /><br />' 
+						<br />##// DEBUG ###<br />This is the GET/POST vars sent to the script:<br /><br />'
 						. 'GET:' . t3lib_utility_Debug::view_array($_GET) . '<br />'
 						. 'POST:' . t3lib_utility_Debug::view_array($_POST) . '<br />'
 #						. 'pageInfo:' . t3lib_utility_Debug::view_array($this->pageInfo) . '<br />'
@@ -429,5 +429,3 @@ foreach($SOBE->include_once as $INC_FILE)	include_once($INC_FILE);
 
 $SOBE->main();
 $SOBE->printContent();
-
-?>

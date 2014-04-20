@@ -20,4 +20,3 @@ return array(
 	'tx_wseevents_speakerslist' => $extensionPath . 'mod1/class.tx_wseevents_speakerslist.php',
 	'tx_wseevents_timeslotslist' => $extensionPath . 'mod1/class.tx_wseevents_timeslotslist.php',
 );
-?>

@@ -33,14 +33,29 @@
 class tx_wseevents_tcemainprocdm {
 
 	/**
+	 * TimeSlot class
+	 * @var tx_wseevents_timeslots
+	 */
+	var $eventTimeSlots;
+
+	/**
+	 *
+	 */
+	function __construct() {
+		// Initialize classes
+		$this->eventTimeSlots = t3lib_div::makeInstance('tx_wseevents_timeslots');
+	}
+
+	/**
 	 * Post processiong of field array
 	 *
-	 * @param	string		$status: edit status
-	 * @param	string		$table: table name
-	 * @param	integer		$id: record id
-	 * @param	array		$incomingFieldArray: record data
-	 * @param	array		$reference: ToDo: insert description
-	 * @return	void		...
+	 * @param    string $status : edit status
+	 * @param    string $table : table name
+	 * @param    integer $id : record id
+	 * @param $fieldArray
+	 * @param    array $reference : ToDo: insert description
+	 * @internal param array $incomingFieldArray : record data
+	 * @return    void        ...
 	 */
     function processDatamap_postProcessFieldArray ($status, $table, $id, &$fieldArray, &$reference) {
         if ($table == 'tx_wseevents_speakers') {
@@ -75,7 +90,7 @@ class tx_wseevents_tcemainprocdm {
 			if (!empty($fieldArray['length']))		$row['length'] = $fieldArray['length'];
 			if (!empty($fieldArray['room']))		$row['room'] = $fieldArray['room'];
 
-			$fieldArray['name'] = tx_wseevents_timeslots::formatSlotName($row);
+			$fieldArray['name'] = $this->eventTimeSlots->formatSlotName($row);
 		}
         if ($table == 'tx_wseevents_speakerrestrictions') {
 			if ($status == 'update') {
@@ -104,19 +119,22 @@ class tx_wseevents_tcemainprocdm {
 	/**
 	 * Pre processiong of field array
 	 *
-	 * @param	array		$incomingFieldArray: record data
-	 * @param	string		$table: table name
-	 * @param	integer		$id: record id
-	 * @param	array		$this: ToDo: insert description
-	 * @return	void		...
+	 * @param    array $incomingFieldArray : record data
+	 * @param    string $table : table name
+	 * @param    integer $id : record id
+	 * @param $reference
+	 * @internal param array $this : ToDo: insert description
+	 * @return    void        ...
 	 */
     function processDatamap_preProcessFieldArray ($incomingFieldArray, $table, $id, &$reference) {
         if ($table == 'tx_wseevents_timeslots') {
 			// Set the default slot length
-# ToDo: Get the default slot length from event record
+// ToDo: Get the default slot length from event record
 #			$row = t3lib_BEfunc::getRecord ($table, $id);
-			if (is_array ($row)) {
-				$incomingFieldArray['length'] = 4;
+			if (isset($row)) {
+				if (is_array ($row)) {
+					$incomingFieldArray['length'] = 4;
+				}
 			}
 		}
     }
@@ -125,4 +143,3 @@ class tx_wseevents_tcemainprocdm {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_tcemainprocdm.php']) {
 	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_tcemainprocdm.php']);
 }
-?>

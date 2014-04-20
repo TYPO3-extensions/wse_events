@@ -41,39 +41,31 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
 	 *
-	 * @param	object		the current back-end page object
+	 * @param	object		$page the current back-end page object
 	 * @return	void		...
 	 */
 	function tx_wseevents_speakerslist(&$page) {
-		global $TCA;
-
 		parent::tx_wseevents_backendlist($page);
 		$this->tableName = $this->tableSpeakers;
 		t3lib_div::loadTCA($this->tableName);
-#		$this->page = $page;
 	}
 
 	/**
 	 * Generates and prints out an event list.
 	 *
-	 * @param	array		the table where the record data is to be addded
-	 * @param	array		the current record
+	 * @param	array		$table the table where the record data is to be addded
+	 * @param	array		$row the current record
 	 * @return	void
 	 */
 	function addRowToTable(&$table, $row) {
-		global $TCA, $BE_USER, $BACK_PATH;
+		global $BE_USER, $BACK_PATH;
 		$uid = $row['uid'];
 		$hidden = $row['hidden'];
 
-		if ($row[$TCA[$this->tableName]['ctrl']['languageField']]==0) {
-			$catnum = $this->categories[$row['category']] . sprintf ('%02d', $row['number']);
-		} else {
-			$catnum = '';
-		}
-		# Get language flag
+		// Get language flag
 		list($imglang, $imgtrans) = $this->makeLocalizationPanel($this->tableName,$row);
 
-		# If deleted in the active workspace show the delete icon instead of the delete link
+		// If deleted in the active workspace show the delete icon instead of the delete link
 		if ('DELETED!' == $row['t3ver_label']) {
 			$deleteIcon = '<img'
 				. t3lib_iconWorks::skinImg(
@@ -86,7 +78,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 			$deleteIcon = $this->getDeleteIcon($uid);
 		}
 		
-		# Add the result row to the table array.
+		// Add the result row to the table array.
 		$table[] = array(
 			TAB . TAB . TAB . TAB . TAB
 				. t3lib_div::fixed_lgd_cs(
@@ -122,18 +114,12 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $TCA, $LANG, $BE_USER, $BACK_PATH;
+		global $TCA, $LANG;
 
-//debug ($LANG);
-//debug ($BE_USER);
-
-		# Get selected backend language of user
-		$userlang = $BE_USER->uc[moduleData][web_layout][language];
-
-		# Initialize the variable for the HTML source code.
+		// Initialize the variable for the HTML source code.
 		$content = '';
 
-		# Set the table layout of the event list.
+		// Set the table layout of the event list.
 		$tableLayout = array(
 			'table' => array(
 				TAB . TAB . '<table cellpadding="0" cellspacing="0" class="typo3-dblist" border="1" rules="rows">' . LF,
@@ -175,7 +161,7 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 			)
 		);
 
-		# Fill the first row of the table array with the header.
+		// Fill the first row of the table array with the header.
 		$table = array(
 			array(
 				TAB . TAB . TAB . TAB . TAB . TAB
@@ -194,53 +180,47 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 			)
 		);
 
-		# unserialize the configuration array
-		$globalConfiguration = unserialize(
-			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
-		);
-
-		# Get date format for selected language
-		if (!$conf[$index . '.']['fmtDate']){
-			$conf['strftime'] = '%d.%m.%Y';
+		// Get date format for selected language
+		if (!$this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate']){
+			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate'];
 		}
 
-		# Initialize languages
+		// Initialize languages
 		$this->initializeLanguages($this->page->pageInfo['uid']);
 
-		# Get list of pid
+		// Get list of pid
 		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
-		# Check if sub pages available and remove main page from list
+		// Check if sub pages available and remove main page from list
 		if ($this->selectedPids<>$this->page->pageInfo['uid']) {
 			$this->selectedPids = t3lib_div::rmFromList($this->page->pageInfo['uid'],$this->selectedPids);
 		}
-		# Remove pages with eveent data
+		// Remove pages with eveent data
 		$commonPids = $this->removeEventPages($this->selectedPids);
-		# If all in one page than use page id
+		// If all in one page than use page id
 		if (empty($commonPids)) {
 			$commonPids = $this->page->pageInfo['uid'];
 		}
-		# Get page titles
+		// Get page titles
 		$this->selectedPidsTitle = $this->getPidTitleList($this->selectedPids);
-		# Get the where clause
+		// Get the where clause
 		$wherePid = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids) . ')';
 
-		# Add icon for new record
+		// Add icon for new record
 		if (!empty($commonPids)) {
 			$content .= $this->getNewIconList($commonPids,$this->selectedPidsTitle);
 		}
 
-		# Initialize variables for the database query.
+		// Initialize variables for the database query.
 		$queryWhere = '1=1' . t3lib_BEfunc::deleteClause($this->tableName)
 			. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
 			. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name,firstname,sys_language_uid';
 		$limit = '';
 
-		# Get list of all events
+		// Get list of all events
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
 			$this->tableName,
@@ -252,33 +232,32 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 		if ($res) {
 			$found = false;
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				# Overlaying record with workspace version if any
+				// Overlaying record with workspace version if any
 				t3lib_BEfunc::workspaceOL($this->tableName, $row);
-				# Get the workspace version if available
+				// Get the workspace version if available
 				$newrow = t3lib_BEfunc::getWorkspaceVersionOfRecord($GLOBALS['BE_USER']->workspace, 
 					$this->tableName, $row['uid']);
-				# If no workspace version is available and original record is not active (pid=-1) 
-				# or original record is only a placeholder than use empty record (don't show record)
+				// If no workspace version is available and original record is not active (pid=-1)
+				// or original record is only a placeholder than use empty record (don't show record)
 				if (!is_array($newrow) AND ((-1 == $row['pid']) OR ('INITIAL PLACEHOLDER' == $row['t3ver_label']))) {
 					$row = $newrow;
 				}
-				# Get correct pid for the workspace record
+				// Get correct pid for the workspace record
 				t3lib_BEfunc::fixVersioningPid($this->tableName, $row);
 				if (is_array($row) 
 					AND (t3lib_div::inList($GLOBALS['TYPO3_DB']->cleanIntList($this->selectedPids), $row['pid']))) {
 					$found = true;
 					$this->addRowToTable($table, $row);
 
-					# Check for translations.
+					// Check for translations.
 					$queryWhere = $wherePid . ' AND l18n_parent=' . $row['uid']
 						. t3lib_BEfunc::deleteClause($this->tableName)
 						. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-					$additionalTables = '';
 					$groupBy = '';
 					$orderBy = $TCA[$this->tableName]['ctrl']['languageField'];
 					$limit = '';
 
-					# Get list of all translated sessions
+					// Get list of all translated sessions
 					$reslang = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 						'*',
 						$this->tableName,
@@ -296,8 +275,8 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 			}
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			if ($found) {
-				# Output the table array using the tableLayout array with the template
-				# class.
+				// Output the table array using the tableLayout array with the template
+				// class.
 				$content .= $this->page->doc->table($table, $tableLayout) . '<br />' . LF;
 			} else {
 				$content .= '<br />' . $LANG->getLL('norecords') . '<br /><br />' . LF;
@@ -310,9 +289,8 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 	 * Generates a linked hide or unhide icon depending on the record's hidden
 	 * status.
 	 *
-	 * @param	string		the name of the table where the record is in
-	 * @param	integer		the UID of the record
-	 * @param	boolean		indicates if the record is hidden (true) or is visible (false)
+	 * @param	integer		$uid the UID of the record
+	 * @param	boolean		$hidden indicates if the record is hidden (true) or is visible (false)
 	 * @return	string		the HTML source code of the linked hide or unhide icon
 	 * @access protected
 	 */
@@ -352,5 +330,3 @@ class tx_wseevents_speakerslist extends tx_wseevents_backendlist{
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerslist.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerslist.php']);
 }
-
-?>

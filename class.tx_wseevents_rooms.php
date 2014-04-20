@@ -22,19 +22,6 @@
 * This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
-/**
- * Class 'tx_wseevents_rooms' for the 'wse_events' extension.
- *
- * xxxxxxx
- * xxxxx
- *
- *
- * @package		TYPO3
- * @subpackage	tx_wseevents
- * @author		Michael Oehlhof
- */
-
 // In case we're on the back end, PATH_tslib isn't defined yet.
 if (!defined('PATH_tslib')) {
 	define('PATH_tslib', t3lib_extMgm::extPath('cms').'tslib/');
@@ -57,62 +44,94 @@ class tx_wseevents_rooms {
 	var $extKey = 'wseevents';
 
 	/**
-	 * Dummy constructor: Does nothing.
-	 *
-	 * The base classe's constructor is called in $this->init().
-	 *
-	 * @return	void		...
+	 * Event class
+	 * @var tx_wseevents_events
 	 */
-	function tx_wseevents_rooms() {
+	var $events;
+
+	/**
+	 * Room count, index is location id
+	 * @var array
+	 */
+	var $count;
+
+	/**
+	 * List of rooms, first index is location id
+	 * @var array
+	 */
+	var $rooms;
+
+	/**
+	 * Constructor: Create needed class.
+	 *
+	 * @param $event
+	 * @return \tx_wseevents_rooms
+	 */
+	function __construct($event) {
+		// Initialize classes
+		$this->events = $event;
+		// and variables
+		$this->count = array();
+		$this->rooms = array();
 	}
 
 	/**
-	 * This is the main function
+	 * Get count of rooms for a location
 	 *
-	 * @param	array		TypoScript configuration for the plugin
-	 * @return	void		...
-	 * @access protected
+	 * @param int $location
+	 * @return int
 	 */
-	function main($items) {
-		return;
-	}
-
-	/**
-	 * Get list of available rooms
-	 *
-	 * @param	array		$PA TypoScript configuration for the plugin
-	 * @param	object		$fobj: ToDo: insert description
-	 * @return	void		...
-	 * @access protected
-	 */
-	function getTCAroomlist($PA,$fobj) {
+	function getRoomCount($location) {
 		global $TCA;
-#		debug ($PA);
-#		debug ($fobj);
 
-		// --------------------- Get the location of the selected event ---------------------
-		// Initialize variables for the database query.
-		$tableName ='tx_wseevents_events';
-		$queryWhere = 'uid='.$PA['row']['event'].
-			t3lib_BEfunc::BEenableFields($tableName).
-			t3lib_BEfunc::deleteClause($tableName).
-//			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
-			t3lib_BEfunc::versioningPlaceholderClause($tableName);
-		$additionalTables = '';
-		$groupBy = '';
-		$orderBy = 'name';
-		$limit = '';
-
-		// Check if event is selected, if not get first event
-		if ($PA['row']['event'] == 0) {
-			$queryWhere = 'pid='.$PA['row']['pid'].
-				t3lib_BEfunc::BEenableFields($tableName).
-				t3lib_BEfunc::deleteClause($tableName).
-//				' AND '.$TCA[$this->tableName]['ctrl']['languageField'].'=0'.
-				t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
+		if (isset($this->count[$location])) {
+			return $this->count[$location];
 		}
 
-		// Get location of the event
+		$groupBy = '';
+		$orderBy = '';
+		$limit = '';
+		$tableName ='tx_wseevents_rooms';
+		$queryWhere = 'location=' . $location
+			. ' AND ' . $TCA[$tableName]['ctrl']['languageField'] . '=0'
+			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
+		// Get info about rooms of the event
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'count(*)',
+			$tableName,
+			$queryWhere,
+			$groupBy,
+			$orderBy,
+			$limit);
+		$locationRow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$roomCount = $locationRow['count(*)'];
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		$this->count[$location] = $roomCount;
+
+		return $roomCount;
+	}
+
+	/**
+	 * @param $location
+	 *
+	 */
+	function getRoomList($location) {
+		global $TCA;
+
+		if (isset($this->rooms[$location])) {
+			return $this->rooms[$location];
+		}
+
+		$tableName ='tx_wseevents_rooms';
+		$queryWhere = 'location=' . $location
+			. ' AND ' . $TCA[$tableName]['ctrl']['languageField'] . '=0'
+			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
+		$groupBy = '';
+		$orderBy = 'uid';
+		$limit = '';
+
+		$roomList = array();
+		// Get info about the rooms of the location
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
 			$tableName,
@@ -120,9 +139,34 @@ class tx_wseevents_rooms {
 			$groupBy,
 			$orderBy,
 			$limit);
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$roomList[$row['uid']] = $row;
+			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+			$this->rooms[$location] = $roomList;
+		}
+		return $roomList;
+	}
 
-		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)		;
-		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+	/**
+	 * Get list of available rooms
+	 *
+	 * @param	array		$PA TypoScript configuration for the plugin
+	 * @param	object		$fobj: t3lib_TCEforms
+	 * @return	void		...
+	 * @access protected
+	 */
+	function getTCAroomlist($PA, $fobj) {
+		global $TCA;
+
+		// Check if events class is loaded
+		if (empty($this->events)) {
+			// Initialize classes
+			$this->events = t3lib_div::makeInstance('tx_wseevents_events', $PA['row']['event']);
+		}
+
+		$row = $this->events->getEventInfo($PA['row']['event'], $PA['row']['pid']);
 		$location = $row['location'];
 		if (!empty($location)) {
 			$location = 'location='.$location;
@@ -138,7 +182,6 @@ class tx_wseevents_rooms {
 			t3lib_BEfunc::deleteClause($tableName).
 			' AND '.$TCA[$tableName]['ctrl']['languageField'].'=0'.
 			t3lib_BEfunc::versioningPlaceholderClause($tableName);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
@@ -153,7 +196,7 @@ class tx_wseevents_rooms {
 			$limit);
 
 		// check if selected room is in location
-		$roomfound = false;
+		$roomFound = false;
 
 		// Clear the item array
 		$PA['items'] = array();
@@ -166,7 +209,7 @@ class tx_wseevents_rooms {
 			$entry[2] = '';
 			$PA['items'][] = $entry;
 			if ($row['uid'] = $PA['row']['room']) {
-				$roomfound = true;
+				$roomFound = true;
 			}
 		}
 		$GLOBALS['TYPO3_DB']->sql_free_result($res);
@@ -179,11 +222,9 @@ class tx_wseevents_rooms {
 		$PA['items'][] = $entry;
 
 		// Set selected room to first room of location, if given room is from another location
-		if (!$roomfound) {
+		if (!$roomFound) {
 			$PA['row']['room'] = $PA['items']['0']['1'];
 		}
-
-#		debug ($PA);
 
 		return;
 	}
@@ -193,5 +234,3 @@ class tx_wseevents_rooms {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_rooms.php']) {
 	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_rooms.php']);
 }
-
-?>

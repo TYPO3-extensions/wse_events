@@ -41,7 +41,7 @@ class tx_wseevents_sessionplanning extends tx_wseevents_backendlist{
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
 	 *
-	 * @param	object		the current back-end page object
+	 * @param	object		$page the current back-end page object
 	 * @return	void		...
 	 */
 	function tx_wseevents_timeslotslist(&$page) {
@@ -56,30 +56,20 @@ class tx_wseevents_sessionplanning extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $BACK_PATH, $TCA, $LANG, $BE_USER;
-
 		// Define initial comment
-		$initcomment = LF . TAB . '<!-- WSE_EVENTS session planning -->' . LF;
+		$initComment = LF . TAB . '<!-- WSE_EVENTS session planning -->' . LF;
 
 		// Initialize the variable for the HTML source code.
-		$content = $initcomment;
+		$content = $initComment;
 
-		// unserialize the configuration array
-		$globalConfiguration = unserialize(
-			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
-		);
-
-		# Get date format for selected language
-		if (!$conf[$index . '.']['fmtDate']){
-			$conf['strftime'] = '%d.%m.%Y';
+		// Get date format for selected language
+		if (!$this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate']){
+			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate'];
 		}
 
 		$content .= '<div align=center><strong>Working on implementation yet ...</strong></div>';
-
-
-
 
 		return $content;
 	}
@@ -88,5 +78,3 @@ class tx_wseevents_sessionplanning extends tx_wseevents_backendlist{
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_sessionplanning.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_sessionplanning.php']);
 }
-
-?>

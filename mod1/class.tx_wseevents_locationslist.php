@@ -41,38 +41,29 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
 	 *
-	 * @param	object		the current back-end page object
+	 * @param	object		$page the current back-end page object
 	 * @return	void		...
 	 */
 	function tx_wseevents_locationslist(&$page) {
-		global $TCA;
-
 		parent::tx_wseevents_backendlist($page);
 		$this->tableName = $this->tableLocations;
 		t3lib_div::loadTCA($this->tableName);
-
-#		$this->page = $page;
 	}
 
 	/**
 	 * Generates and prints out an event list.
 	 *
-	 * @param	array		the table where the record data is to be addded
-	 * @param	array		the current record
+	 * @param	array		$table the table where the record data is to be addded
+	 * @param	array		$row the current record
 	 * @return	void
 	 */
 	function addRowToTable(&$table, $row) {
-		global $BE_USER, $BACK_PATH;
+		global $BE_USER;
 		$uid = $row['uid'];
 		$hidden = $row['hidden'];
 
-		if ($row['sys_language_uid']==0) {
-			$catnum = $this->categories[$row['category']] . sprintf ('%02d', $row['number']);
-		} else {
-			$catnum = '';
-		}
 		// Get language flag
-		list($imglang, $imgtrans) = $this->makeLocalizationPanel($this->tableName,$row);
+		list($imgLang, $imgTrans) = $this->makeLocalizationPanel($this->tableName,$row);
 
 		// Add the result row to the table array.
 		$table[] = array(
@@ -82,9 +73,9 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 					$BE_USER->uc['titleLen']
 				) . LF,
 			TAB . TAB . TAB . TAB . TAB
-				. $imglang . LF,
+				. $imgLang . LF,
 			TAB . TAB . TAB . TAB . TAB
-				. $imgtrans . LF,
+				. $imgTrans . LF,
 			TAB . TAB . TAB . TAB . TAB
 				. $this->getEditIcon($uid) . LF
 				. TAB . TAB . TAB . TAB . TAB
@@ -105,10 +96,7 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $TCA, $LANG, $BE_USER;
-
-		// Get selected backend language of user
-		$userlang = $BE_USER->uc[moduleData][web_layout][language];
+		global $TCA, $LANG;
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -171,16 +159,11 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 			)
 		);
 
-		// unserialize the configuration array
-		$globalConfiguration = unserialize(
-			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
-		);
-
-		# Get date format for selected language
-		if (!$conf[$index . '.']['fmtDate']){
-			$conf['strftime'] = '%d.%m.%Y';
+		// Get date format for selected language
+		if (!$this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate']){
+			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate'];
 		}
 
 		// Initialize languages
@@ -212,7 +195,6 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 		$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableName)
 			. ' AND ' . $TCA[$this->tableName]['ctrl']['languageField'] . '=0'
 			. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
@@ -236,7 +218,6 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 				$queryWhere = $wherePid . ' AND l18n_parent=' . $row['uid']
 					. t3lib_BEfunc::deleteClause($this->tableName)
 					. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-				$additionalTables = '';
 				$groupBy = '';
 				$orderBy = 'sys_language_uid';
 				$limit = '';
@@ -273,5 +254,3 @@ class tx_wseevents_locationslist extends tx_wseevents_backendlist{
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_locationslist.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_locationslist.php']);
 }
-
-?>

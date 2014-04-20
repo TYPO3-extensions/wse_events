@@ -38,16 +38,23 @@
 class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 
 	/**
+	 * Event class
+	 * @var tx_wseevents_events
+	 */
+	var $events;
+
+	/**
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
 	 *
-	 * @param	object		the current back-end page object
-	 * @return	void		...
+	 * @param    object $page the current back-end page object
+	 * @return \tx_wseevents_timeslotslist ...
 	 */
-	function tx_wseevents_timeslotslist(&$page) {
+	function __construct(&$page) {
 		parent::tx_wseevents_backendlist($page);
 		$this->tableName = $this->tableTimeslots;
-#		$this->page = $page;
+		// Initialize classes
+		$this->events = t3lib_div::makeInstance('tx_wseevents_events');
 	}
 
 	/**
@@ -57,17 +64,17 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function showCreateForm() {
-		global $BACK_PATH, $TCA, $LANG, $BE_USER;
+		global $LANG;
 
 		$content = $LANG->getLL('showCreateForm') . '<br />';
 		// Show name of event
 		$eventid = t3lib_div::_GET('event');
-		$event = tx_wseevents_events::getEventInfo($eventid);
+		$event = $this->events->getEventInfo($eventid);
 		$content .= TAB . '<br /><span style="font-size:1.2em"><b>' . $LANG->getLL('event') . ' ' . $event['name'] . '</b></span><br /><br />' . LF;
 
 		$defslotlen = $event['defslotcount'];
-		$slotlist = tx_wseevents_events::getEventSlotList($eventid);
-		$rooms = tx_wseevents_events::getEventRooms($eventid);
+		$slotlist = $this->events->getEventSlotList($eventid);
+		$rooms = $this->events->getEventRooms($eventid);
 		$daycount = $event['length'];
 		$roomcount = count($rooms);
 		$slotsize = $defslotlen * $event['slotsize'];
@@ -141,55 +148,52 @@ class tx_wseevents_timeslotslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function createSlots() {
-		global $BACK_PATH, $TCA, $LANG, $BE_USER;
+		global $LANG;
 
 		$content = $LANG->getLL('slotCreated') . '<br />' . LF;
 		// Show name of event
-		$eventid = t3lib_div::_GET('event');
-		$event = tx_wseevents_events::getEventInfo($eventid);
+		$eventId = t3lib_div::_GET('event');
+		$event = $this->events->getEventInfo($eventId);
 		$content .= TAB . '<br /><span style="font-size:1.2em"><b>' . $LANG->getLL('event') . ' ' . $event['name'] . '</b></span><br /><br />' . LF;
 
-if (1==0) {
-$content .= '---POST begin ---' . '<br />' . LF;
-$content .= t3lib_utility_Debug::view_array(t3lib_div::_POST()) . '<br />' . LF;
-$content .= '---POST end ---' . '<br />' . LF;
-}
-		$slotlist = tx_wseevents_events::getEventSlotList($eventid);
-		$slotbegin = t3lib_div::_POST('slotbegin');
-		$slotlen = t3lib_div::_POST('slotlen');
-		$rooms = tx_wseevents_events::getEventRooms($eventid);
-		$daycount = $event['length'];
-		$secofday = 60*60*24;
-		for ( $d = 1; $d <= $daycount; $d++ ) {
-			$thisday = $event['begin']+($d-1)*$secofday;
-			$dayname[$d] = strftime('%Y-%m-%d', $thisday);
-			$weekdays[$d] = strftime('%A', $thisday);
+		$slotList = $this->events->getEventSlotList($eventId);
+		$slotBegin = t3lib_div::_POST('slotbegin');
+		$slotLen = t3lib_div::_POST('slotlen');
+		$rooms = $this->events->getEventRooms($eventId);
+		$dayCount = $event['length'];
+		$secOfDay = 60*60*24;
+		$dayName = array();
+		$weekdays = array();
+		for ( $d = 1; $d <= $dayCount; $d++ ) {
+			$thisDay = $event['begin']+($d-1)*$secOfDay;
+			$dayName[$d] = strftime('%Y-%m-%d', $thisDay);
+			$weekdays[$d] = strftime('%A', $thisDay);
 		}
 
 		$idx = 1;
 		$comment = $LANG->getLL('slotCreatedComment');
-		while ($idx < count($slotlist)) {
-			if (!empty($slotbegin[$idx])) {
-				for ( $d = 1; $d <= $daycount; $d++ ) {
-					foreach ( array_keys($rooms) as $roomid ) {
-						$cbx = t3lib_div::_POST('room_' . $d . '_' . $roomid);
+		while ($idx < count($slotList)) {
+			if (!empty($slotBegin[$idx])) {
+				for ( $d = 1; $d <= $dayCount; $d++ ) {
+					foreach ( array_keys($rooms) as $roomId ) {
+						$cbx = t3lib_div::_POST('room_' . $d . '_' . $roomId);
 						if ($cbx[$idx]) {
 							// Create timeslot record
 							$insertArray = array (
-								'event' => $eventid,
+								'event' => $eventId,
 								'pid' => $event['pid'],
 								'eventday' => $d,
-								'room' => $roomid,
-								'begin' => array_search($slotbegin[$idx], $slotlist),
-								'length' => intval($slotlen[$idx] / $event['slotsize']),
-								'name' => $weekdays[$d] . ' ' . $slotbegin[$idx] . ' ' . $rooms[$roomid],
+								'room' => $roomId,
+								'begin' => array_search($slotBegin[$idx], $slotList),
+								'length' => intval($slotLen[$idx] / $event['slotsize']),
+								'name' => $weekdays[$d] . ' ' . $slotBegin[$idx] . ' ' . $rooms[$roomId],
 								'comment' => $comment,
 							);
 
-							$query  = $GLOBALS['TYPO3_DB']->exec_INSERTquery($this->tableName, $insertArray);
+							$GLOBALS['TYPO3_DB']->exec_INSERTquery($this->tableName, $insertArray);
 							$lastID = $GLOBALS['TYPO3_DB']->sql_insert_id();
 							// Print out info
-							$content .= TAB . '[' . $lastID . '] ' . $slotbegin[$idx] . ', ' . $slotlen[$idx] . ', ' . $weekdays[$d] . ' ' . $dayname[$d] . ', ' . $rooms[$roomid] . '<br />' . LF;
+							$content .= TAB . '[' . $lastID . '] ' . $slotBegin[$idx] . ', ' . $slotLen[$idx] . ', ' . $weekdays[$d] . ' ' . $dayName[$d] . ', ' . $rooms[$roomId] . '<br />' . LF;
 						}
 					}
 				}
@@ -211,47 +215,20 @@ $content .= '---POST end ---' . '<br />' . LF;
 	 * @access public
 	 */
 	function updateSlots() {
-		global $BACK_PATH, $TCA, $LANG, $BE_USER;
+		global $LANG;
 
 		$content = $LANG->getLL('slotUpdate') . '<br />' . LF;
 		// Show name of event
-		$eventid = t3lib_div::_GET('event');
-		$event = tx_wseevents_events::getEventInfo($eventid);
+		$eventId = t3lib_div::_GET('event');
+		$event = $this->events->getEventInfo($eventId);
 
 		// Show name of event
 		$content .= LF . TAB . '<br /><span style="font-size:1.2em"><b>' . $LANG->getLL('event') . ' ' . $event['name'] . '</b></span><br />';
-
-		// Get list of all possible timeslots for the event
-		$slots = tx_wseevents_events::getEventSlotList($event['uid']);
-
-		// Get info about event
-		$eventinfo = tx_wseevents_events::getEventInfo($event['uid']);
-
-		// -------------------- Get list of rooms --------------------
-		// Initialize variables for the database query.
-		$queryWhere = 'location=' . $event['location']
-			. ' AND ' . $TCA[$this->tableRooms]['ctrl']['languageField'] . '=0'
-			. t3lib_BEfunc::versioningPlaceholderClause($this->tableRooms)
-			. t3lib_BEfunc::deleteClause($this->tableRooms);
-		$additionalTables = '';
-		$groupBy = '';
-		$orderBy = 'number';
-		$limit = '';
-
-		// Get list of all rooms for the location of the event
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'*',
-			$this->tableRooms,
-			$queryWhere,
-			$groupBy,
-			$orderBy,
-			$limit);
 
 		// Initialize variables for the database query.
 		$queryWhere = 'event=' . $event['uid']
 			. t3lib_BEfunc::deleteClause($this->tableName)
 			. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'eventday,begin,room';
 		$limit = '';
@@ -266,29 +243,26 @@ $content .= '---POST end ---' . '<br />' . LF;
 			$limit);
 
 		if ($res) {
-			$slotlist = tx_wseevents_events::getEventSlotList($eventid);
-			$rooms = tx_wseevents_events::getEventRooms($event['uid']);
-			$daycount = $event['length'];
-			$secofday = 60*60*24;
-			for ( $d = 1; $d <= $daycount; $d++ ) {
-				$thisday = $event['begin']+($d-1)*$secofday;
-//				$dayname[$d] = strftime('%Y-%m-%d', $thisday);
-				$weekdays[$d] = strftime('%A', $thisday);
+			$slotList = $this->events->getEventSlotList($eventId);
+			$rooms = $this->events->getEventRooms($event['uid']);
+			$dayCount = $event['length'];
+			$secOfDay = 60*60*24;
+			$weekdays = array();
+			for ( $d = 1; $d <= $dayCount; $d++ ) {
+				$thisDay = $event['begin']+($d-1)*$secOfDay;
+				$weekdays[$d] = strftime('%A', $thisDay);
 			}
 
-			$found = false;
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$found = true;
 				$uid = $row['uid'];
-				$hidden = $row['hidden'];
 				// Add the result row to the table array.
 				$updateArray = array (
-					'name' => $weekdays[$row['eventday']] . ' ' . $slotlist[$row['begin']] . ' ' . $rooms[$row['room']],
+					'name' => $weekdays[$row['eventday']] . ' ' . $slotList[$row['begin']] . ' ' . $rooms[$row['room']],
 				);
 				// Print out info
-				$newname = '[' . $uid . '] ' . $weekdays[$row['eventday']] . ' ' . $slotlist[$row['begin']] . ' ' . $rooms[$row['room']];
-				$content .= $newname . '<br />' . LF;
-				$query  = $GLOBALS['TYPO3_DB']->exec_UPDATEquery($this->tableName, 'uid=' . $uid, $updateArray);
+				$newName = '[' . $uid . '] ' . $weekdays[$row['eventday']] . ' ' . $slotList[$row['begin']] . ' ' . $rooms[$row['room']];
+				$content .= $newName . '<br />' . LF;
+				$GLOBALS['TYPO3_DB']->exec_UPDATEquery($this->tableName, 'uid=' . $uid, $updateArray);
 			}
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 			$content .= LF;
@@ -396,16 +370,11 @@ $content .= '---POST end ---' . '<br />' . LF;
 			)
 		);
 
-		// unserialize the configuration array
-		$globalConfiguration = unserialize(
-			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
-		);
-
-		# Get date format for selected language
-		if (!$conf[$index . '.']['fmtDate']){
-			$conf['strftime'] = '%d.%m.%Y';
+		// Get date format for selected language
+		if (!$this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate']){
+			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate'];
 		}
 
 		// Get list of pid
@@ -434,7 +403,7 @@ $content .= '---POST end ---' . '<br />' . LF;
 
 
 		if (!isset($this->page->pageInfo['uid'])) {
-			return;
+			return '';
 		}
 
 		// -------------------- Get list of events --------------------
@@ -442,7 +411,6 @@ $content .= '---POST end ---' . '<br />' . LF;
 		$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableEvents)
 			. ' AND ' . $TCA[$this->tableEvents]['ctrl']['languageField'] . '=0'
 			. t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
@@ -480,48 +448,18 @@ $content .= '---POST end ---' . '<br />' . LF;
 //			$content .= '&nbsp;' . $this->getNewIcon($event['pid'],0) . '<br />';
 
 			// Get list of all possible timeslots for the event
-			$slots = tx_wseevents_events::getEventSlotList($event['uid']);
+			$slots = $this->events->getEventSlotList($event['uid']);
 
 			// Get info about event
-			$eventinfo = tx_wseevents_events::getEventInfo($event['uid']);
+			$eventInfo = $this->events->getEventInfo($event['uid']);
 
 			// -------------------- Get list of rooms --------------------
-			// Initialize variables for the database query.
-			$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableRooms)
-				. ' AND location=' . $event['location']
-				. ' AND ' . $TCA[$this->tableRooms]['ctrl']['languageField'] . '=0'
-				. t3lib_BEfunc::versioningPlaceholderClause($this->tableRooms);
-			$additionalTables = '';
-			$groupBy = '';
-			$orderBy = 'number';
-			$limit = '';
-
-			// Get list of all rooms for the location of the event
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-				'*',
-				$this->tableRooms,
-				$queryWhere,
-				$groupBy,
-				$orderBy,
-				$limit);
-
-/*
-			$rooms = array();
-			$rooms[0] = $LANG->getLL('timeslots.allrooms');
-			if ($res) {
-				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-					$rooms[$row['uid']] = $row['name'];
-				}
-				$GLOBALS['TYPO3_DB']->sql_free_result($res);
-			}
-*/
-			$rooms = tx_wseevents_events::getEventRooms($event['uid']);
+			$rooms = $this->events->getEventRooms($event['uid']);
 
 			// Initialize variables for the database query.
 			$queryWhere = $wherePid . ' AND event=' . $event['uid']
 				. t3lib_BEfunc::deleteClause($this->tableName)
 				. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'eventday,begin,room';
 			$limit = '';
@@ -558,7 +496,7 @@ $content .= '---POST end ---' . '<br />' . LF;
 						TAB . TAB . TAB . TAB
 							. $slots[$row['begin']] . LF,
 						TAB . TAB . TAB . TAB
-							. $eventinfo['slotsize']*$row['length'] . LF,
+							. $eventInfo['slotsize']*$row['length'] . LF,
 						TAB . TAB . TAB . TAB
 							. $row['uid'] . LF,
 						TAB . TAB . TAB . TAB
@@ -630,5 +568,3 @@ $content .= '---POST end ---' . '<br />' . LF;
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_timeslotslist.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_timeslotslist.php']);
 }
-
-?>

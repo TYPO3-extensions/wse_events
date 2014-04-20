@@ -26,7 +26,7 @@
 ***************************************************************/
 
 /***************************************************************
-*  Because I dont want to redefine the wheel again, some ideas
+*  Because I don't want to redefine the wheel again, some ideas
 *  and code snippets are taken from the seminar manager extension
 *  tx_seminars
 ***************************************************************/
@@ -44,8 +44,6 @@
  * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
 
-// the UTF-8 representation of an en dash
-DEFINE(UTF8_EN_DASH, chr(0xE2) . chr(0x80) . chr(0x93));
 // a CR-LF combination (the default Unix line ending)
 DEFINE(CRLF, chr(0x0D) . chr(0x0A));
 
@@ -120,7 +118,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 *
 	 * If the parameter is omited, the configuration for plugin.tx_seminar is used instead.
 	 *
-	 * @param	array		TypoScript configuration for the plugin
+	 * @param	array		$conf TypoScript configuration for the plugin
 	 * @return	void		...
 	 * @access protected
 	 */
@@ -136,7 +134,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 
 			$this->backPath = $BACK_PATH;
 
-			// call the base classe's constructor manually as this isn't done automatically
+			// call the base classes constructor manually as this isn't done automatically
 			parent::tslib_pibase();
 
 			if ($conf !== null) {
@@ -180,9 +178,6 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 			$this->setTableNames();
 			$this->setRecordTypes();
 
-			// unserialize the configuration array
-			$globalConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']);
-
 			$this->isInitialized = true;
 		}
 
@@ -192,18 +187,16 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/**
 	 * Generates a list of pids of all sub pages for the given depth.
 	 *
-	 * @param	integer		the pid of the page
-	 * @param	integer		the depth for the search
+	 * @param	integer		$parentUid the pid of the page
+	 * @param	integer		$depth the depth for the search
 	 * @return	string		the list of pids
 	 * @access public
 	 */
 	function getRecursiveUidList($parentUid, $depth){
-		global $TCA;
-
 		if($depth != -1) {
 			$depth = $depth-1; //decreasing depth
 		}
-		# Get ressource records:
+		// Get ressource records:
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'uid',
 			'pages',
@@ -220,11 +213,10 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		return $parentUid;
 	}
 
-
 	/**
 	 * Removes all pages which have common content from pid list.
 	 *
-	 * @param	string		list with page pids
+	 * @param	string		$pageList list with page pids
 	 * @return	string		the list of pids, without pages with common data
 	 * @access public
 	 */
@@ -237,7 +229,6 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 			$queryWhere = 'pid=' . $thisPage . t3lib_BEfunc::deleteClause($this->tableLocations)
 				. ' AND ' . $TCA[$this->tableLocations]['ctrl']['languageField'] . '=0'
 				. t3lib_BEfunc::versioningPlaceholderClause($this->tableLocations);
-			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'uid';
 			$limit = '';
@@ -260,24 +251,19 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		return $resultList;
 	}
 
-
 	/**
 	 * Removes all pages which have event content from pid list.
 	 *
-	 * @param	string		list with page pids
+	 * @param	string		$pageList list with page pids
 	 * @return	string		the list of pids, without pages with event data
 	 * @access public
 	 */
 	function removeEventPages($pageList){
-		global $TCA;
-
 		$resultList = $pageList;
 		foreach (explode(',', $pageList) as $thisPage) {
 			// Initialize variables for the database query.
 			$queryWhere = 'pid=' . $thisPage . t3lib_BEfunc::deleteClause($this->tableEvents)
-//				. ' AND ' . $TCA[$this->tableEvents]['ctrl']['languageField'] . '=0'
 				. t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
-			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = '';
 			$limit = '';
@@ -303,12 +289,13 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/**
 	 * Get all pages which have common content
 	 *
-	 * @param	string		page uid
-	 * @param	string		page pid
+	 * @param	string		$pageUid page uid
+	 * @param	string		$pagePid page pid
 	 * @return	string		the list of pids, without pages with event data
 	 * @access public
 	 */
 	function getCommonPids($pageUid, $pagePid){
+		$selectedPids = '';
 		// Check for root page
 		if ($pageUid<>0) {
 			// Get list of pid
@@ -334,7 +321,6 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		return $GLOBALS['TYPO3_DB']->cleanIntList($selectedPids);
 	}
 
-
 	/**
 	 * Sets the table names.
 	 *
@@ -342,7 +328,6 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @access protected
 	 */
 	function setTableNames() {
-		global $TCA;
 		$dbPrefix = 'tx_' . $this->extKey . '_';
 
 		$this->tableLocations           = $dbPrefix . 'locations';
@@ -387,11 +372,12 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * from TS setup is returned. If there is no field with that name in TS setup,
 	 * an empty string is returned.
 	 *
-	 * @param	string		field name to extract
-	 * @param	string		sheet pointer, eg. "sDEF"
-	 * @param	boolean		whether this is a filename, which has to be combined with a path
-	 * @param	boolean		whether to ignore the flexform values and just get the settings from TypoScript, may be empty
-	 * @return	string		the value of the corresponding flexforms or TS setup entry (may be empty)
+	 * @param    string $fieldName field name to extract
+	 * @param    string $sheet sheet pointer, eg. "sDEF"
+	 * @param bool $isFileName
+	 * @param    boolean $ignoreFlexform whether to ignore the flexform values and just get the settings from TypoScript, may be empty
+	 * @internal param bool $isFieldName whether this is a filename, which has to be combined with a path
+	 * @return    string        the value of the corresponding flexforms or TS setup entry (may be empty)
 	 * @access private
 	 */
 	function getConfValue($fieldName, $sheet = 'sDEF', $isFileName = false, $ignoreFlexform = false) {
@@ -421,8 +407,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * If the file is named 'template.tmpl', the output will be 'uploads/[extension_name]/template.tmpl'.
 	 * The '[extension_name]' will be replaced by the name of the calling extension.
 	 *
-	 * @param	string		the file name
-	 * @param	string		the path to the file (without filename), must contain a slash at the end, may contain a slash at the beginning (if not relative)
+	 * @param	string		$fileName the file name
+	 * @param	string		$path the path to the file (without filename), must contain a slash at the end, may contain a slash at the beginning (if not relative)
 	 * @return	string		the complete path including file name
 	 * @access private
 	 */
@@ -440,10 +426,10 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * from TS setup is returned. If there is no field with that name in TS setup,
 	 * an empty string is returned.
 	 *
-	 * @param	string		field name to extract
-	 * @param	string		sheet pointer, eg. "sDEF"
-	 * @param	boolean		whether this is a filename, which has to be combined with a path
-	 * @param	boolean		whether to ignore the flexform values and just get the settings from TypoScript, may be empty
+	 * @param	string		$fieldName field name to extract
+	 * @param	string		$sheet sheet pointer, eg. "sDEF"
+	 * @param	boolean		$isFileName whether this is a filename, which has to be combined with a path
+	 * @param	boolean		$ignoreFlexform whether to ignore the flexform values and just get the settings from TypoScript, may be empty
 	 * @return	string		the trimmed value of the corresponding flexforms or TS setup entry (may be empty)
 	 * @access public
 	 */
@@ -457,10 +443,10 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * from TS setup is checked. If there is no field with that name in TS setup,
 	 * false is returned.
 	 *
-	 * @param	string		field name to extract
-	 * @param	string		sheet pointer, eg. "sDEF"
-	 * @param	boolean		whether to ignore the flexform values and just get the settings from TypoScript, may be empty
-	 * @return	boolean		whether there is a non-empty value in the corresponding flexforms or TS setup entry
+	 * @param    string $fieldName field name to extract
+	 * @param    string $sheet sheet pointer, eg. "sDEF"
+	 * @param bool $ignoreFlexform whether to ignore the flexform values and just get the settings from TypoScript, may be empty
+	 * @return    boolean        whether there is a non-empty value in the corresponding flexforms or TS setup entry
 	 * @access public
 	 */
 	function hasConfValueString($fieldName, $sheet = 'sDEF', $ignoreFlexform = false) {
@@ -473,8 +459,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * from TS setup is returned. If there is no field with that name in TS setup,
 	 * zero is returned.
 	 *
-	 * @param	string		field name to extract
-	 * @param	string		sheet pointer, eg. "sDEF"
+	 * @param	string		$fieldName field name to extract
+	 * @param	string		$sheet sheet pointer, eg. "sDEF"
 	 * @return	integer		the inval'ed value of the corresponding flexforms or TS setup entry
 	 * @access public
 	 */
@@ -488,8 +474,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * from TS setup is checked. If there is no field with that name in TS setup,
 	 * false is returned.
 	 *
-	 * @param	string		field name to extract
-	 * @param	string		sheet pointer, eg. "sDEF"
+	 * @param	string		$fieldName field name to extract
+	 * @param	string		$sheet sheet pointer, eg. "sDEF"
 	 * @return	boolean		whether there is a non-zero value in the corresponding flexforms or TS setup entry
 	 * @access public
 	 */
@@ -503,8 +489,8 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * from TS setup is returned. If there is no field with that name in TS setup,
 	 * false is returned.
 	 *
-	 * @param	string		field name to extract
-	 * @param	string		sheet pointer, eg. "sDEF"
+	 * @param	string		$fieldName field name to extract
+	 * @param	string		$sheet sheet pointer, eg. "sDEF"
 	 * @return	boolean		the boolean value of the corresponding flexforms or TS setup entry
 	 * @access public
 	 */
@@ -515,7 +501,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/**
 	 * Extracts a value within listView.
 	 *
-	 * @param	string		TS setup field name to extract (within listView.), must not be empty
+	 * @param	string		$fieldName TS setup field name to extract (within listView.), must not be empty
 	 * @return	string		the trimmed contents of that field within listView. (may be empty)
 	 * @access public
 	 */
@@ -568,18 +554,18 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		return ($this->isLoggedIn() ? intval($this->feuser['uid']) : 0);
 	}
 
-
 	/**
 	 * Provides data items from the DB.
 	 *
 	 * By default, the field "title" is used as the name that will be returned
 	 * within the array (as caption). For FE users, the field "name" is used.
 	 *
-	 * @param	array		array that contains any pre-filled data (may be empty, but not null)
-	 * @param	string		the table name to query
-	 * @param	string		query parameter that will be used as the WHERE clause (may be omitted)
-	 * @param	string		whether to append a <br /> at the end of each caption
-	 * @return	array		$items with additional items from the $params['what'] table as an array with the keys "caption" (for the title) and "value" (for the uid), might be empty, will not be null
+	 * @param $items
+	 * @param $tableName
+	 * @param string $queryParameter the table name to query
+	 * @param bool $appendBr
+	 * @internal param array $array that contains any pre-filled data (may be empty, but not null)
+	 * @return    array        $items with additional items from the $params['what'] table as an array with the keys "caption" (for the title) and "value" (for the uid), might be empty, will not be null
 	 * @access public
 	 */
 	function populateList($items, $tableName, $queryParameter = '1=1', $appendBr = false) {
@@ -640,22 +626,24 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * Is using the $TCA arrays "ctrl" part where the key "enablefields" determines
 	 * for each table which of these features applies to that table.
 	 *
-	 * 						records are ignored. NOTICE: If you call this function,
-	 * 						consider what to do with the show_hidden parameter.
-	 * 						Maybe it should be set? See tslib_cObj->enableFields
-	 * 						where it's implemented correctly.
-	 * 						"starttime", "endtime", "fe_group" (keys from
-	 * 						"enablefields" in TCA) and if set they will make sure
-	 * 						that part of the clause is not added. Thus disables
-	 * 						the specific part of the clause. For previewing etc.
-	 * 						any versioning preview settings which might otherwise
-	 * 						disable enableFields.
+	 *                        records are ignored. NOTICE: If you call this function,
+	 *                        consider what to do with the show_hidden parameter.
+	 *                        Maybe it should be set? See tslib_cObj->enableFields
+	 *                        where it's implemented correctly.
+	 *                        "starttime", "endtime", "fe_group" (keys from
+	 *                        "enablefields" in TCA) and if set they will make sure
+	 *                        that part of the clause is not added. Thus disables
+	 *                        the specific part of the clause. For previewing etc.
+	 *                        any versioning preview settings which might otherwise
+	 *                        disable enableFields.
 	 *
-	 * @param	string		table name found in the $TCA array
-	 * @param	integer		If $show_hidden is set (0/1), any hidden-fields in
-	 * @param	array		Array you can pass where keys can be "disabled",
-	 * @param	boolean		If set, enableFields will be applied regardless of
-	 * @return	string		the clause starting like " AND ...=... AND ...=..."
+	 * @param $table
+	 * @param $show_hidden
+	 * @param    array        Array you can pass where keys can be "disabled",
+	 * @param bool $noVersionPreview If set, enableFields will be applied regardless of
+	 * @internal param \table $string name found in the $TCA array
+	 * @internal param \If $integer $show_hidden is set (0/1), any hidden-fields in
+	 * @return    string        the clause starting like " AND ...=... AND ...=..."
 	 * @access protected
 	 */
 	function enableFields($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = false) {
@@ -675,7 +663,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	 * @return	void
 	 */
 	function initializeLanguages($pageId)	{
-		global $TCA, $LANG, $BACK_PATH;
+		global $BACK_PATH;
 
 			// Look up page overlays:
 		$this->pageOverlays = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
@@ -697,7 +685,7 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/**
 	 * Return the icon for the language
 	 *
-	 * @param	integer		Sys language uid
+	 * @param	integer		$sys_language_uid Sys language uid
 	 * @return	string		Language icon
 	 */
 	function languageFlag($sys_language_uid)	{
@@ -719,14 +707,12 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 	/**
 	 * Creates the localization panel
 	 *
-	 * @param	string		The table
-	 * @param	array		The record for which to make the localization panel.
+	 * @param	string		$table The table
+	 * @param	array		$row The record for which to make the localization panel.
 	 * @return	array		Array with key 0/1 with content for column 1 and 2
 	 */
 	function makeLocalizationPanel($table, $row)	{
-		global $TCA, $LANG, $BE_USER, $BACK_PATH;
-
-#debug($TCA[$table], 'TCA[' . $table . ']');
+		global $TCA;
 
 		$out = array(
 			0 => '',
@@ -736,27 +722,17 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
 		$translations = $t8Tools->translationInfo($table, $row['uid']);
 
-		# Language title and icon:
+		// Language title and icon:
 		$out[0] = $this->languageFlag($row[$TCA[$table]['ctrl']['languageField']]);
 
 		if (is_array($translations))	{
 
-#			if ($BE_USER->check('tables_modify', $table)
-#				&& $BE_USER->doesUserHaveAccess(t3lib_BEfunc::getRecord('pages', $row['pid']), 16)) {
-#				$params = '&edit[' . $table . '][' . $uid . ']=edit';
-#				$returnUrl = 'returnUrl=' . rawurlencode(t3lib_div::getIndpEnv('REQUEST_URI'));
-#				$editOnClick = 'alt_doc.php?' . $returnUrl . $params;
-#			}
-
-			# Traverse page translations and add icon for each language that does NOT yet exist:
+			// Traverse page translations and add icon for each language that does NOT yet exist:
 			$lNew = '';
 			foreach($this->pageOverlays as $lUid_OnPage => $lsysRec)	{
 				if (!isset($translations['translations'][$lUid_OnPage]) && $GLOBALS['BE_USER']->checkLanguageAccess($lUid_OnPage))	{
 					$href = $GLOBALS['TBE_TEMPLATE']->issueCommand(
 						'&cmd[' . $table . '][' . $row['uid'] . '][localize]=' . $lUid_OnPage //,
-#						$editOnClick
-#						$this->listURL() . '&justLocalized=' . rawurlencode($table . ':' . $row['uid'] . ':' . $lUid_OnPage)
-#						. '&returnUrl=' . t3lib_div::getIndpEnv('REQUEST_URI')
 					);
 
 					$lC = $this->languageFlag($lUid_OnPage);
@@ -771,7 +747,6 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 			$out[0] = '&nbsp;&nbsp;&nbsp;&nbsp;' . $out[0];
 		}
 
-
 		return $out;
 	}
 
@@ -780,5 +755,3 @@ class tx_wseevents_dbplugin extends tslib_pibase {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_dbplugin.php']) {
 	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_dbplugin.php']);
 }
-
-?>

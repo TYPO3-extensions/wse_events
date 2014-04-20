@@ -55,6 +55,7 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
 class tx_wseevents_locations extends tx_wseevents_dbplugin {
 	/** The extension key. */
 	var $extKey = 'wseevents';
+	private $selectedPids;
 
 	/**
 	 * Dummy constructor: Does nothing.
@@ -70,7 +71,7 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 	/**
 	 * This is the main function
 	 *
-	 * @param	array		TypoScript configuration for the plugin
+	 * @param	array		$items TypoScript configuration for the plugin
 	 * @return	void		...
 	 * @access protected
 	 */
@@ -81,15 +82,13 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 	/**
 	 * Get list of available locations
 	 *
-	 * @param	array		TypoScript configuration for the plugin
-	 * @param	object		$fobj: ToDo: insert description
+	 * @param	array		$PA TypoScript configuration for the plugin
+	 * @param	object		$fobj t3lib_TCEforms
 	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAlocationlist($PA, $fobj) {
 		global $TCA;
-#		debug ($PA);
-#		debug ($fobj);
 
 		// Get list of common pids
 		$thispage = t3lib_BEfunc::getRecord('pages', $PA['row']['pid']);
@@ -103,7 +102,6 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 			. t3lib_BEfunc::BEenableFields($tableName)
 			. t3lib_BEfunc::deleteClause($tableName)
 			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
@@ -140,5 +138,3 @@ class tx_wseevents_locations extends tx_wseevents_dbplugin {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_locations.php']) {
 	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_locations.php']);
 }
-
-?>

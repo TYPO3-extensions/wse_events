@@ -73,7 +73,7 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 	/**
 	 * This is the main function
 	 *
-	 * @param	array		TypoScript configuration for the plugin
+	 * @param	array		$items TypoScript configuration for the plugin
 	 * @return	void		...
 	 * @access protected
 	 */
@@ -84,19 +84,17 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 	/**
 	 * Get list of categories
 	 *
-	 * @param	array		TypoScript configuration for the plugin
-	 * @param	object		$fobj: ToDo: insert description
+	 * @param	array		$PA TypoScript configuration for the plugin
+	 * @param	object		$fobj t3lib_TCEforms
 	 * @return	void		...
 	 * @access protected
 	 */
 	function getTCAcategorylist($PA, $fobj) {
 		global $TCA;
-#		debug ($PA);
-#		debug ($fobj);
 
 		// Get list of common pids
-		$thispage = t3lib_BEfunc::getRecord('pages', $PA['row']['pid']);
-		$this->selectedPids = $this->getCommonPids($PA['row']['pid'], $thispage['pid']);
+		$thisPage = t3lib_BEfunc::getRecord('pages', $PA['row']['pid']);
+		$this->selectedPids = $this->getCommonPids($PA['row']['pid'], $thisPage['pid']);
 
 		// --------------------- Get the list of categories ---------------------
 		// Initialize variables for the database query.
@@ -105,7 +103,6 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 			. ' AND pid in(' . $this->selectedPids . ')'
 			. t3lib_BEfunc::BEenableFields($tableName)
 			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'shortkey';
 		$limit = '';
@@ -124,7 +121,7 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 		// Fill item array with rooms of location of selected event
 		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				// Add the name and id to the itemlist
+				// Add the name and id to the item list
 				$entry = array();
 				$entry[0] = $row['shortkey'] . ' - ' . $row['name'];
 				$entry[1] = $row['uid'];
@@ -134,8 +131,6 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
-#		debug ($PA);
-
 		return;
 	}
 
@@ -144,5 +139,3 @@ class tx_wseevents_categories extends tx_wseevents_dbplugin {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_categories.php']) {
 	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_categories.php']);
 }
-
-?>

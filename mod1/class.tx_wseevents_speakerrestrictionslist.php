@@ -38,16 +38,23 @@
 class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 
 	/**
+	 * Event class
+	 * @var tx_wseevents_events
+	 */
+	var $events;
+
+	/**
 	 * The constructor. Calls the constructor of the parent class and sets
 	 * $this->tableName.
 	 *
-	 * @param	object		the current back-end page object
-	 * @return	void		...
+	 * @param    object $page the current back-end page object
+	 * @return \tx_wseevents_speakerrestrictionslist ...
 	 */
-	function tx_wseevents_speakerrestrictionslist(&$page) {
+	function __construct(&$page) {
 		parent::tx_wseevents_backendlist($page);
 		$this->tableName = $this->tableSpeakerRestrictions;
-#		$this->page = $page;
+		// Initialize classes
+		$this->events = t3lib_div::makeInstance('tx_wseevents_events');
 	}
 
 	/**
@@ -57,20 +64,12 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 	 * @access public
 	 */
 	function show() {
-		global $TCA, $LANG, $BE_USER;
-
-#debug ($LANG);
-#debug ($BE_USER);
-
-		// Get selected backend language of user
-		$userlang = $BE_USER->uc[moduleData][web_layout][language];
+		global $TCA, $LANG;
 
 		// Loading all TCA details for this table:
 		t3lib_div::loadTCA($this->tableSpeakers);
 		t3lib_div::loadTCA($this->tableEvents);
 		t3lib_div::loadTCA($this->tableName);
-
-
 
 		// Initialize the variable for the HTML source code.
 		$content = '';
@@ -136,18 +135,13 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 			)
 		);
 
-		// unserialize the configuration array
-		$globalConfiguration = unserialize(
-			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wse_events']
-		);
-
-		# Get date format for selected language
-		if (!$conf[$index . '.']['fmtDate']){
-			$conf['strftime'] = '%d.%m.%Y';
+		// Get date format for selected language
+		if (!$this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate']){
+			$this->conf['strftime'] = '%d.%m.%Y';
 		} else {
-			$conf['strftime'] = $conf[$index . '.']['fmtDate'];
+			$this->conf['strftime'] = $this->conf[$GLOBALS['TSFE']->sys_language_uid . '.']['fmtDate'];
 		}
-		$secofday = 60*60*24;
+		$secOfDay = 60*60*24;
 
 		// Get list of pid
 		$this->selectedPids = $this->getRecursiveUidList($this->page->pageInfo['uid'],2);
@@ -189,7 +183,6 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableSpeakers)
 			. ' AND ' . $TCA[$this->tableSpeakers]['ctrl']['languageField'] . '=0'
 			. t3lib_BEfunc::versioningPlaceholderClause($this->tableSpeakers);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'uid';
 		$limit = '';
@@ -216,7 +209,6 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 		$queryWhere = $wherePid . t3lib_BEfunc::deleteClause($this->tableEvents)
 			. ' AND ' . $TCA[$this->tableEvents]['ctrl']['languageField'] . '=0'
 			. t3lib_BEfunc::versioningPlaceholderClause($this->tableEvents);
-		$additionalTables = '';
 		$groupBy = '';
 		$orderBy = 'name';
 		$limit = '';
@@ -252,13 +244,12 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 //			$content .= '&nbsp;' . $this->getNewIcon($event['pid'],0) . '<br />';
 
 			// Get list of timeslots for the event
-			$slots = tx_wseevents_events::getEventSlotlist($event['uid']);
+			$slots = $this->events->getEventSlotlist($event['uid']);
 
 			// Initialize variables for the database query.
 			$queryWhere = $wherePid . ' AND event='.$event['uid']
 				. t3lib_BEfunc::deleteClause($this->tableName)
 				. t3lib_BEfunc::versioningPlaceholderClause($this->tableName);
-			$additionalTables = '';
 			$groupBy = '';
 			$orderBy = 'speaker,eventday';
 			$limit = '';
@@ -278,15 +269,15 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 					$found = true;
 					$uid = $row['uid'];
 					$hidden = $row['hidden'];
-					$eventday = $row['eventday'];
+					$eventDay = $row['eventday'];
 					// Format begin day of event
-					$eventdate = strftime($conf['strftime'], ($event['begin']+($eventday-1)*$secofday));
+					$eventDate = strftime($this->conf['strftime'], ($event['begin']+($eventDay-1)*$secOfDay));
 					// Add the result row to the table array.
 					$table[] = array(
 						TAB . TAB . TAB . TAB . TAB
 							. $speakers[$row['speaker']] . LF,
 						TAB . TAB . TAB . TAB . TAB
-							. $eventdate . LF,
+							. $eventDate . LF,
 						TAB . TAB . TAB . TAB . TAB
 							. $slots[$row['begin']] . LF,
 						TAB . TAB . TAB . TAB . TAB
@@ -322,5 +313,3 @@ class tx_wseevents_speakerrestrictionslist extends tx_wseevents_backendlist{
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerrestrictionslist.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/mod1/class.tx_wseevents_speakerrestrictionslist.php']);
 }
-
-?>

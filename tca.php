@@ -1,5 +1,6 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
+global $TCA;
 
 $TCA['tx_wseevents_events'] = Array (
 	'ctrl' => $TCA['tx_wseevents_events']['ctrl'],
@@ -1123,4 +1124,3 @@ $TCA['tx_wseevents_categories'] = Array (
 		'1' => Array('showitem' => '')
 	)
 );
-?>

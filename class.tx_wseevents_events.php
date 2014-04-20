@@ -23,19 +23,6 @@
 ***************************************************************/
 
 
-/**
- * Class 'tx_wseevents_events' for the 'wse_events' extension.
- *
- * xxxxxxx
- * xxxxx
- *
- *
- * @package		TYPO3
- * @subpackage	tx_wseevents
- * @author		Michael Oehlhof <typo3@oehlhof.de>
- */
-
-
 // In case we're on the back end, PATH_tslib isn't defined yet.
 if (!defined('PATH_tslib')) {
 	define('PATH_tslib', t3lib_extMgm::extPath('cms') . 'tslib/');
@@ -53,7 +40,7 @@ if ((TYPO3_MODE == 'BE') && is_object($LANG)) {
  * @subpackage	wse_events
  * @author		Michael Oehlhof <typo3@oehlhof.de>
  */
-class tx_wseevents_events {
+class tx_wseevents_events implements t3lib_singleton {
 	/** The extension key. */
 	var $extKey = 'wseevents';
 
@@ -64,24 +51,20 @@ class tx_wseevents_events {
 	var $cacheEvent;
 
 	/**
-	 * Dummy constructor: Does nothing.
-	 *
-	 * The base class's constructor is called in $this->init().
-	 *
-	 * @return	void		...
+	 * @var tx_wseevents_rooms
 	 */
-	function tx_wseevents_events() {
-	}
+	var $rooms;
 
 	/**
-	 * This is the main function
+	 * Constructor: Initializes cache.
 	 *
-	 * @param	array		$items TypoScript configuration for the plugin
-	 * @return	void		...
-	 * @access protected
+	 * @return \tx_wseevents_events ...
 	 */
-	function main($items) {
-		return;
+	function __construct() {
+		// Initialize classes
+		$this->rooms = t3lib_div::makeInstance('tx_wseevents_rooms', $this);
+		// Initialize variables
+		$this->cacheEvent = array();
 	}
 
 	/**
@@ -93,34 +76,32 @@ class tx_wseevents_events {
 	 */
 	function getTCAeventDays(&$params, &$pObj) {
 		global $LANG;
-#debug($params, '$params');
-#echo 'getTCAeventDays ' . date('H:i:s');
 
-		$thispid = $params['row']['pid'];
+		$thisPid = $params['row']['pid'];
 		// If pid is negative than the pid is the uid of the last saved record
 		// and we must get the pid of the folder from the last saved record
-		if (0 > $thispid) {
-			$lastpage = t3lib_BEfunc::getRecord($params['table'], abs($thispid));
-			$thispid = $lastpage['pid'];
+		if (0 > $thisPid) {
+			$lastPage = t3lib_BEfunc::getRecord($params['table'], abs($thisPid));
+			$thisPid = $lastPage['pid'];
 		}
 
 		// Get the event info
-		$eventinfo = $this->getEventInfo($params['row']['event'], $thispid);
+		$eventInfo = $this->getEventInfo($params['row']['event'], $thisPid);
 
 		// Clear the item array
 		$params['items'] = array();
 
-		$thisday = 1;
-		$maxday = $eventinfo['length'];
+		$thisDay = 1;
+		$maxDay = $eventInfo['length'];
 		// Create list of event days
-		while ($thisday<=$maxday) {
+		while ($thisDay<=$maxDay) {
 			// Add the name and id to the itemlist
 			$entry = array();
-			$entry[0] = $LANG->getLL('events.length') . ' ' . $thisday;
-			$entry[1] = $thisday;
+			$entry[0] = $LANG->getLL('events.length') . ' ' . $thisDay;
+			$entry[1] = $thisDay;
 			$entry[2] = '';
 			$params['items'][] = $entry;
-			$thisday += 1;
+			$thisDay += 1;
 		}
 	}
 
@@ -135,39 +116,39 @@ class tx_wseevents_events {
 		// Clear the item array
 		$params['items'] = array();
 
-		$thispid = $params['row']['pid'];
+		$thisPid = $params['row']['pid'];
 		// If pid is negative than the pid is the uid of the last saved record
 		// and we must get the pid of the folder from the last saved record
-		if ($thispid<0) {
-			$lastpage = t3lib_BEfunc::getRecord($params['table'], abs($thispid));
-			$thispid = $lastpage['pid'];
+		if ($thisPid < 0) {
+			$lastPage = t3lib_BEfunc::getRecord($params['table'], abs($thisPid));
+			$thisPid = $lastPage['pid'];
 		}
 
 		// Get the event info
-		$eventinfo = $this->getEventInfo($params['row']['event'], $thispid);
+		$eventInfo = $this->getEventInfo($params['row']['event'], $thisPid);
 
-		$thisslot = 1;
-		$maxslot = $eventinfo['maxslot'];
-		$defslot = $eventinfo['defslotcount'];
-		$slotsize = $eventinfo['slotsize'];
+		$thisSlot = 1;
+		$maxSlot = $eventInfo['maxslot'];
+		$defSlot = $eventInfo['defslotcount'];
+		$slotSize = $eventInfo['slotsize'];
 		// Create list of event days
-		while ($thisslot<=$maxslot) {
+		while ($thisSlot<=$maxSlot) {
 			// Add the name and id to the itemlist
 			$entry = array();
-			$entry[0] = $thisslot*$slotsize;
-			$entry[1] = $thisslot;
+			$entry[0] = $thisSlot * $slotSize;
+			$entry[1] = $thisSlot;
 			$entry[2] = '';
 			$params['items'][] = $entry;
-			$thisslot += 1;
+			$thisSlot += 1;
 		}
-		$params['row']['length'] = $defslot;
+		$params['row']['length'] = $defSlot;
 	}
 
 	/**
 	 * Get default session length
 	 *
 	 * @param	array		$params Array of items passed by reference.
-	 * @return	void
+	 * @return	int
 	 * @access protected
 	 */
 	function getTCAsessionDefault(&$params) {
@@ -229,9 +210,15 @@ class tx_wseevents_events {
 	 * @return	array		Event record
 	 * @access protected
 	 */
-	public static function getEventInfo($event, $eventPid=0) {
+	function getEventInfo($event, $eventPid=0) {
 		global $TCA;
 
+		// Check if an event is cached
+		if ($event > 0) {
+			if (!empty($this->cacheEvent[$event])) {
+				return $this->cacheEvent[$event];
+			}
+		}
 		// Initialize variables for the database query.
 		$tableName ='tx_wseevents_events';
 
@@ -264,6 +251,8 @@ class tx_wseevents_events {
 			$limit);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		// Put event data into cache
+		$this->cacheEvent[$row['uid']] = $row;
 		return $row;
 	}
 
@@ -271,49 +260,17 @@ class tx_wseevents_events {
 	 * Get list of slots for an event
 	 *
 	 * @param	string		$event Id of event
-	 * @param	integer		$eventpid Page to search for events if $event is set to 0
+	 * @param	integer		$eventPid Page to search for events if $event is set to 0
 	 * @return	array		List of slots for the event
 	 * @access protected
 	 */
-	public static function getEventSlotList($event, $eventpid = 0) {
+	function getEventSlotList($event, $eventPid = 0) {
 		global $TCA;
 
-		// --------------------- Get the list of time slots ---------------------
-		// Initialize variables for the database query.
-		$tableName ='tx_wseevents_events';
+		$row = $this->getEventInfo($event, $eventPid);
 
-		// Loading all TCA details for this table:
-		t3lib_div::loadTCA($tableName);
-
-		if (0 == $eventpid) {
-			$pidWhere = '0=0';
-		} else {
-			$pidWhere = 'pid=' . $eventpid;
-		}
-		if (0 < $event) {
-			$queryWhere = 'uid=' . $event;
-		} else {
-			$queryWhere = $pidWhere . t3lib_BEfunc::deleteClause($tableName);
-		}
-		$queryWhere .= ' AND ' . $TCA[$tableName]['ctrl']['languageField'] . '=0'
-			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
-		$additionalTables = '';
-		$groupBy = '';
-		$orderBy = 'name';
-		$limit = '';
-
-		// Get info about time slots of the event
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'*',
-			$tableName,
-			$queryWhere,
-			$groupBy,
-			$orderBy,
-			$limit);
-		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		// Clear the item array
-		$slotlist = array();
+		$slotList = array();
 
 		if (!empty($row)) {
 			$begin = $row['timebegin'];
@@ -324,107 +281,64 @@ class tx_wseevents_events {
 				list($this_h, $this_m) = explode(':', $begin);
 				list($end_h, $end_m) = explode(':', $end);
 
-				$itemindex = 1;
+				$itemIndex = 1;
 				$finished = false;
 				// Fill item array with time slots of selected event
 				while (!$finished) {
-
-					$thistime = sprintf('%02d:%02d', $this_h, $this_m);
-					$slotlist[$itemindex] =$thistime;
+					$thisTime = sprintf('%02d:%02d', $this_h, $this_m);
+					$slotList[$itemIndex] =$thisTime;
 					$this_m += intval($size);
 					if ($this_m>=60) {
 						$this_h += 1;
 						$this_m -= 60;
 					}
-					if ($slotlist[$itemindex]==$end) {
+					if ($slotList[$itemIndex]==$end) {
 						$finished = true;
 					}
 					if (($this_m>=$end_m) && ($this_h>=$end_h)) {
 						$finished = true;
 					}
-					$itemindex += 1;
+					$itemIndex += 1;
 				}
 			}
 		}
-		return $slotlist;
+		return $slotList;
 	}
 
 	/**
 	 * Get list of slots for an event
 	 *
 	 * @param	string		$event Id of event
-	 * @param	integer		$eventpid Page to search for events if $event is set to 0
+	 * @param	integer		$eventPid Page to search for events if $event is set to 0
 	 * @return	array		List of slots for the event
 	 * @access protected
 	 */
-	function getEventSlotArray($event, $eventpid = 0) {
+	function getEventSlotArray($event, $eventPid = 0) {
 		global $TCA;
 
-		// --------------------- Get the list of time slots ---------------------
-		// Initialize variables for the database query.
-		$tableName ='tx_wseevents_events';
-		if (0 == $eventpid) {
-			$pidWhere = '0=0';
-		} else {
-			$pidWhere = 'pid=' . $eventpid;
-		}
-		if (0 < $event) {
-			$queryWhere = 'uid=' . $event;
-		} else {
-			$queryWhere = $pidWhere . t3lib_BEfunc::deleteClause($tableName);
-		}
-		$queryWhere .= ' AND ' . $TCA[$tableName]['ctrl']['languageField'] . '=0'
-			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
-		$additionalTables = '';
-		$groupBy = '';
-		$orderBy = 'name';
-		$limit = '';
-
-		// Get info about time slots of the event
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'*',
-			$tableName,
-			$queryWhere,
-			$groupBy,
-			$orderBy,
-			$limit);
-		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		$row = $this->getEventInfo($event, $eventPid);
 
 		// Clear the item array
-		$slotlist = array();
-		$slotarray = array();
+		$slotList = array();
+		$slotArray = array();
 
 		if (!empty($row)) {
-			$tableName ='tx_wseevents_rooms';
 			$begin = $row['timebegin'];
 			$end = $row['timeend'];
 			$size = $row['slotsize'];
-			$daycount = $row['length'];
+			$dayCount = $row['length'];
 			$location = $row['location'];
-			$queryWhere = 'location=' . $location
-				. ' AND ' . $TCA[$tableName]['ctrl']['languageField'] . '=0'
-				. t3lib_BEfunc::versioningPlaceholderClause($tableName);
-			// Get info about rooms of the event
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-				'count(*)',
-				$tableName,
-				$queryWhere,
-				$groupBy,
-				$orderBy,
-				$limit);
-			$locationrow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-			$roomcount = $locationrow['count(*)'];
-			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+			$roomCount = $this->rooms->getRoomCount($location);
 
 			list($this_h, $this_m) = explode(':', $begin);
 
-			$itemindex = 1;
+			$itemIndex = 1;
 			$finished = false;
 			// Fill item array with time slots of selected event
 			while (!$finished) {
-				$thistime = sprintf('%02d:%02d', $this_h, $this_m);
-				$slotlist[$itemindex] = 1;
+				$thisTime = sprintf('%02d:%02d', $this_h, $this_m);
+				$slotList[$itemIndex] = 1;
 				$this_m += intval($size);
 				if ($this_m>=60) {
 					$this_h += 1;
@@ -433,104 +347,51 @@ class tx_wseevents_events {
 				if ($this_h>=24) {
 					$finished = true;
 				}
-				if ($thistime==$end) {
+				if ($thisTime==$end) {
 					$finished = true;
 				}
-				$itemindex += 1;
+				$itemIndex += 1;
 			}
-			for ( $d = 1; $d <= $daycount; $d++ ) {
-				for ( $r = 1; $r <= $roomcount; $r++ ) {
-					$slotarray[$d][$r] = $slotlist;
+			for ( $d = 1; $d <= $dayCount; $d++ ) {
+				for ( $r = 1; $r <= $roomCount; $r++ ) {
+					$slotArray[$d][$r] = $slotList;
 				}
 			}
 		}
-		return $slotarray;
+		return $slotArray;
 	}
 
 	/**
 	 * Get list of room names of an event
 	 *
 	 * @param	integer		$event Id of an event
-	 * @param	integer		$eventpid Page to search for events if $event is set to 0
+	 * @param	integer		$eventPid Page to search for events if $event is set to 0
 	 * @return	array		List of room names
 	 * @access protected
 	 */
-	public static function getEventRooms($event, $eventpid = 0) {
-		global $TCA;
+	function getEventRooms($event, $eventPid = 0) {
+		$row = $this->getEventInfo($event, $eventPid);
 
-		// --------------------- Get the list of time slots ---------------------
-		// Initialize variables for the database query.
-		$tableName ='tx_wseevents_events';
-		if (0 == $eventpid) {
-			$pidWhere = '0=0';
-		} else {
-			$pidWhere = 'pid=' . $eventpid;
-		}
-		if (0 < $event) {
-			$queryWhere = 'uid=' . $event;
-		} else {
-			$queryWhere = $pidWhere . t3lib_BEfunc::deleteClause($tableName);
-		}
-		$queryWhere .= ' AND ' . $TCA[$tableName]['ctrl']['languageField'] . '=0'
-			. t3lib_BEfunc::versioningPlaceholderClause($tableName);
-		$groupBy = '';
-		$orderBy = 'name';
-		$limit = '';
-#debug($queryWhere, '$queryWhere tx_wseevents_events');
-
-		// Get info about the event
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'*',
-			$tableName,
-			$queryWhere,
-			$groupBy,
-			$orderBy,
-			$limit);
-		if ($res) {
-			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-			$GLOBALS['TYPO3_DB']->sql_free_result($res);
-
-			$roomlist = array();
-			$roomlist[0] = '- All rooms -';
+		$roomList = array();
+		if ($row) {
+			$roomList[0] = '- All rooms -';
 			// Get the room list from the location
 			$location = $row['location'];
 			if ($location>0) {
-				$tableName ='tx_wseevents_rooms';
-				$queryWhere = 'location=' . $location
-					. ' AND ' . $TCA[$tableName]['ctrl']['languageField'] . '=0'
-					. t3lib_BEfunc::versioningPlaceholderClause($tableName);
-				$groupBy = '';
-				$orderBy = 'uid';
-				$limit = '';
-#debug($queryWhere, '$queryWhere tx_wseevents_rooms');
-
-				// Get info about the rooms of the location
-				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'*',
-					$tableName,
-					$queryWhere,
-					$groupBy,
-					$orderBy,
-					$limit);
-#			$roomindex = 1;
-				if ($res) {
-					while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-						$roomlist[$row['uid']] = $row['name'];
-#				$roomindex += 1;
-					}
-					$GLOBALS['TYPO3_DB']->sql_free_result($res);
+				$allRooms = $this->rooms->getRoomList($location);
+				foreach ($allRooms as $oneRoom) {
+					$roomList[$oneRoom['uid']] = $oneRoom['name'];
 				}
 			}
 		}
-#debug($roomlist, '$roomlist');
-		return $roomlist;
+		return $roomList;
 	}
 
 	/**
 	 *
 	 */
-	public static function checkForToday ($event) {
-		$eventInfo = tx_wseevents_events::getEventInfo($event);
+	function checkForToday ($event) {
+		$eventInfo = $this->getEventInfo($event);
 		$eventBegin = $eventInfo['begin'];
 		$today = time();
 		$dayToBegin = intval(($today - intval($eventBegin)) / 86400) + 1; // (60 * 60 * 24)
@@ -540,10 +401,10 @@ class tx_wseevents_events {
 		} else {
 			// Today is during the event
 			$dayNr = $dayToBegin;
-			$timeBegin = intval(substr($eventInfo['timebegin'], 0, 2) * 60 + substr($eventInfo['timebegin'], 3, 2));
-			$timeEnd = intval(substr($eventInfo['timeend'], 0, 2) * 60 + substr($eventInfo['timeend'], 3, 2));
+			$timeBegin = intval(intval(substr($eventInfo['timebegin'], 0, 2)) * 60 + intval(substr($eventInfo['timebegin'], 3, 2)));
+			$timeEnd = intval(intval(substr($eventInfo['timeend'], 0, 2)) * 60 + intval(substr($eventInfo['timeend'], 3, 2)));
 			$timeTodayString = date('H:i', $today);
-			$timeToday = intval(substr($timeTodayString, 0, 2) * 60 + substr($timeTodayString, 3, 2));
+			$timeToday = intval(intval(substr($timeTodayString, 0, 2)) * 60 + intval(substr($timeTodayString, 3, 2)));
 			$slotCount = intval(($timeEnd - $timeBegin) / intval($eventInfo['slotsize']));
 			$slotToday = intval(($timeToday - $timeBegin) / intval($eventInfo['slotsize'])) + 1;
 			if (($slotToday < 1) or ($slotToday > $slotCount)) {
@@ -559,5 +420,3 @@ class tx_wseevents_events {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_events.php']) {
 	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wse_events/class.tx_wseevents_events.php']);
 }
-
-?>

@@ -2,7 +2,7 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 //include_once(t3lib_extMgm::extPath($_EXTKEY).'class.tx_wseevents_addFieldsToFlexForm.php');
-include_once(t3lib_extMgm::extPath($_EXTKEY).'class.tx_wseevents_events.php');
+include_once(t3lib_extMgm::extPath($_EXTKEY) . 'class.tx_wseevents_events.php');
 
 //t3lib_extMgm::allowTableOnStandardPages('tx_wseevents_events');
 
@@ -259,5 +259,3 @@ t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:wse_events/flexform_
 if (TYPO3_MODE == 'BE')	{
 	t3lib_extMgm::addModule('web','txwseeventsM1','',t3lib_extMgm::extPath($_EXTKEY).'mod1/');
 }
-
-?>
